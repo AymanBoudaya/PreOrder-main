@@ -9,7 +9,6 @@ import '../screens/favorite/favorite_screen.dart';
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  // Lazy-load screens to ensure controllers are initialized first
   Widget getScreen(int index) {
     switch (index) {
       case 0:

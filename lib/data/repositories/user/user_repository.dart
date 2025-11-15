@@ -24,9 +24,9 @@ class UserRepository extends GetxController {
           .maybeSingle();
     } on PostgrestException catch (e) {
       throw Exception(
-          'Exception PostgrestException saveUserRecord: ${e.message}');
+          'Exception de sauvegarde utilisateur PostgrestException : ${e.message}');
     } catch (e) {
-      throw Exception('Unknown error saveUserRecord: $e');
+      throw Exception('Erreur inconnue de sauvegarde utilisateur : $e');
     }
   }
 
@@ -36,7 +36,7 @@ class UserRepository extends GetxController {
       final authUser = Supabase.instance.client.auth.currentUser;
       final targetId = userId ?? authUser?.id;
 
-      if (targetId == null) throw 'No authenticated user.';
+      if (targetId == null) throw 'Aucun utilisateur authentifié.';
 
       final response = await _client
           .from(_table)
@@ -73,7 +73,7 @@ class UserRepository extends GetxController {
           .eq('id', updatedUser.id)
           .select();
 
-      if (response.isEmpty) throw 'Update failed.';
+      if (response.isEmpty) throw 'Mise à jour échouée.';
     } on AuthException catch (e) {
       throw SupabaseAuthException(
         e.message,
@@ -84,7 +84,7 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw TPlatformException(e.code).message;
     } catch (e) {
-      throw Exception('Something went wrong in updateUserDetails: $e');
+      throw Exception('Erreur inconnue de mise à jour utilisateur : $e');
     }
   }
 
@@ -92,12 +92,12 @@ class UserRepository extends GetxController {
   Future<void> updateSingleField(Map<String, dynamic> json) async {
     try {
       final userId = AuthenticationRepository.instance.authUser?.id;
-      if (userId == null) throw 'No authenticated user.';
+      if (userId == null) throw 'Aucun utilisateur authentifié.';
 
       final response =
           await _client.from(_table).update(json).eq('id', userId).select();
 
-      if (response.isEmpty) throw 'Update failed.';
+      if (response.isEmpty) throw 'Mise à jour échouée.';
     } on AuthException catch (e) {
       throw SupabaseAuthException(
         e.message,
@@ -108,7 +108,7 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw TPlatformException(e.code).message;
     } catch (e) {
-      throw Exception('Something went wrong in updateSingleField: $e');
+      throw Exception('Erreur inconnue de mise à jour d\'un champ utilisateur : $e');
     }
   }
 
@@ -199,7 +199,7 @@ class UserRepository extends GetxController {
           .eq('id', userId)
           .select();
 
-      if (response.isEmpty) throw 'Update ban status failed.';
+      if (response.isEmpty) throw 'Mise à jour du statut de bannissement échouée.';
       
       // Note: La déconnexion sera gérée automatiquement lors de la prochaine
       // tentative de connexion grâce à la vérification dans AuthenticationRepository

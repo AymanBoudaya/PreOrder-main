@@ -3,7 +3,6 @@ import '../../utils/constants/colors.dart';
 
 class TShadowStyle {
   static final verticalProductShadow = BoxShadow(
-    // ignore: deprecated_member_use
     color: AppColors.darkGrey.withAlpha((255 * 0.1).toInt()),
     blurRadius: 50,
     spreadRadius: 7,
@@ -11,7 +10,6 @@ class TShadowStyle {
   );
 
   static final horizontalProductShadow = BoxShadow(
-    // ignore: deprecated_member_use
     color: AppColors.darkGrey.withAlpha((255 * 0.1).toInt()),
     blurRadius: 50,
     spreadRadius: 7,

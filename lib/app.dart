@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'bindings/general_binding.dart';
+import 'features/authentication/screens/login/login.dart';
 import 'navigation_menu.dart';
 import 'utils/constants/colors.dart';
 import 'utils/theme/theme.dart';
@@ -18,11 +19,11 @@ class App extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       initialBinding: GeneralBinding(),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/NavigationMenu',
+      initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => const SplashScreen()),
         GetPage(name: '/NavigationMenu', page: () => const NavigationMenu()),
-        // ajoute toutes autres routes…
+        GetPage(name: '/Login', page: () => const LoginScreen()),
       ],
       // Handle unknown routes gracefully to prevent restoration errors
       onUnknownRoute: (settings) {
@@ -36,7 +37,7 @@ class App extends StatelessWidget {
         );
       },
 
-      locale: const Locale('fr', 'FR'), // <- pour le français
+      locale: const Locale('fr', 'FR'),
       supportedLocales: const [
         Locale('en', 'US'),
         Locale('fr', 'FR'),
@@ -45,7 +46,7 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
-      ], // <- pour le français
+      ],
 
       home: const SplashScreen(),
     );

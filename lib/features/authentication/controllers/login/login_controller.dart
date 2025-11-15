@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:caferesto/features/authentication/screens/signup.widgets/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +16,6 @@ class LoginController extends GetxController {
 
   /// Variables
   final rememberMe = false.obs;
-  // final hidePassword = true.obs;
   final localStorage = GetStorage();
   final email = TextEditingController();
   final password = TextEditingController();
@@ -72,33 +69,6 @@ class LoginController extends GetxController {
     } catch (e) {
       TFullScreenLoader.stopLoading();
       TLoaders.errorSnackBar(title: 'Erreur !', message: e.toString());
-    }
-  }
-
-  Future<void> googleSignIn() async {
-    try {
-      TFullScreenLoader.openLoadingDialog(
-        "Connexion avec Google...",
-        TImages.docerAnimation,
-      );
-
-      // Vérifier connexion internet
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        TFullScreenLoader.stopLoading();
-        return;
-      }
-
-      // Appeler le repo
-      await AuthenticationRepository.instance.signInWithGoogle();
-
-      TFullScreenLoader.stopLoading();
-      // ⚠️ Pas besoin de navigation manuelle ici :
-      // onAuthStateChange dans AuthenticationRepository gère déjà la redirection.
-    } catch (e) {
-      TFullScreenLoader.stopLoading();
-      TLoaders.errorSnackBar(
-          title: 'Erreur Google Sign-In', message: e.toString());
     }
   }
 }
