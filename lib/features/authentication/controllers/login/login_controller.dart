@@ -12,7 +12,7 @@ import '../../../personalization/controllers/user_controller.dart';
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
-  final userController = Get.put(UserController());
+  final userController = Get.find<UserController>();
 
   /// Variables
   final rememberMe = false.obs;
@@ -23,6 +23,8 @@ class LoginController extends GetxController {
 
   @override
   void onInit() {
+    print("🟡 [LoginController] onInit() CALLED");
+
     email.text = localStorage.read("REMEMBER_ME_EMAIL") ?? '';
     password.text = localStorage.read("REMEMBER_ME_PASSWORD") ?? '';
     super.onInit();

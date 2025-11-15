@@ -29,33 +29,56 @@ class AuthenticationRepository extends GetxController {
 
   @override
   void onReady() {
-    // On utilise notre splash screen Flutter au lieu du splash screen natif
+    print("🔵 [AuthRepo] onReady() START");
+    print("🔵 [AuthRepo] Current user at startup: ${authUser?.id}");
+    print("🟣 [AuthRepo] Starting Supabase onAuthStateChange listener…");
 
     _auth.onAuthStateChange.listen((data) async {
       final event = data.event;
       final session = data.session;
+
+      print("\n🟠🔻🔻🔻 AUTH EVENT RECEIVED 🔻🔻🔻");
+      print("🟠 Event: $event");
+      print("🟠 Session user: ${session?.user?.id}");
+      print("🟠 Email confirmed: ${session?.user?.emailConfirmedAt}");
+      print("🟠🔺🔺🔺───────────────\n");
       final pending = deviceStorage.read('pending_user_data');
 
       try {
         if (event == AuthChangeEvent.signedIn && session != null) {
-          // Si inscription en cours => ne pas rediriger
+          print("🟢 [AuthRepo] signedIn EVENT detected");
+
+          // Si inscription en cours ne pas rediriger
           if (pending != null) return;
+          print("🟢 Fetching userDetails…");
 
           // Connexion classique
           final userDetails = await UserRepository.instance.fetchUserDetails();
-          
+
           // Vérifier si l'utilisateur est banni (sans afficher de snackbar ici,
           // car c'est déjà géré dans verifyOTP qui est le point d'entrée principal)
           if (userDetails != null && userDetails.isBanned) {
+            print("🔴 User is banned → Signing out");
+
             // Déconnecter l'utilisateur banni silencieusement
             await _auth.signOut();
             Get.offAll(() => const LoginScreen());
             return;
           }
-          
+          print("🟢 User OK → redirect to NavigationMenu");
+
           await TLocalStorage.init(session.user.id);
           Get.offAll(() => const NavigationMenu());
-        } else if (event == AuthChangeEvent.signedOut) {
+        }
+        if (event == AuthChangeEvent.initialSession && session?.user == null) {
+          print(
+              "🔵 [AuthRepo] initialSession with null user → Redirect to Login");
+          Get.offAll(() => const LoginScreen());
+          return;
+        }
+        if (event == AuthChangeEvent.signedOut) {
+          print("🔵 [AuthRepo] signedOut EVENT detected");
+
           await deviceStorage.remove('pending_user_data');
           Get.offAll(() => const LoginScreen());
         }
@@ -63,35 +86,50 @@ class AuthenticationRepository extends GetxController {
         throw Exception('Erreur dans auth state change handler: $e');
       }
     });
-
     screenRedirect();
+    print("🔵 [AuthRepo] onReady() END");
   }
 
   /// --- Redirection après démarrage
   Future<void> screenRedirect() async {
-    final Map<String, dynamic> userData = SignupController.instance.userData;
+    print("\n🔵 [AuthRepo] screenRedirect() START");
+
+    final Map<String, dynamic> userData =
+        (deviceStorage.read('pending_user_data')
+                as Map<String, dynamic>?)?['user_data'] ??
+            {};
     final user = authUser;
     final pending = deviceStorage.read('pending_user_data');
-
+    print("🔵 User at startup: ${user?.id}");
+    print("🔵 Pending data: $pending");
     if (user != null) {
       final meta = user.userMetadata ?? {};
       final emailVerified =
           (meta['email_verified'] == true) || (user.emailConfirmedAt != null);
+      print("🔵 Email verified: $emailVerified");
 
       if (emailVerified) {
+        print("🟢 Email OK → fetching userDetails…");
+
         // Vérifier si l'utilisateur est banni (sans afficher de snackbar ici,
         // car c'est déjà géré dans verifyOTP qui est le point d'entrée principal)
-        final userDetails = await UserRepository.instance.fetchUserDetails(user.id);
+        final userDetails =
+            await UserRepository.instance.fetchUserDetails(user.id);
         if (userDetails != null && userDetails.isBanned) {
+          print("🔴 User banned → Signing out");
+
           // Déconnecter l'utilisateur banni silencieusement
           await _auth.signOut();
           Get.offAll(() => const LoginScreen());
           return;
         }
-        
+        print("🟢 Redirect from screenRedirect → NavigationMenu");
+
         await TLocalStorage.init(user.id);
         Get.offAll(() => const NavigationMenu());
       } else {
+        print("🟡 Email NOT verified → redirect to OTP");
+
         // OTP non vérifié
         final pendingMap = pending as Map<String, dynamic>?;
         final pendingEmail = pendingMap?['email'] as String? ?? user.email;
@@ -105,9 +143,9 @@ class AuthenticationRepository extends GetxController {
             ));
       }
     } else {
-      // Le splash screen est déjà affiché comme home, il redirigera automatiquement vers login après 3 secondes
-      // Pas besoin de redirection ici
+      print("🔵 No user → SplashScreen will redirect");
     }
+    print("🔵 [AuthRepo] screenRedirect() END\n");
   }
 
   /// --- Inscription avec OTP
@@ -222,7 +260,8 @@ class AuthenticationRepository extends GetxController {
           // Afficher un seul snackbar pour l'utilisateur banni
           TLoaders.errorSnackBar(
             title: 'Accès refusé',
-            message: "Votre compte a été banni. Veuillez contacter l'administrateur.",
+            message:
+                "Votre compte a été banni. Veuillez contacter l'administrateur.",
           );
           Get.offAll(() => const LoginScreen());
           // Lancer une exception spéciale qui sera ignorée dans le controller
@@ -240,23 +279,9 @@ class AuthenticationRepository extends GetxController {
       if (e is _BannedUserException) {
         return; // Sortir silencieusement car le snackbar est déjà affiché
       }
-      
+
       // Pour les autres erreurs, afficher le snackbar dans le controller
       rethrow;
-    }
-  }
-
-  /// --- Connexion via Google
-  Future<void> signInWithGoogle() async {
-    try {
-      await _auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: 'io.supabase.flutterquickstart://login-callback',
-      );
-    } on AuthException catch (e) {
-      throw Exception('AuthException signInWithGoogle: ${e.message}');
-    } catch (e) {
-      throw Exception('Erreur inconnue signInWithGoogle: $e');
     }
   }
 

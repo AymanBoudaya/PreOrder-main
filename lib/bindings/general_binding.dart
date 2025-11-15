@@ -37,7 +37,6 @@ class GeneralBinding extends Bindings {
     Get.lazyPut<NetworkManager>(() => NetworkManager(), fenix: true);
 
     // Controllers d'authentification
-    Get.lazyPut(() => SignupController());
     Get.lazyPut(() => OTPVerificationController());
 
     // Controllers qui dépendent de UserController

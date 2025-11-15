@@ -1,5 +1,4 @@
 import 'package:caferesto/features/shop/controllers/product/all_products_controller.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,10 +11,9 @@ import '../../models/produit_model.dart';
 
 class AllProducts extends StatelessWidget {
   const AllProducts(
-      {super.key, required this.title, this.query, this.futureMethod});
+      {super.key, required this.title, this.futureMethod});
 
   final String title;
-  final Query? query;
   final Future<List<ProduitModel>>? futureMethod;
 
   @override

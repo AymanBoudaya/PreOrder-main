@@ -10,14 +10,8 @@ import '../models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserController extends GetxController {
-  static UserController get instance {
-    try {
-      return Get.find<UserController>();
-    } catch (e) {
-      // If not found, create it (shouldn't happen with proper binding)
-      return Get.put(UserController(), permanent: true);
-    }
-  }
+  static UserController get instance => Get.find<UserController>();
+
 
   String get userRole => user.value.role;
   String? get currentEtablissementId => user.value.establishmentId;
@@ -37,7 +31,7 @@ class UserController extends GetxController {
       return Get.put(UserRepository(), permanent: true);
     }
   }
-  
+
   RealtimeChannel? _userBanChannel;
 
   final hidePassword = false.obs;
@@ -47,6 +41,9 @@ class UserController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print("🔴 [UserController] onInit() CALLED");
+    print(
+        "🔴 [UserController] authUser: ${AuthenticationRepository.instance.authUser}");
 
     // Charger l'utilisateur immédiatement si une session existe déjà
     final currentSession = Supabase.instance.client.auth.currentSession;
@@ -88,6 +85,8 @@ class UserController extends GetxController {
 
   /// Charger les infos utilisateur
   Future<void> fetchUserRecord() async {
+    print("🔴 [UserController] fetchUserRecord() CALLED");
+
     try {
       profileLoading.value = true;
       final userData = await userRepository.fetchUserDetails();
