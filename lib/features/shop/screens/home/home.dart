@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProduitController());
-    final bannerController = Get.put(BannerController());
+    final bannerController = Get.find<BannerController>();
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -45,7 +45,8 @@ class HomeScreen extends StatelessWidget {
                       padding: EdgeInsets.all(0),
                       showActionButton: true,
                       whiteTextColor: true,
-                      onPressed: () => Get.to(() => const AllCategoriesScreen())),
+                      onPressed: () =>
+                          Get.to(() => const AllCategoriesScreen())),
                   const SizedBox(height: AppSizes.spaceBtwItems),
 
                   /// Categories List
@@ -77,7 +78,9 @@ class HomeScreen extends StatelessWidget {
                         );
                       }
 
-                      if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+                      if (snapshot.hasError ||
+                          !snapshot.hasData ||
+                          snapshot.data!.isEmpty) {
                         // Si pas de bannières, ne rien afficher ou afficher un message
                         return const SizedBox.shrink();
                       }

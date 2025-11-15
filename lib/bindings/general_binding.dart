@@ -1,4 +1,3 @@
-import 'package:caferesto/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:caferesto/features/personalization/controllers/address_controller.dart';
 import 'package:caferesto/features/shop/controllers/product/order_controller.dart';
 import 'package:get/get.dart';
