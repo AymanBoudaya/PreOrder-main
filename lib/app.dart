@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'bindings/general_binding.dart';
+import 'navigation_menu.dart';
 import 'utils/constants/colors.dart';
 import 'utils/theme/theme.dart';
 import 'features/authentication/screens/splash/splash_screen.dart';
@@ -17,6 +18,12 @@ class App extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       initialBinding: GeneralBinding(),
       debugShowCheckedModeBanner: false,
+      initialRoute: '/NavigationMenu',
+      getPages: [
+        GetPage(name: '/', page: () => const SplashScreen()),
+        GetPage(name: '/NavigationMenu', page: () => const NavigationMenu()),
+        // ajoute toutes autres routes…
+      ],
       // Handle unknown routes gracefully to prevent restoration errors
       onUnknownRoute: (settings) {
         // Return to home screen if route restoration fails
