@@ -21,7 +21,7 @@ class TVerticalProductShimmer extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppSizes.defaultSpace),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -57,12 +57,14 @@ class TVerticalProductShimmer extends StatelessWidget {
 
                 /// Price and cart button
                 Padding(
-                  padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+                  padding:
+                      const EdgeInsets.only(left: 12, right: 12, bottom: 12),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       /// Price
                       TShimmerEffect(width: 60, height: 16),
+
                       /// Cart button
                       TShimmerEffect(width: 40, height: 40, radius: 8),
                     ],

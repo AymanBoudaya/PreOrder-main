@@ -59,6 +59,8 @@ dependencies:
   flutter_localization: ^0.3.3
   searchable_listview: ^2.19.3
   share_plus: ^7.0.1
+  flutter_localizations:
+    sdk: flutter
 
 
 dev_dependencies:
@@ -66,7 +68,9 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.13.1
-
+  mocktail:
+  mockito: ^5.4.0
+  build_runner: ^2.4.0
 flutter_launcher_icons:
   android: true
   ios: true

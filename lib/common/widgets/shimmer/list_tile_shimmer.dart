@@ -24,7 +24,7 @@ class TListTileShimmer extends StatelessWidget {
                   width: 100,
                   height: 15,
                 ),
-                const SizedBox(height: AppSizes.spaceBtwItems / 2),
+                SizedBox(height: AppSizes.spaceBtwItems / 2),
                 TShimmerEffect(
                   width: 80,
                   height: 12,

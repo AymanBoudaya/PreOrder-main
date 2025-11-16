@@ -186,7 +186,7 @@ class _TPromoSliderState extends State<TPromoSlider> {
             borderRadius: _getBannerBorderRadius(screenWidth),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withValues(alpha: 0.15),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
@@ -240,7 +240,7 @@ class _TPromoSliderState extends State<TPromoSlider> {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withOpacity(0.1),
+                        Colors.black.withValues(alpha: 0.1),
                       ],
                     ),
                   ),
@@ -334,7 +334,8 @@ class _TPromoSliderState extends State<TPromoSlider> {
   void _navigateToEstablishment(String establishmentId) async {
     try {
       final etablissementController = Get.find<EtablissementController>();
-      final establishments = await etablissementController.getTousEtablissements();
+      final establishments =
+          await etablissementController.getTousEtablissements();
       final establishmentIndex = establishments.indexWhere(
         (e) => e.id == establishmentId,
       );
@@ -363,7 +364,7 @@ class _TPromoSliderState extends State<TPromoSlider> {
     required VoidCallback onTap,
   }) {
     return Material(
-      color: Colors.black.withOpacity(0.4),
+      color: Colors.black.withValues(alpha: 0.4),
       shape: const CircleBorder(),
       child: InkWell(
         onTap: onTap,
@@ -373,7 +374,7 @@ class _TPromoSliderState extends State<TPromoSlider> {
           height: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.3)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
           ),
           child: Icon(
             icon,
@@ -402,7 +403,7 @@ class _TPromoSliderState extends State<TPromoSlider> {
               boxShadow: _currentPage == i
                   ? [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.5),
+                        color: AppColors.primary.withValues(alpha: 0.5),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),

@@ -155,7 +155,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
         color: Get.isDarkMode ? AppColors.dark : AppColors.light,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -171,7 +171,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: DropdownButtonFormField<Etablissement>(
-                  value: selectedEtablissement.value,
+                  initialValue: selectedEtablissement.value,
                   decoration: InputDecoration(
                     labelText: 'Filtrer par établissement',
                     labelStyle: TextStyle(
@@ -190,7 +190,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: AppColors.primary.withOpacity(0.3),
+                        color: AppColors.primary.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),

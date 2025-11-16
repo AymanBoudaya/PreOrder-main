@@ -37,7 +37,7 @@ class THorizontalProductShimmer extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppSizes.defaultSpace),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 2),
                       ),
@@ -66,7 +66,8 @@ class THorizontalProductShimmer extends StatelessWidget {
                                 children: [
                                   /// Brand
                                   TShimmerEffect(width: 100, height: 12),
-                                  const SizedBox(height: AppSizes.spaceBtwItems / 2),
+                                  const SizedBox(
+                                      height: AppSizes.spaceBtwItems / 2),
 
                                   /// Title
                                   TShimmerEffect(width: 120, height: 14),
@@ -77,12 +78,15 @@ class THorizontalProductShimmer extends StatelessWidget {
 
                               /// Bottom Section - Price and Add to Cart
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   /// Price
                                   TShimmerEffect(width: 60, height: 16),
+
                                   /// Cart button
-                                  TShimmerEffect(width: 40, height: 40, radius: 8),
+                                  TShimmerEffect(
+                                      width: 40, height: 40, radius: 8),
                                 ],
                               ),
                             ],

@@ -471,7 +471,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
       ),
       const SizedBox(height: 16),
       DropdownButtonFormField<String>(
-        value: _selectedCategorieId,
+        initialValue: _selectedCategorieId,
         decoration: const InputDecoration(
             labelText: 'Catégorie *', border: OutlineInputBorder()),
         items: _categories

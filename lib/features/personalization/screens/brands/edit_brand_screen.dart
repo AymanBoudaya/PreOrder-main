@@ -405,7 +405,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
             constraints: BoxConstraints(maxWidth: constraints.maxWidth),
             child: DropdownButtonFormField<StatutEtablissement>(
               isExpanded: true,
-              value: _selectedStatut,
+              initialValue: _selectedStatut,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Statut',

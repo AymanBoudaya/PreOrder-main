@@ -45,7 +45,7 @@ class DashboardSideMenu extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 0),
           ),
@@ -57,7 +57,7 @@ class DashboardSideMenu extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSizes.md),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               border: Border(
                 bottom: BorderSide(
                   color: dark ? Colors.grey.shade800 : Colors.grey.shade300,
@@ -249,12 +249,12 @@ class DashboardSideMenu extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withOpacity(0.1)
+              ? AppColors.primary.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
           border: isSelected
               ? Border.all(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                   width: 1,
                 )
               : null,
@@ -289,4 +289,3 @@ class DashboardSideMenu extends StatelessWidget {
     );
   }
 }
-

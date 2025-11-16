@@ -33,7 +33,7 @@ class AdminDashboardScreen extends StatelessWidget {
           if (constraints.maxWidth < 900) {
             return _buildDashboardContent(controller, dark);
           }
-          
+
           // Sur desktop, afficher le menu latéral
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,116 +56,116 @@ class AdminDashboardScreen extends StatelessWidget {
 
   Widget _buildDashboardContent(DashboardController controller, bool dark) {
     return Obx(() {
-        if (controller.isLoading.value && controller.stats.value == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
+      if (controller.isLoading.value && controller.stats.value == null) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-        final stats = controller.stats.value;
-        if (stats == null) {
-          return const Center(child: Text('Aucune statistique disponible'));
-        }
+      final stats = controller.stats.value;
+      if (stats == null) {
+        return const Center(child: Text('Aucune statistique disponible'));
+      }
 
-        return RefreshIndicator(
-          onRefresh: controller.loadDashboardStats,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSizes.defaultSpace),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Filtre de période
-                _buildPeriodFilter(controller),
-                const SizedBox(height: AppSizes.spaceBtwSections),
+      return RefreshIndicator(
+        onRefresh: controller.loadDashboardStats,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSizes.defaultSpace),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Filtre de période
+              _buildPeriodFilter(controller),
+              const SizedBox(height: AppSizes.spaceBtwSections),
 
-                // Cartes de statistiques principales
-                _buildMainStatsCards(stats, dark),
-                const SizedBox(height: AppSizes.spaceBtwSections),
+              // Cartes de statistiques principales
+              _buildMainStatsCards(stats, dark),
+              const SizedBox(height: AppSizes.spaceBtwSections),
 
-                // Graphiques et statistiques détaillées
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    if (constraints.maxWidth > 800) {
-                      // Desktop layout
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              children: [
-                                _buildRevenueChart(stats, dark),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
-                                _buildOrdersByStatusChart(stats, dark),
-                              ],
-                            ),
+              // Graphiques et statistiques détaillées
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth > 800) {
+                    // Desktop layout
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              _buildRevenueChart(stats, dark),
+                              const SizedBox(height: AppSizes.spaceBtwSections),
+                              _buildOrdersByStatusChart(stats, dark),
+                            ],
                           ),
-                          const SizedBox(width: AppSizes.spaceBtwItems),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                _buildTopProducts(stats, dark),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
-                                _buildSystemStats(stats, dark),
-                              ],
-                            ),
+                        ),
+                        const SizedBox(width: AppSizes.spaceBtwItems),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              _buildTopProducts(stats, dark),
+                              const SizedBox(height: AppSizes.spaceBtwSections),
+                              _buildSystemStats(stats, dark),
+                            ],
                           ),
-                        ],
-                      );
-                    } else {
-                      // Mobile layout
-                      return Column(
-                        children: [
-                          _buildRevenueChart(stats, dark),
-                          const SizedBox(height: AppSizes.spaceBtwSections),
-                          _buildOrdersByStatusChart(stats, dark),
-                          const SizedBox(height: AppSizes.spaceBtwSections),
-                          _buildTopProducts(stats, dark),
-                          const SizedBox(height: AppSizes.spaceBtwSections),
-                          _buildSystemStats(stats, dark),
-                        ],
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: AppSizes.spaceBtwSections),
+                        ),
+                      ],
+                    );
+                  } else {
+                    // Mobile layout
+                    return Column(
+                      children: [
+                        _buildRevenueChart(stats, dark),
+                        const SizedBox(height: AppSizes.spaceBtwSections),
+                        _buildOrdersByStatusChart(stats, dark),
+                        const SizedBox(height: AppSizes.spaceBtwSections),
+                        _buildTopProducts(stats, dark),
+                        const SizedBox(height: AppSizes.spaceBtwSections),
+                        _buildSystemStats(stats, dark),
+                      ],
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: AppSizes.spaceBtwSections),
 
-                // Statistiques par jour et heures de pickup
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    if (constraints.maxWidth > 800) {
-                      // Desktop layout
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _buildOrdersByDay(stats, dark),
-                          ),
-                          const SizedBox(width: AppSizes.spaceBtwItems),
-                          Expanded(
-                            child: _buildPickupHours(stats, dark),
-                          ),
-                        ],
-                      );
-                    } else {
-                      // Mobile layout
-                      return Column(
-                        children: [
-                          _buildOrdersByDay(stats, dark),
-                          const SizedBox(height: AppSizes.spaceBtwSections),
-                          _buildPickupHours(stats, dark),
-                        ],
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: AppSizes.spaceBtwSections),
+              // Statistiques par jour et heures de pickup
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth > 800) {
+                    // Desktop layout
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: _buildOrdersByDay(stats, dark),
+                        ),
+                        const SizedBox(width: AppSizes.spaceBtwItems),
+                        Expanded(
+                          child: _buildPickupHours(stats, dark),
+                        ),
+                      ],
+                    );
+                  } else {
+                    // Mobile layout
+                    return Column(
+                      children: [
+                        _buildOrdersByDay(stats, dark),
+                        const SizedBox(height: AppSizes.spaceBtwSections),
+                        _buildPickupHours(stats, dark),
+                      ],
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: AppSizes.spaceBtwSections),
 
-                // Utilisateurs les plus fidèles
-                _buildTopUsers(stats, dark),
-              ],
-            ),
+              // Utilisateurs les plus fidèles
+              _buildTopUsers(stats, dark),
+            ],
           ),
-        );
-      });
+        ),
+      );
+    });
   }
 
   Widget _buildPeriodFilter(DashboardController controller) {
@@ -176,7 +176,7 @@ class AdminDashboardScreen extends StatelessWidget {
         color: dark ? AppColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.2),
+          color: AppColors.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -201,13 +201,16 @@ class AdminDashboardScreen extends StatelessWidget {
               const Text('Période rapide: '),
               const SizedBox(width: AppSizes.sm),
               DropdownButton<String>(
-                value: controller.useCustomDateRange.value ? 'custom' : controller.selectedPeriod.value,
+                value: controller.useCustomDateRange.value
+                    ? 'custom'
+                    : controller.selectedPeriod.value,
                 underline: const SizedBox(),
                 items: [
                   const DropdownMenuItem(value: '7', child: Text('7 jours')),
                   const DropdownMenuItem(value: '30', child: Text('30 jours')),
                   const DropdownMenuItem(value: '90', child: Text('90 jours')),
-                  const DropdownMenuItem(value: 'custom', child: Text('Personnalisé')),
+                  const DropdownMenuItem(
+                      value: 'custom', child: Text('Personnalisé')),
                 ],
                 onChanged: (value) {
                   if (value != null) {
@@ -234,7 +237,8 @@ class AdminDashboardScreen extends StatelessWidget {
                           onTap: () async {
                             final pickedDate = await showDatePicker(
                               context: Get.context!,
-                              initialDate: controller.startDate.value ?? DateTime.now(),
+                              initialDate:
+                                  controller.startDate.value ?? DateTime.now(),
                               firstDate: DateTime(2020),
                               lastDate: DateTime.now(),
                             );
@@ -281,8 +285,10 @@ class AdminDashboardScreen extends StatelessWidget {
                           onTap: () async {
                             final pickedDate = await showDatePicker(
                               context: Get.context!,
-                              initialDate: controller.endDate.value ?? DateTime.now(),
-                              firstDate: controller.startDate.value ?? DateTime(2020),
+                              initialDate:
+                                  controller.endDate.value ?? DateTime.now(),
+                              firstDate:
+                                  controller.startDate.value ?? DateTime(2020),
                               lastDate: DateTime.now(),
                             );
                             if (pickedDate != null) {
@@ -321,7 +327,8 @@ class AdminDashboardScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: AppSizes.sm),
-                      if (controller.startDate.value != null && controller.endDate.value != null)
+                      if (controller.startDate.value != null &&
+                          controller.endDate.value != null)
                         IconButton(
                           icon: const Icon(Iconsax.close_circle),
                           onPressed: () => controller.clearCustomDateRange(),
@@ -350,7 +357,7 @@ class AdminDashboardScreen extends StatelessWidget {
         double titleFontSize;
         double horizontalPadding;
         double verticalPadding;
-        
+
         if (constraints.maxWidth > 1200) {
           // Desktop large
           crossAxisCount = 4;
@@ -397,13 +404,15 @@ class AdminDashboardScreen extends StatelessWidget {
           horizontalPadding = AppSizes.xs;
           verticalPadding = AppSizes.xs / 2;
         }
-        
+
         return GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: crossAxisCount,
-          crossAxisSpacing: constraints.maxWidth < 400 ? AppSizes.xs : AppSizes.sm,
-          mainAxisSpacing: constraints.maxWidth < 400 ? AppSizes.xs : AppSizes.sm,
+          crossAxisSpacing:
+              constraints.maxWidth < 400 ? AppSizes.xs : AppSizes.sm,
+          mainAxisSpacing:
+              constraints.maxWidth < 400 ? AppSizes.xs : AppSizes.sm,
           childAspectRatio: childAspectRatio,
           children: [
             _buildStatCard(
@@ -521,14 +530,15 @@ class AdminDashboardScreen extends StatelessWidget {
     double verticalPadding = 4.0,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
+      padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding, vertical: verticalPadding),
       decoration: BoxDecoration(
         color: dark ? AppColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 1),
           ),
@@ -543,13 +553,16 @@ class AdminDashboardScreen extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(iconSize * 0.35),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Icon(icon, color: color, size: iconSize),
             ),
           ),
-          SizedBox(width: horizontalPadding > AppSizes.xs ? AppSizes.xs : AppSizes.xs / 2),
+          SizedBox(
+              width: horizontalPadding > AppSizes.xs
+                  ? AppSizes.xs
+                  : AppSizes.xs / 2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -561,11 +574,12 @@ class AdminDashboardScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     value,
-                    style: Theme.of(Get.context!).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                      fontSize: valueFontSize,
-                    ),
+                    style:
+                        Theme.of(Get.context!).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: color,
+                              fontSize: valueFontSize,
+                            ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -574,9 +588,9 @@ class AdminDashboardScreen extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(Get.context!).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey,
-                    fontSize: titleFontSize,
-                  ),
+                        color: Colors.grey,
+                        fontSize: titleFontSize,
+                      ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -596,7 +610,7 @@ class AdminDashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -613,8 +627,10 @@ class AdminDashboardScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildRevenueItem('Aujourd\'hui', stats.todayRevenue, Colors.orange, dark),
-              _buildRevenueItem('Ce Mois', stats.monthlyRevenue, Colors.green, dark),
+              _buildRevenueItem(
+                  'Aujourd\'hui', stats.todayRevenue, Colors.orange, dark),
+              _buildRevenueItem(
+                  'Ce Mois', stats.monthlyRevenue, Colors.green, dark),
               _buildRevenueItem('Total', stats.totalRevenue, Colors.blue, dark),
             ],
           ),
@@ -630,7 +646,7 @@ class AdminDashboardScreen extends StatelessWidget {
           width: 60,
           height: 60,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -662,7 +678,7 @@ class AdminDashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -679,10 +695,9 @@ class AdminDashboardScreen extends StatelessWidget {
           ...stats.ordersByStatus.entries.map((entry) {
             final status = entry.key;
             final count = entry.value;
-            final percentage = stats.totalOrders > 0 
-                ? (count / stats.totalOrders * 100) 
-                : 0.0;
-            
+            final percentage =
+                stats.totalOrders > 0 ? (count / stats.totalOrders * 100) : 0.0;
+
             Color statusColor;
             switch (status) {
               case 'pending':
@@ -719,7 +734,7 @@ class AdminDashboardScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   LinearProgressIndicator(
                     value: percentage / 100,
-                    backgroundColor: statusColor.withOpacity(0.1),
+                    backgroundColor: statusColor.withValues(alpha: 0.1),
                     valueColor: AlwaysStoppedAnimation<Color>(statusColor),
                   ),
                 ],
@@ -739,7 +754,7 @@ class AdminDashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -761,7 +776,7 @@ class AdminDashboardScreen extends StatelessWidget {
               final product = entry.value;
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: AppColors.primary.withOpacity(0.1),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                   child: Text(
                     '${index + 1}',
                     style: const TextStyle(
@@ -803,7 +818,7 @@ class AdminDashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -817,11 +832,18 @@ class AdminDashboardScreen extends StatelessWidget {
             style: Theme.of(Get.context!).textTheme.titleLarge,
           ),
           const SizedBox(height: AppSizes.spaceBtwItems),
-          _buildSystemStatItem('Total Produits', stats.totalProducts.toString(), Iconsax.box),
-          _buildSystemStatItem('Produits Stock Faible', stats.lowStockProducts.toString(), Iconsax.warning_2),
-          _buildSystemStatItem('Valeur Moyenne Commande', '${stats.averageOrderValue.toStringAsFixed(2)} DT', Iconsax.dollar_circle),
-          _buildSystemStatItem('Commandes Aujourd\'hui', stats.ordersToday.toString(), Iconsax.calendar),
-          _buildSystemStatItem('Commandes Ce Mois', stats.ordersThisMonth.toString(), Iconsax.chart_2),
+          _buildSystemStatItem(
+              'Total Produits', stats.totalProducts.toString(), Iconsax.box),
+          _buildSystemStatItem('Produits Stock Faible',
+              stats.lowStockProducts.toString(), Iconsax.warning_2),
+          _buildSystemStatItem(
+              'Valeur Moyenne Commande',
+              '${stats.averageOrderValue.toStringAsFixed(2)} DT',
+              Iconsax.dollar_circle),
+          _buildSystemStatItem('Commandes Aujourd\'hui',
+              stats.ordersToday.toString(), Iconsax.calendar),
+          _buildSystemStatItem('Commandes Ce Mois',
+              stats.ordersThisMonth.toString(), Iconsax.chart_2),
         ],
       ),
     );
@@ -843,9 +865,9 @@ class AdminDashboardScreen extends StatelessWidget {
           Text(
             value,
             style: Theme.of(Get.context!).textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
           ),
         ],
       ),
@@ -860,7 +882,7 @@ class AdminDashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -903,7 +925,7 @@ class AdminDashboardScreen extends StatelessWidget {
                 final orderCount = user['orderCount'] as int;
                 final totalSpent = user['totalSpent'] as double;
                 final profileImageUrl = user['profileImageUrl'] as String?;
-                
+
                 return ListTile(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: AppSizes.sm,
@@ -911,13 +933,16 @@ class AdminDashboardScreen extends StatelessWidget {
                   ),
                   leading: CircleAvatar(
                     radius: 20,
-                    backgroundImage: profileImageUrl != null && profileImageUrl.isNotEmpty
-                        ? NetworkImage(profileImageUrl)
-                        : null,
-                    backgroundColor: AppColors.primary.withOpacity(0.1),
+                    backgroundImage:
+                        profileImageUrl != null && profileImageUrl.isNotEmpty
+                            ? NetworkImage(profileImageUrl)
+                            : null,
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                     child: profileImageUrl == null || profileImageUrl.isEmpty
                         ? Text(
-                            fullName.isNotEmpty ? fullName[0].toUpperCase() : 'U',
+                            fullName.isNotEmpty
+                                ? fullName[0].toUpperCase()
+                                : 'U',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           )
                         : null,
@@ -929,20 +954,23 @@ class AdminDashboardScreen extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(email, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text(email,
+                          style: TextStyle(fontSize: 12, color: Colors.grey)),
                       const SizedBox(height: 4),
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.1),
+                              color: AppColors.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Iconsax.shopping_bag, size: 14, color: AppColors.primary),
+                                const Icon(Iconsax.shopping_bag,
+                                    size: 14, color: AppColors.primary),
                                 const SizedBox(width: 4),
                                 Text(
                                   '$orderCount commande${orderCount > 1 ? 's' : ''}',
@@ -957,15 +985,17 @@ class AdminDashboardScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.1),
+                              color: Colors.green.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Iconsax.dollar_circle, size: 14, color: Colors.green),
+                                const Icon(Iconsax.dollar_circle,
+                                    size: 14, color: Colors.green),
                                 const SizedBox(width: 4),
                                 Text(
                                   '${totalSpent.toStringAsFixed(2)} DT',
@@ -986,7 +1016,7 @@ class AdminDashboardScreen extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -1035,7 +1065,7 @@ class AdminDashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1063,7 +1093,7 @@ class AdminDashboardScreen extends StatelessWidget {
               final dayData = entry.value;
               final day = dayData['day'] as String? ?? 'Inconnu';
               final count = dayData['count'] as int? ?? 0;
-              final maxCount = stats.ordersByDay.isNotEmpty 
+              final maxCount = stats.ordersByDay.isNotEmpty
                   ? (stats.ordersByDay[0]['count'] as int? ?? 1)
                   : 1;
               final percentage = maxCount > 0 ? (count / maxCount * 100) : 0.0;
@@ -1082,7 +1112,7 @@ class AdminDashboardScreen extends StatelessWidget {
                               width: 24,
                               height: 24,
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withOpacity(0.1),
+                                color: AppColors.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Center(
@@ -1119,8 +1149,9 @@ class AdminDashboardScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     LinearProgressIndicator(
                       value: percentage / 100,
-                      backgroundColor: AppColors.primary.withOpacity(0.1),
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(AppColors.primary),
                       minHeight: 6,
                     ),
                   ],
@@ -1140,7 +1171,7 @@ class AdminDashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1168,7 +1199,7 @@ class AdminDashboardScreen extends StatelessWidget {
               final hourData = entry.value;
               final hour = hourData['hour'] as String? ?? 'Inconnu';
               final count = hourData['count'] as int? ?? 0;
-              final maxCount = stats.pickupHours.isNotEmpty 
+              final maxCount = stats.pickupHours.isNotEmpty
                   ? (stats.pickupHours[0]['count'] as int? ?? 1)
                   : 1;
               final percentage = maxCount > 0 ? (count / maxCount * 100) : 0.0;
@@ -1187,7 +1218,7 @@ class AdminDashboardScreen extends StatelessWidget {
                               width: 24,
                               height: 24,
                               decoration: BoxDecoration(
-                                color: Colors.orange.withOpacity(0.1),
+                                color: Colors.orange.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Center(
@@ -1224,7 +1255,7 @@ class AdminDashboardScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     LinearProgressIndicator(
                       value: percentage / 100,
-                      backgroundColor: Colors.orange.withOpacity(0.1),
+                      backgroundColor: Colors.orange.withValues(alpha: 0.1),
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
                       minHeight: 6,
                     ),
@@ -1237,4 +1268,3 @@ class AdminDashboardScreen extends StatelessWidget {
     );
   }
 }
-

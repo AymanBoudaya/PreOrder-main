@@ -34,7 +34,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
   void initState() {
     super.initState();
     _searchFocusNode.requestFocus();
-    
+
     // Initialiser avec les produits
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (controller.allProducts.isEmpty) {
@@ -113,7 +113,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
 
                 /// --- Active Filters ---
                 Obx(() => _buildActiveFilters(dark)),
-                
+
                 /// --- Filters Section ---
                 AnimatedSize(
                   duration: const Duration(milliseconds: 300),
@@ -184,7 +184,8 @@ class _SearchOverlayState extends State<SearchOverlay> {
                 ),
               if (controller.selectedEtablissement.value != null)
                 _buildFilterChip(
-                  label: 'Établissement: ${controller.selectedEtablissementName}',
+                  label:
+                      'Établissement: ${controller.selectedEtablissementName}',
                   onRemove: controller.clearEtablissementFilter,
                   dark: dark,
                 ),
@@ -235,9 +236,9 @@ class _SearchOverlayState extends State<SearchOverlay> {
           vertical: AppSizes.xs,
         ),
         decoration: BoxDecoration(
-          color: AppColors.error.withOpacity(0.1),
+          color: AppColors.error.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
-          border: Border.all(color: AppColors.error.withOpacity(0.3)),
+          border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -281,11 +282,12 @@ class _SearchOverlayState extends State<SearchOverlay> {
 
   Widget _buildCategoryFilter(bool dark) {
     return Obx(() => DropdownButtonFormField<CategoryModel>(
-          value: controller.selectedCategory.value,
+          initialValue: controller.selectedCategory.value,
           decoration: InputDecoration(
             labelText: 'Catégorie',
             filled: true,
-            fillColor: dark ? AppColors.darkContainer : AppColors.lightContainer,
+            fillColor:
+                dark ? AppColors.darkContainer : AppColors.lightContainer,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(
@@ -337,11 +339,12 @@ class _SearchOverlayState extends State<SearchOverlay> {
 
   Widget _buildEtablissementFilter(bool dark) {
     return Obx(() => DropdownButtonFormField<Etablissement>(
-          value: controller.selectedEtablissement.value,
+          initialValue: controller.selectedEtablissement.value,
           decoration: InputDecoration(
             labelText: 'Établissement',
             filled: true,
-            fillColor: dark ? AppColors.darkContainer : AppColors.lightContainer,
+            fillColor:
+                dark ? AppColors.darkContainer : AppColors.lightContainer,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(
@@ -393,13 +396,14 @@ class _SearchOverlayState extends State<SearchOverlay> {
 
   Widget _buildSortFilter(bool dark) {
     return Obx(() => DropdownButtonFormField<String>(
-          value: controller.selectedSort.value.isEmpty
+          initialValue: controller.selectedSort.value.isEmpty
               ? null
               : controller.selectedSort.value,
           decoration: InputDecoration(
             labelText: 'Trier par',
             filled: true,
-            fillColor: dark ? AppColors.darkContainer : AppColors.lightContainer,
+            fillColor:
+                dark ? AppColors.darkContainer : AppColors.lightContainer,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(

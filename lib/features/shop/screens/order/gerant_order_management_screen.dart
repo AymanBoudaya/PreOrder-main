@@ -304,9 +304,9 @@ class _GerantOrderManagementScreenState
         margin: const EdgeInsets.symmetric(horizontal: AppSizes.defaultSpace),
         padding: const EdgeInsets.all(AppSizes.md),
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.05),
+          color: AppColors.primary.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-          border: Border.all(color: AppColors.primary.withOpacity(0.1)),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -329,7 +329,7 @@ class _GerantOrderManagementScreenState
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, size: 20, color: AppColors.primary),
@@ -413,7 +413,7 @@ class _GerantOrderManagementScreenState
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-        child: Card(
+      child: Card(
         elevation: 1,
         margin: const EdgeInsets.only(bottom: 6),
         shape: RoundedRectangleBorder(
@@ -433,21 +433,24 @@ class _GerantOrderManagementScreenState
                     child: Row(
                       children: [
                         Text(
-                          order.codeRetrait != null && order.codeRetrait!.isNotEmpty
+                          order.codeRetrait != null &&
+                                  order.codeRetrait!.isNotEmpty
                               ? '#${order.codeRetrait}'
                               : '#${order.id.substring(0, 8)}',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
                         ),
                         const SizedBox(width: 6),
                         Text(
                           order.formattedOrderDate,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey.shade600,
-                                fontSize: 10,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 10,
+                                  ),
                         ),
                       ],
                     ),
@@ -486,9 +489,9 @@ class _GerantOrderManagementScreenState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: statusConfig.color.withOpacity(0.1),
+        color: statusConfig.color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: statusConfig.color.withOpacity(0.3)),
+        border: Border.all(color: statusConfig.color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -521,8 +524,8 @@ class _GerantOrderManagementScreenState
             snapshot.data!.isNotEmpty) {
           // Raccourcir le nom si trop long
           final fullName = snapshot.data!;
-          clientName = fullName.length > 15 
-              ? '${fullName.substring(0, 15)}...' 
+          clientName = fullName.length > 15
+              ? '${fullName.substring(0, 15)}...'
               : fullName;
         } else {
           clientName = order.userId.isNotEmpty
@@ -633,9 +636,9 @@ class _GerantOrderManagementScreenState
               // Extraire la taille de la variation si elle existe
               String? taille;
               if (item.selectedVariation != null) {
-                taille = item.selectedVariation!['taille'] ?? 
-                         item.selectedVariation!['size'] ?? 
-                         (item.variationId.isNotEmpty ? item.variationId : null);
+                taille = item.selectedVariation!['taille'] ??
+                    item.selectedVariation!['size'] ??
+                    (item.variationId.isNotEmpty ? item.variationId : null);
               } else if (item.variationId.isNotEmpty) {
                 taille = item.variationId;
               }
@@ -643,16 +646,18 @@ class _GerantOrderManagementScreenState
               // Obtenir le nom de la catégorie
               String categoryName = '';
               // Utiliser categoryId depuis item si disponible, sinon depuis product
-              String? categoryIdToUse = item.categoryId.isNotEmpty 
-                  ? item.categoryId 
-                  : (item.product != null && item.product!.categoryId.isNotEmpty 
-                      ? item.product!.categoryId 
+              String? categoryIdToUse = item.categoryId.isNotEmpty
+                  ? item.categoryId
+                  : (item.product != null && item.product!.categoryId.isNotEmpty
+                      ? item.product!.categoryId
                       : null);
-              
+
               // Si categoryId n'est pas disponible, essayer de le récupérer depuis ProduitController
-              if ((categoryIdToUse == null || categoryIdToUse.isEmpty) && item.productId.isNotEmpty) {
+              if ((categoryIdToUse == null || categoryIdToUse.isEmpty) &&
+                  item.productId.isNotEmpty) {
                 try {
-                  final product = produitController.getProductById(item.productId);
+                  final product =
+                      produitController.getProductById(item.productId);
                   if (product != null && product.categoryId.isNotEmpty) {
                     categoryIdToUse = product.categoryId;
                   }
@@ -660,7 +665,7 @@ class _GerantOrderManagementScreenState
                   // Ignorer l'erreur, categoryIdToUse reste null
                 }
               }
-              
+
               if (categoryIdToUse != null && categoryIdToUse.isNotEmpty) {
                 try {
                   final category = categoryController.allCategories
@@ -738,7 +743,8 @@ class _GerantOrderManagementScreenState
   Widget _buildTimeSlotCompact(OrderModel order, BuildContext context) {
     // Formater l'heure d'arrivée si elle existe (HH:mm:ss -> HH:mm)
     String? formattedArrivalTime;
-    if (order.clientArrivalTime != null && order.clientArrivalTime!.isNotEmpty) {
+    if (order.clientArrivalTime != null &&
+        order.clientArrivalTime!.isNotEmpty) {
       formattedArrivalTime = order.clientArrivalTime!;
       if (formattedArrivalTime.contains(':')) {
         final timeParts = formattedArrivalTime.split(':');
@@ -753,9 +759,9 @@ class _GerantOrderManagementScreenState
       margin: const EdgeInsets.only(top: 6),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
-        border: Border.all(color: AppColors.primary.withOpacity(0.1)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
@@ -777,9 +783,9 @@ class _GerantOrderManagementScreenState
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
+                color: Colors.green.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: Colors.green.withOpacity(0.3)),
+                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -802,7 +808,6 @@ class _GerantOrderManagementScreenState
       ),
     );
   }
-
 
   // Action Buttons - Compact
   Widget _buildActionButtons(OrderModel order, BuildContext context) {
@@ -831,7 +836,8 @@ class _GerantOrderManagementScreenState
                           children: [
                             const Icon(Iconsax.tick_circle, size: 16),
                             const SizedBox(width: 4),
-                            const Text("Accepter", style: TextStyle(fontSize: 12)),
+                            const Text("Accepter",
+                                style: TextStyle(fontSize: 12)),
                           ],
                         ),
                 ),
@@ -854,7 +860,8 @@ class _GerantOrderManagementScreenState
                           width: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : Row(
@@ -862,7 +869,8 @@ class _GerantOrderManagementScreenState
                           children: [
                             const Icon(Iconsax.close_circle, size: 16),
                             const SizedBox(width: 4),
-                            const Text("Refuser", style: TextStyle(fontSize: 12)),
+                            const Text("Refuser",
+                                style: TextStyle(fontSize: 12)),
                           ],
                         ),
                 ),
@@ -890,7 +898,8 @@ class _GerantOrderManagementScreenState
                       children: [
                         const Icon(Iconsax.box_tick, size: 16),
                         const SizedBox(width: 4),
-                        const Text("Marquer Prête", style: TextStyle(fontSize: 12)),
+                        const Text("Marquer Prête",
+                            style: TextStyle(fontSize: 12)),
                       ],
                     ),
             ),
@@ -916,7 +925,8 @@ class _GerantOrderManagementScreenState
                       children: [
                         const Icon(Iconsax.truck_tick, size: 16),
                         const SizedBox(width: 4),
-                        const Text("Marquer Livrée", style: TextStyle(fontSize: 12)),
+                        const Text("Marquer Livrée",
+                            style: TextStyle(fontSize: 12)),
                       ],
                     ),
             ),

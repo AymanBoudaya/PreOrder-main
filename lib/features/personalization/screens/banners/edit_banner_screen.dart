@@ -93,7 +93,7 @@ class EditBannerScreen extends StatelessWidget {
               Obx(() {
                 final currentValue = controller.selectedLinkType.value;
                 return DropdownButtonFormField<String?>(
-                  value: currentValue.isEmpty ? null : currentValue,
+                  initialValue: currentValue.isEmpty ? null : currentValue,
                   decoration: const InputDecoration(
                     labelText: 'Type de lien',
                     prefixIcon: Icon(Iconsax.link),
@@ -323,7 +323,7 @@ class EditBannerScreen extends StatelessWidget {
             products.any((p) => p.id == selectedValue);
         
         return DropdownButtonFormField<String>(
-          value: isValidValue ? selectedValue : null,
+          initialValue: isValidValue ? selectedValue : null,
           decoration: const InputDecoration(
             labelText: 'Sélectionner un produit',
             prefixIcon: Icon(Iconsax.shop),
@@ -352,7 +352,7 @@ class EditBannerScreen extends StatelessWidget {
             categories.any((c) => c.id == selectedValue);
         
         return DropdownButtonFormField<String>(
-          value: isValidValue ? selectedValue : null,
+          initialValue: isValidValue ? selectedValue : null,
           decoration: const InputDecoration(
             labelText: 'Sélectionner une catégorie',
             prefixIcon: Icon(Iconsax.category),
@@ -381,7 +381,7 @@ class EditBannerScreen extends StatelessWidget {
             establishments.any((e) => e.id == selectedValue);
         
         return DropdownButtonFormField<String>(
-          value: isValidValue ? selectedValue : null,
+          initialValue: isValidValue ? selectedValue : null,
           decoration: const InputDecoration(
             labelText: 'Sélectionner un établissement',
             prefixIcon: Icon(Iconsax.home),

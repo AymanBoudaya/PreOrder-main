@@ -170,13 +170,13 @@ class TOrderListItems extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              order.codeRetrait != null && order.codeRetrait!.isNotEmpty
-                  ? 'Commande ${order.codeRetrait}'
-                  : 'Commande',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+                order.codeRetrait != null && order.codeRetrait!.isNotEmpty
+                    ? 'Commande ${order.codeRetrait}'
+                    : 'Commande',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             Text(order.formattedOrderDate,
                 style: Theme.of(context)
@@ -229,9 +229,9 @@ class TOrderListItems extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: config.color.withOpacity(0.1),
+        color: config.color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: config.color.withOpacity(0.3)),
+        border: Border.all(color: config.color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -253,7 +253,7 @@ class TOrderListItems extends StatelessWidget {
         margin: const EdgeInsets.only(top: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.05),
+          color: AppColors.primary.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
         ),
         child: Row(children: [
@@ -280,7 +280,7 @@ class TOrderListItems extends StatelessWidget {
         margin: const EdgeInsets.only(top: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.05),
+          color: Colors.red.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
         ),
         child: Row(children: [

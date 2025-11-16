@@ -118,7 +118,7 @@ class AdminUserManagementScreen extends StatelessWidget {
               // Filtre par rôle
               Expanded(
                 child: Obx(() => DropdownButtonFormField<String>(
-                      value: controller.selectedRole.value,
+                      initialValue: controller.selectedRole.value,
                       decoration: InputDecoration(
                         labelText: 'Rôle',
                         prefixIcon: const Icon(Iconsax.profile_2user),
@@ -142,7 +142,7 @@ class AdminUserManagementScreen extends StatelessWidget {
               // Filtre par statut de bannissement
               Expanded(
                 child: Obx(() => DropdownButtonFormField<String>(
-                      value: controller.selectedBanStatus.value,
+                      initialValue: controller.selectedBanStatus.value,
                       decoration: InputDecoration(
                         labelText: 'Statut',
                         prefixIcon: const Icon(Iconsax.shield),
@@ -217,15 +217,15 @@ class AdminUserManagementScreen extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceBtwItems),
       color: user.isBanned
-          ? (dark ? Colors.red.withOpacity(0.1) : Colors.red.shade50)
+          ? (dark ? Colors.red.withValues(alpha: 0.1) : Colors.red.shade50)
           : null,
       child: ListTile(
         contentPadding: const EdgeInsets.all(AppSizes.md),
         leading: CircleAvatar(
           radius: 28,
           backgroundColor: user.isBanned
-              ? Colors.red.withOpacity(0.2)
-              : AppColors.primary.withOpacity(0.1),
+              ? Colors.red.withValues(alpha: 0.2)
+              : AppColors.primary.withValues(alpha: 0.1),
           backgroundImage:
               user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty
                   ? NetworkImage(user.profileImageUrl!)
@@ -288,7 +288,7 @@ class AdminUserManagementScreen extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: _getRoleColor(user.role).withOpacity(0.1),
+                    color: _getRoleColor(user.role).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -308,7 +308,7 @@ class AdminUserManagementScreen extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: Colors.blue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Text(
