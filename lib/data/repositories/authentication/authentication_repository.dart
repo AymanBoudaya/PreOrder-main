@@ -36,7 +36,6 @@ class AuthenticationRepository extends GetxController {
 
       try {
         if (event == AuthChangeEvent.signedIn && session != null) {
-
           // Si inscription en cours ne pas rediriger
           if (pending != null) return;
 
@@ -46,9 +45,19 @@ class AuthenticationRepository extends GetxController {
           // Vérifier si l'utilisateur est banni (sans afficher de snackbar ici,
           // car c'est déjà géré dans verifyOTP qui est le point d'entrée principal)
           if (userDetails != null && userDetails.isBanned) {
-
             // Déconnecter l'utilisateur banni silencieusement
             await _auth.signOut();
+            Get.offAll(() => const LoginScreen());
+            return;
+          }
+
+          if (userDetails == null) {
+            await _auth.signOut();
+            TLoaders.errorSnackBar(
+              title: "Email inconnu",
+              message:
+                  "Aucun compte n'est associé à cet email. Veuillez vous inscrire.",
+            );
             Get.offAll(() => const LoginScreen());
             return;
           }
@@ -56,6 +65,7 @@ class AuthenticationRepository extends GetxController {
           await TLocalStorage.init(session.user.id);
           Get.offAll(() => const NavigationMenu());
         }
+
         if (event == AuthChangeEvent.initialSession && session?.user == null) {
           Get.offAll(() => const LoginScreen());
           return;
@@ -86,13 +96,11 @@ class AuthenticationRepository extends GetxController {
           (meta['email_verified'] == true) || (user.emailConfirmedAt != null);
 
       if (emailVerified) {
-
         // Vérifier si l'utilisateur est banni (sans afficher de snackbar ici,
         // car c'est déjà géré dans verifyOTP qui est le point d'entrée principal)
         final userDetails =
             await UserRepository.instance.fetchUserDetails(user.id);
         if (userDetails != null && userDetails.isBanned) {
-
           // Déconnecter l'utilisateur banni silencieusement
           await _auth.signOut();
           Get.offAll(() => const LoginScreen());
@@ -141,14 +149,23 @@ class AuthenticationRepository extends GetxController {
   }
 
   /// --- Connexion par OTP (email seulement)
-  Future<void> sendOtp(String email) async {
+  Future<bool> sendOtp(String email) async {
     try {
       await _auth.signInWithOtp(
         email: email,
         shouldCreateUser: false,
         emailRedirectTo: null,
       );
+      return true;
     } catch (e) {
+      if (e.toString().contains("otp_disabled") ||
+          e.toString().contains("signups not allowed")) {
+        TLoaders.errorSnackBar(
+          title: "Email inconnu",
+          message: "Aucun utilisateur n'est associé à cet email.",
+        );
+        return false;
+      }
       TLoaders.errorSnackBar(title: "Erreur OTP", message: e.toString());
       rethrow;
     }

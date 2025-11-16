@@ -52,10 +52,14 @@ class LoginController extends GetxController {
       }
 
       // Envoi OTP via AuthenticationRepository
-      await AuthenticationRepository.instance.sendOtp(email.text.trim());
+      final otpSent =
+          await AuthenticationRepository.instance.sendOtp(email.text.trim());
 
       TFullScreenLoader.stopLoading();
 
+      if (!otpSent) {
+        return;
+      }
       // Aller vers l'écran OTP
       Get.to(() => OTPVerificationScreen(
             email: email.text.trim(),
