@@ -17,7 +17,7 @@ class THomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userController = Get.put(UserController());
+    final userController = Get.find<UserController>();
     final notifController = Get.put(NotificationController());
     return TAppBar(
       centerTitle: false,

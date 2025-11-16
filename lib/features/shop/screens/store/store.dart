@@ -11,39 +11,15 @@ import 'package:get/get.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/colors.dart';
+import '../../models/statut_etablissement_model.dart';
 
-class StoreScreen extends StatefulWidget {
+class StoreScreen extends StatelessWidget {
   const StoreScreen({super.key});
 
   @override
-  State<StoreScreen> createState() => _StoreScreenState();
-}
-
-class _StoreScreenState extends State<StoreScreen> {
-  final etablissementController = EtablissementController.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    // Charger immédiatement tous les établissements approuvés pour le Store
-    // Cette méthode charge indépendamment du rôle de l'utilisateur
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadStoreEtablissements();
-    });
-  }
-
-  Future<void> _loadStoreEtablissements() async {
-    try {
-      // Utiliser la méthode spécifique pour le Store qui charge tous les établissements approuvés
-      // Cette méthode remplace complètement la liste avec tous les établissements approuvés
-      await etablissementController.getApprovedEtablissementsForStore();
-    } catch (e) {
-      print('Erreur chargement établissements Store: $e');
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final etablissementController = Get.find<EtablissementController>();
+
     return Scaffold(
       appBar: TAppBar(
         showBackArrow: false,
@@ -51,81 +27,70 @@ class _StoreScreenState extends State<StoreScreen> {
           'Store',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
-        actions: [
+        actions: const [
           TCartCounterIcon(
             iconColor: AppColors.primary,
             counterBgColor: AppColors.primary,
           )
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _loadStoreEtablissements,
-        child: SingleChildScrollView(
+
+      body: Obx(() {
+        if (etablissementController.isLoading.value &&
+            etablissementController.etablissements.isEmpty) {
+          return const TbrandsShimmer();
+        }
+
+        final approved = etablissementController.etablissements
+            .where((e) => e.statut == StatutEtablissement.approuve)
+            .toList();
+
+        if (approved.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSizes.defaultSpace),
+              child: Text(
+                'Aucun établissement approuvé',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
           padding: const EdgeInsets.all(AppSizes.defaultSpace),
-          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// -- Établissements approuvés
-              TSectionHeading(
-                title: 'Nos partenaires',
-              ),
-              const SizedBox(
-                height: AppSizes.spaceBtwItems,
-              ),
+              TSectionHeading(title: 'Nos partenaires'),
+              const SizedBox(height: AppSizes.spaceBtwItems),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final crossAxisCount = constraints.maxWidth < 600 ? 1 : 2;
+                  final mainAxisExtent =
+                      constraints.maxWidth < 400 ? 90.0 : 80.0;
 
-              /// -- Grid des établissements approuvés
-              Obx(() {
-                // Afficher le shimmer pendant le chargement
-                if (etablissementController.isLoading.value) {
-                  return const TbrandsShimmer();
-                }
-
-                // La liste etablissements contient déjà uniquement les établissements approuvés
-                // car getApprovedEtablissementsForStore() les filtre déjà
-                final approved =
-                    etablissementController.etablissements.toList();
-
-                if (approved.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSizes.defaultSpace),
-                      child: Text(
-                        'Aucun établissement approuvé',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
+                  return GridLayout(
+                    itemCount: approved.length,
+                    crossAxisCount: crossAxisCount,
+                    mainAxisExtent: mainAxisExtent,
+                    itemBuilder: (_, index) {
+                      final brand = approved[index];
+                      return BrandCard(
+                        showBorder: true,
+                        brand: brand,
+                        onTap: () => Get.to(
+                          () => BrandProducts(brand: brand),
+                        ),
+                      );
+                    },
                   );
-                }
-
-                // Use responsive grid: 1 column on small screens, 2 on larger screens
-                return LayoutBuilder(
-                  builder: (context, constraints) {
-                    final crossAxisCount = constraints.maxWidth < 600 ? 1 : 2;
-                    final mainAxisExtent =
-                        constraints.maxWidth < 400 ? 90.0 : 80.0;
-
-                    return GridLayout(
-                      itemCount: approved.length,
-                      crossAxisCount: crossAxisCount,
-                      mainAxisExtent: mainAxisExtent,
-                      itemBuilder: (_, index) {
-                        final brand = approved[index];
-                        return BrandCard(
-                          showBorder: true,
-                          brand: brand,
-                          onTap: () =>
-                              Get.to(() => BrandProducts(brand: brand)),
-                        );
-                      },
-                    );
-                  },
-                );
-              }),
+                },
+              ),
             ],
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

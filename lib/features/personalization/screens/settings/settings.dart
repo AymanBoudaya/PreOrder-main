@@ -32,11 +32,16 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userController = Get.put(UserController());
+    final userController = Get.find<UserController>();
 
     bool isAdminOnly() {
       final role = userController.user.value.role;
       return role == 'Admin';
+    }
+
+    bool isGerantOnly() {
+      final role = userController.user.value.role;
+      return role == 'Gérant';
     }
 
     bool isAdminGerant() {
@@ -47,12 +52,13 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       body: Obx(() {
         // Attendre que les données utilisateur soient chargées
-        if (userController.profileLoading.value && userController.user.value.id.isEmpty) {
+        if (userController.profileLoading.value &&
+            userController.user.value.id.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
 
         final user = userController.user.value;
-        
+
         // Si l'utilisateur n'est pas encore chargé, ne pas afficher
         if (user.id.isEmpty) {
           return const Center(child: CircularProgressIndicator());
@@ -127,11 +133,6 @@ class SettingsScreen extends StatelessWidget {
                       subTitle: "Notifications de l'application",
                       icon: Iconsax.notification,
                       onTap: () => Get.to(() => const NotificationsScreen())),
-                  // TSettingsMenuTile(
-                  //     title: "Sécurité du Compte",
-                  //     subTitle: "Sécuriser mon compte",
-                  //     icon: Iconsax.security_card,
-                  //     onTap: () {}),
 
                   /// Développeur , upload
                   if (isAdminGerant()) ...[
@@ -148,7 +149,7 @@ class SettingsScreen extends StatelessWidget {
                       subTitle: "Statistiques et analyses détaillées",
                       onTap: () => Get.to(() => const AdminDashboardScreen()),
                     ),
-                  if (userController.user.value.role == 'Gérant')
+                  if (isGerantOnly())
                     TSettingsMenuTile(
                       icon: Iconsax.chart_2,
                       title: "Dashboard Gérant",
@@ -156,12 +157,12 @@ class SettingsScreen extends StatelessWidget {
                       onTap: () => Get.to(() => const GerantDashboardScreen()),
                     ),
 
-                  if (userController.user.value.role == 'Gérant')
+                  if (isGerantOnly())
                     TSettingsMenuTile(
                       icon: Iconsax.category,
                       title: "Gérer commandes",
                       subTitle:
-                          "Consulter, ajouter, modifier ou supprimer une catégorie",
+                          "Accepter, préparer ou refuser une commande",
                       onTap: () async {
                         final etab = await EtablissementController.instance
                             .getEtablissementUtilisateurConnecte();
@@ -214,7 +215,7 @@ class SettingsScreen extends StatelessWidget {
                       icon: Iconsax.home,
                       title: "Gérer  établissement",
                       subTitle:
-                          "Consulter, ajouter, modifier ou supprimer un établissement",
+                          isAdminOnly() ? "Consulter, modifier ou supprimer des établissements" : "Consulter, ajouter, modifier ou supprimer mon établissement",
                       onTap: () => Get.to(() => MonEtablissementScreen()),
                     ),
                   SizedBox(

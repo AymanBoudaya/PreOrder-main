@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../features/authentication/controllers/signup/signup_controller.dart';
 import '../../../features/authentication/screens/login/login.dart';
 import '../../../features/personalization/controllers/user_controller.dart';
 import '../../../features/personalization/models/user_model.dart';
@@ -29,28 +28,17 @@ class AuthenticationRepository extends GetxController {
 
   @override
   void onReady() {
-    print("🔵 [AuthRepo] onReady() START");
-    print("🔵 [AuthRepo] Current user at startup: ${authUser?.id}");
-    print("🟣 [AuthRepo] Starting Supabase onAuthStateChange listener…");
-
     _auth.onAuthStateChange.listen((data) async {
       final event = data.event;
       final session = data.session;
 
-      print("\n🟠🔻🔻🔻 AUTH EVENT RECEIVED 🔻🔻🔻");
-      print("🟠 Event: $event");
-      print("🟠 Session user: ${session?.user?.id}");
-      print("🟠 Email confirmed: ${session?.user?.emailConfirmedAt}");
-      print("🟠🔺🔺🔺───────────────\n");
       final pending = deviceStorage.read('pending_user_data');
 
       try {
         if (event == AuthChangeEvent.signedIn && session != null) {
-          print("🟢 [AuthRepo] signedIn EVENT detected");
 
           // Si inscription en cours ne pas rediriger
           if (pending != null) return;
-          print("🟢 Fetching userDetails…");
 
           // Connexion classique
           final userDetails = await UserRepository.instance.fetchUserDetails();
@@ -58,27 +46,21 @@ class AuthenticationRepository extends GetxController {
           // Vérifier si l'utilisateur est banni (sans afficher de snackbar ici,
           // car c'est déjà géré dans verifyOTP qui est le point d'entrée principal)
           if (userDetails != null && userDetails.isBanned) {
-            print("🔴 User is banned → Signing out");
 
             // Déconnecter l'utilisateur banni silencieusement
             await _auth.signOut();
             Get.offAll(() => const LoginScreen());
             return;
           }
-          print("🟢 User OK → redirect to NavigationMenu");
 
           await TLocalStorage.init(session.user.id);
           Get.offAll(() => const NavigationMenu());
         }
         if (event == AuthChangeEvent.initialSession && session?.user == null) {
-          print(
-              "🔵 [AuthRepo] initialSession with null user → Redirect to Login");
           Get.offAll(() => const LoginScreen());
           return;
         }
         if (event == AuthChangeEvent.signedOut) {
-          print("🔵 [AuthRepo] signedOut EVENT detected");
-
           await deviceStorage.remove('pending_user_data');
           Get.offAll(() => const LoginScreen());
         }
@@ -87,49 +69,39 @@ class AuthenticationRepository extends GetxController {
       }
     });
     screenRedirect();
-    print("🔵 [AuthRepo] onReady() END");
   }
 
   /// --- Redirection après démarrage
   Future<void> screenRedirect() async {
-    print("\n🔵 [AuthRepo] screenRedirect() START");
-
     final Map<String, dynamic> userData =
         (deviceStorage.read('pending_user_data')
                 as Map<String, dynamic>?)?['user_data'] ??
             {};
     final user = authUser;
     final pending = deviceStorage.read('pending_user_data');
-    print("🔵 User at startup: ${user?.id}");
-    print("🔵 Pending data: $pending");
+
     if (user != null) {
       final meta = user.userMetadata ?? {};
       final emailVerified =
           (meta['email_verified'] == true) || (user.emailConfirmedAt != null);
-      print("🔵 Email verified: $emailVerified");
 
       if (emailVerified) {
-        print("🟢 Email OK → fetching userDetails…");
 
         // Vérifier si l'utilisateur est banni (sans afficher de snackbar ici,
         // car c'est déjà géré dans verifyOTP qui est le point d'entrée principal)
         final userDetails =
             await UserRepository.instance.fetchUserDetails(user.id);
         if (userDetails != null && userDetails.isBanned) {
-          print("🔴 User banned → Signing out");
 
           // Déconnecter l'utilisateur banni silencieusement
           await _auth.signOut();
           Get.offAll(() => const LoginScreen());
           return;
         }
-        print("🟢 Redirect from screenRedirect → NavigationMenu");
 
         await TLocalStorage.init(user.id);
         Get.offAll(() => const NavigationMenu());
       } else {
-        print("🟡 Email NOT verified → redirect to OTP");
-
         // OTP non vérifié
         final pendingMap = pending as Map<String, dynamic>?;
         final pendingEmail = pendingMap?['email'] as String? ?? user.email;
@@ -143,9 +115,9 @@ class AuthenticationRepository extends GetxController {
             ));
       }
     } else {
-      print("🔵 No user → SplashScreen will redirect");
+      // print("🔵 No user → SplashScreen will redirect");
     }
-    print("🔵 [AuthRepo] screenRedirect() END\n");
+    // print("🔵 [AuthRepo] screenRedirect() END\n");
   }
 
   /// --- Inscription avec OTP

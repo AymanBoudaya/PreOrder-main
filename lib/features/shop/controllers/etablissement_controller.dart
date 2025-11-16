@@ -27,24 +27,19 @@ class EtablissementController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('EtablissementController initialisé');
     _subscribeToRealtimeEtablissements();
     fetchFeaturedEtablissements();
-    // Charger les établissements selon le rôle de l'utilisateur
     _loadEtablissementsAccordingToRole();
   }
 
-  /// Charge les établissements selon le rôle de l'utilisateur
   Future<void> _loadEtablissementsAccordingToRole() async {
     try {
       final userRole = userController.userRole;
       final userId = userController.user.value.id;
 
       if (userRole == 'Admin') {
-        // Les admins voient tous les établissements
         await getTousEtablissements();
       } else if (userRole == 'Gérant' && userId.isNotEmpty) {
-        // Les gérants ne voient que leurs propres établissements
         await fetchEtablissementsByOwner(userId);
       }
       // Pour les autres rôles, on ne charge rien
@@ -62,35 +57,31 @@ class EtablissementController extends GetxController {
 
   void _subscribeToRealtimeEtablissements() {
     _channel = _supabase.channel('etablissements_changes');
-
     _channel!.onPostgresChanges(
-      event: PostgresChangeEvent.all, // 'INSERT', 'UPDATE', 'DELETE', or all
+      event: PostgresChangeEvent.all,
       schema: 'public',
       table: 'etablissements',
       callback: (payload) {
-        final eventType = payload.eventType;
+        final type = payload.eventType;
         final newData = payload.newRecord;
         final oldData = payload.oldRecord;
-
-        if (eventType == PostgresChangeEvent.insert) {
-          final etab = Etablissement.fromJson(newData);
+        final etab = Etablissement.fromJson(
+          type == PostgresChangeEvent.delete ? oldData : newData,
+        );
+        if (etab.statut != StatutEtablissement.approuve) return;
+        if (type == PostgresChangeEvent.insert) {
           etablissements.add(etab);
-          etablissements.refresh();
-        } else if (eventType == PostgresChangeEvent.update) {
-          final etab = Etablissement.fromJson(newData);
-          final index = etablissements.indexWhere((e) => e.id == etab.id);
-          if (index != -1) {
-            etablissements[index] = etab;
-            etablissements.refresh();
-          }
-        } else if (eventType == PostgresChangeEvent.delete) {
-          final id = oldData['id'];
-          etablissements.removeWhere((e) => e.id == id);
-          etablissements.refresh();
         }
+        if (type == PostgresChangeEvent.update) {
+          final index = etablissements.indexWhere((e) => e.id == etab.id);
+          if (index != -1) etablissements[index] = etab;
+        }
+        if (type == PostgresChangeEvent.delete) {
+          etablissements.removeWhere((e) => e.id == etab.id);
+        }
+        etablissements.refresh();
       },
     );
-
     _channel!.subscribe();
   }
 
@@ -225,7 +216,8 @@ class EtablissementController extends GetxController {
 
       // Vérifier que le gérant ne peut modifier que ses propres établissements
       if (_isUserGerant()) {
-        final etablissement = etablissements.firstWhereOrNull((e) => e.id == id);
+        final etablissement =
+            etablissements.firstWhereOrNull((e) => e.id == id);
         if (etablissement == null) {
           TLoaders.errorSnackBar(message: 'Établissement non trouvé');
           return false;
@@ -419,20 +411,21 @@ class EtablissementController extends GetxController {
   }
 
   // Pour Store - charger tous les établissements approuvés (indépendamment du rôle)
-  Future<List<Etablissement>> getApprovedEtablissementsForStore() async {
+  Future<List<Etablissement>> getApprovedEtablissementsForStore(
+      {bool refreshOnly = false}) async {
     try {
-      isLoading.value = true;
+      if (!refreshOnly && etablissements.isEmpty) {
+        isLoading.value = true;
+      }
       // Charger tous les établissements depuis le repository
       final data = await repo.getAllEtablissements();
       // Filtrer pour ne garder que les établissements approuvés
-      final approved = data
-          .where((e) => e.statut == StatutEtablissement.approuve)
-          .toList();
+      final approved =
+          data.where((e) => e.statut == StatutEtablissement.approuve).toList();
       // Mettre à jour la liste réactive avec tous les établissements approuvés
       etablissements.assignAll(approved);
       return approved;
     } catch (e) {
-      print('Erreur getApprovedEtablissementsForStore: $e');
       TLoaders.errorSnackBar(message: 'Erreur chargement établissements: $e');
       rethrow;
     } finally {
