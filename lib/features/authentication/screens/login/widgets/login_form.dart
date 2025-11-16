@@ -47,7 +47,7 @@ class TLoginForm extends StatelessWidget {
                 height: AppSizes.spaceBtwItems / 2,
               ),
 
-              /// Create account button
+              /// Bouton créer un compte
               SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(

@@ -28,11 +28,13 @@ class EtablissementController extends GetxController {
   void onInit() {
     super.onInit();
     _subscribeToRealtimeEtablissements();
-    fetchFeaturedEtablissements();
+    getTousEtablissements();
     _loadEtablissementsAccordingToRole();
   }
 
   Future<void> _loadEtablissementsAccordingToRole() async {
+    debugPrint(
+        "🟢 [EtablissementController] Chargement des établissements selon le rôle de l'utilisateur");
     try {
       final userRole = userController.userRole;
       final userId = userController.user.value.id;
@@ -396,6 +398,7 @@ class EtablissementController extends GetxController {
 
   // Pour Admin - tous les établissements
   Future<List<Etablissement>> getTousEtablissements() async {
+    debugPrint("🟢 [EtablissementController] Chargement de tous les établissements");
     try {
       isLoading.value = true;
       final data = await repo.getAllEtablissements();
@@ -579,26 +582,6 @@ class EtablissementController extends GetxController {
     print('Erreur $action: $error');
     if (stack != null) {
       print('Stack: $stack');
-    }
-  }
-
-  /// Fetch etablissements
-  void fetchFeaturedEtablissements() async {
-    try {
-      // Show loader while loading etablissements
-      isLoading.value = true;
-
-      // Fetch etablissements from an API or database
-      final etablissements = await repo.getFeaturedEtablissements();
-      // Assign etablissements
-      featuredBrands.assignAll(etablissements);
-      print(featuredBrands.toString());
-    } catch (e) {
-      // Handle error
-      TLoaders.errorSnackBar(title: 'Erreur!', message: e.toString());
-    } finally {
-      // Hide loader after loading etablissements
-      isLoading.value = false;
     }
   }
 

@@ -44,7 +44,7 @@ class OTPVerificationScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    // 🌗 Couleurs adaptatives
+    // Couleurs adaptatives
     final Color backgroundTop =
         isDark ? const Color(0xFF121212) : const Color(0xFFF3F4F6);
     final Color backgroundBottom =

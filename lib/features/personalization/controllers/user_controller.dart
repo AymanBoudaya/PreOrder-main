@@ -41,10 +41,6 @@ class UserController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print("🔴 [UserController] onInit() CALLED");
-    print(
-        "🔴 [UserController] authUser: ${AuthenticationRepository.instance.authUser}");
-
     // Charger l'utilisateur immédiatement si une session existe déjà
     final currentSession = Supabase.instance.client.auth.currentSession;
     if (currentSession != null) {
@@ -85,8 +81,6 @@ class UserController extends GetxController {
 
   /// Charger les infos utilisateur
   Future<void> fetchUserRecord() async {
-    print("🔴 [UserController] fetchUserRecord() CALLED");
-
     try {
       profileLoading.value = true;
       final userData = await userRepository.fetchUserDetails();
@@ -101,8 +95,7 @@ class UserController extends GetxController {
 
         // Mettre à jour avec les données de la base de données
         user(userData);
-        debugPrint(
-            "✅ Utilisateur chargé depuis la base de données - Rôle: ${userData.role}");
+
       } else {
         // Si l'utilisateur n'existe pas en base, ne pas écraser avec un utilisateur vide
         // Garder l'utilisateur actuel si disponible
@@ -147,8 +140,6 @@ class UserController extends GetxController {
               value: currentUserId,
             ),
             callback: (payload) async {
-              debugPrint(
-                  "🔄 Changement détecté sur l'utilisateur via Realtime");
               final updatedData = payload.newRecord;
 
               // Vérifier si l'utilisateur a été banni

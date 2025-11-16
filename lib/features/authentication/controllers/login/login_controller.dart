@@ -18,15 +18,11 @@ class LoginController extends GetxController {
   final rememberMe = false.obs;
   final localStorage = GetStorage();
   final email = TextEditingController();
-  final password = TextEditingController();
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
   @override
   void onInit() {
-    print("🟡 [LoginController] onInit() CALLED");
-
     email.text = localStorage.read("REMEMBER_ME_EMAIL") ?? '';
-    password.text = localStorage.read("REMEMBER_ME_PASSWORD") ?? '';
     super.onInit();
   }
 

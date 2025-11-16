@@ -24,15 +24,11 @@ class LoginScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = THelperFunctions.isDarkMode(context);
 
-    // Contenu commun
     final Widget content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         TLoginHeader(),
         const TLoginForm(),
-        // TFormDivider(dividerText: TTexts.orSignInWith.capitalize!),
-        // const SizedBox(height: AppSizes.spaceBtwSections),
-        // const TSocialButtons(),
       ],
     );
 

@@ -34,7 +34,6 @@ class StoreScreen extends StatelessWidget {
           )
         ],
       ),
-
       body: Obx(() {
         if (etablissementController.isLoading.value &&
             etablissementController.etablissements.isEmpty) {
