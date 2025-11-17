@@ -198,7 +198,6 @@ class EtablissementRepository {
       // 1. Supprimer les horaires associés
       try {
         await _db.from('horaires').delete().eq('etablissement_id', id);
-        print('Horaires supprimés pour établissement: $id');
       } catch (e) {
         print('Aucun horaire à supprimer: $e');
       }
@@ -206,15 +205,12 @@ class EtablissementRepository {
       // 2. Supprimer les produits associés
       try {
         await _db.from(_table).delete().eq('etablissement_id', id);
-        print('Produits supprimés pour établissement: $id');
       } catch (e) {
         print('Aucun produit à supprimer: $e');
       }
 
       // 3. Supprimer l'établissement
       await _db.from(_table).delete().eq('id', id);
-
-      print('Établissement $id supprimé avec succès');
       return true;
     } catch (e, stack) {
       print('Erreur suppression établissement $id: $e');

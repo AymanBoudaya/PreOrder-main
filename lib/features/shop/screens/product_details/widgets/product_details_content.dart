@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'product_attributes.dart';
 import 'product_description_section.dart';
 import 'product_meta_data.dart';
-import 'product_rating_share_row.dart';
+import 'product_favorite_button.dart';
 
 class ProductDetailsContent extends StatelessWidget {
   const ProductDetailsContent({
@@ -16,7 +16,8 @@ class ProductDetailsContent extends StatelessWidget {
 
   final ProduitModel product;
   final bool dark;
-  final String? excludeVariationId; // Variation to exclude from disabled list (for edit mode)
+  final String?
+      excludeVariationId; // Variation to exclude from disabled list (for edit mode)
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +25,8 @@ class ProductDetailsContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        /// Rating & Share
-        ProductRatingShareRow(product: product, dark: dark),
+        /// Favorite button
+        ProductFavoriteButton(product: product, dark: dark),
 
         const SizedBox(height: AppSizes.md),
 
@@ -56,4 +57,3 @@ class ProductDetailsContent extends StatelessWidget {
     );
   }
 }
-

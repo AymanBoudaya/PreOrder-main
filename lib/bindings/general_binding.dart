@@ -14,7 +14,6 @@ import '../features/personalization/controllers/user_management_controller.dart'
 import '../features/shop/controllers/etablissement_controller.dart';
 import '../features/shop/controllers/product/checkout_controller.dart';
 import '../features/shop/controllers/product/favorites_controller.dart';
-import '../features/shop/controllers/product/share_controller.dart';
 import '../features/shop/controllers/product/variation_controller.dart';
 import '../features/shop/controllers/product/panier_controller.dart';
 import '../features/shop/controllers/banner_controller.dart';
@@ -45,7 +44,6 @@ class GeneralBinding extends Bindings {
     Get.lazyPut<CheckoutController>(() => CheckoutController(), fenix: true);
     Get.lazyPut(() => OrderController());
     Get.lazyPut<FavoritesController>(() => FavoritesController(), fenix: true);
-    Get.lazyPut<ShareController>(() => ShareController(), fenix: true);
     Get.lazyPut<VariationController>(() => VariationController(), fenix: true);
     Get.lazyPut<UserManagementController>(() => UserManagementController(),
         fenix: true);

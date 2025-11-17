@@ -131,8 +131,6 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     }
   }
 
-  // ================= IMAGES =================
-
   Future<void> _pickMainImage() async {
     try {
       final picked = await ImagePicker()

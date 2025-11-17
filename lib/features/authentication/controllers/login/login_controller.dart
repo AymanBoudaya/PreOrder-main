@@ -15,9 +15,9 @@ class LoginController extends GetxController {
   final userController = Get.find<UserController>();
 
   /// Variables
+  final email = TextEditingController();
   final rememberMe = false.obs;
   final localStorage = GetStorage();
-  final email = TextEditingController();
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
   @override
@@ -67,10 +67,10 @@ class LoginController extends GetxController {
             isSignupFlow: false,
           ));
       TLoaders.successSnackBar(
-          title: 'OTP envoyé !', message: 'Vérifier votre boîte e-mail');
+          title: 'OTP envoyé !', message: 'Vérifier votre boîte e-mail');  
     } catch (e) {
       TFullScreenLoader.stopLoading();
-      TLoaders.errorSnackBar(title: 'Erreur !', message: e.toString());
+      TLoaders.errorSnackBar(title: 'Erreur Login !', message: e.toString());
     }
   }
 }
