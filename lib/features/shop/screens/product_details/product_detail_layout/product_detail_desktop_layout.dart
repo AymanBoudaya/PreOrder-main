@@ -1,7 +1,7 @@
 import 'package:caferesto/features/shop/models/produit_model.dart';
 import 'package:flutter/material.dart';
 import 'product_details_content.dart';
-import 'product_image_section.dart';
+import '../widgets/product_image_section.dart';
 
 class ProductDetailDesktopLayout extends StatelessWidget {
   const ProductDetailDesktopLayout({

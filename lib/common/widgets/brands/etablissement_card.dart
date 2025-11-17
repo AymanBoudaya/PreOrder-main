@@ -7,8 +7,8 @@ import '../images/circular_image.dart';
 import '../products/product_cards/widgets/rounded_container.dart';
 import '../texts/brand_title_text_with_verified_icon.dart';
 
-class BrandCard extends StatelessWidget {
-  const BrandCard({
+class EtablissementCard extends StatelessWidget {
+  const EtablissementCard({
     super.key,
     required this.showBorder,
     this.onTap,

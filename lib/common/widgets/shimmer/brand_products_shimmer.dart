@@ -5,7 +5,7 @@ import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 
 /// Shimmer de chargement pour la page BrandProducts
-/// Correspond à la structure: BrandCard + Filtres de catégorie + Grille de produits
+/// Correspond à la structure: EtablissementCard + Filtres de catégorie + Grille de produits
 class TBrandProductsShimmer extends StatelessWidget {
   const TBrandProductsShimmer({super.key, this.itemCount = 4});
   final int itemCount;
@@ -17,7 +17,7 @@ class TBrandProductsShimmer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// BrandCard Shimmer
+          /// EtablissementCard Shimmer
           TRoundedContainer(
             padding: const EdgeInsets.all(AppSizes.sm),
             showBorder: true,
@@ -28,6 +28,7 @@ class TBrandProductsShimmer extends StatelessWidget {
                 /// Image circulaire shimmer
                 TShimmerEffect(width: 50, height: 50, radius: 50),
                 const SizedBox(width: AppSizes.spaceBtwItems / 2),
+
                 /// Texte shimmer
                 Expanded(
                   child: Column(
@@ -86,4 +87,3 @@ class TBrandProductsShimmer extends StatelessWidget {
     );
   }
 }
-

@@ -1,10 +1,10 @@
 import 'package:caferesto/features/shop/models/produit_model.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
-import 'product_attributes.dart';
-import 'product_description_section.dart';
-import 'product_meta_data.dart';
-import 'product_favorite_button.dart';
+import '../widgets/product_attributes.dart';
+import '../widgets/product_description_section.dart';
+import '../widgets/product_meta_data.dart';
+import '../widgets/product_favorite_button.dart';
 
 class ProductDetailsContent extends StatelessWidget {
   const ProductDetailsContent({

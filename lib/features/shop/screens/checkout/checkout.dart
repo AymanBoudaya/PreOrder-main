@@ -45,32 +45,25 @@ class CheckoutScreen extends StatelessWidget {
           padding: const EdgeInsets.all(AppSizes.defaultSpace),
           child: Column(
             children: [
-              /// Items in cart (checkout mode - no buttons, bill-like format)
+              /// Elements dans panier sans buttons comme facture
               TCartItems(isCheckout: true),
               SizedBox(
                 height: AppSizes.spaceBtwSections,
               ),
 
-              /// --Coupon TextField
-              // TCouponCode(dark: dark),
-              // const SizedBox(height: AppSizes.spaceBtwSections),
-
-              /// --Billing section
+              /// -- Section Prix , Adresse, Créneau --
               TRoundedContainer(
                 showBorder: true,
                 padding: const EdgeInsets.all(AppSizes.md),
                 backgroundColor: dark ? AppColors.black : AppColors.white,
                 child: Column(
                   children: [
-                    /// Pricing
                     TBillingAmountSection(),
                     const SizedBox(height: AppSizes.spaceBtwItems),
 
-                    /// Divider
                     const Divider(),
                     const SizedBox(height: AppSizes.spaceBtwItems),
 
-                    /// Address
                     TBillingAddressSection(),
                     const SizedBox(height: AppSizes.spaceBtwItems),
                     const Divider(),
@@ -85,7 +78,7 @@ class CheckoutScreen extends StatelessWidget {
         ),
       ),
 
-      /// Checkout button
+      /// Bouton commander
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(AppSizes.defaultSpace),
         child: ElevatedButton(

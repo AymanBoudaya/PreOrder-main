@@ -7,9 +7,9 @@ import '../../../../utils/helpers/helper_functions.dart';
 import '../../controllers/product/panier_controller.dart';
 import '../../controllers/product/variation_controller.dart';
 import '../../models/produit_model.dart';
-import 'widgets/product_detail_bottom_bar_wrapper.dart';
-import 'widgets/product_detail_desktop_layout.dart';
-import 'widgets/product_detail_mobile_layout.dart';
+import 'product_detail_layout/product_detail_bottom_bar_wrapper.dart';
+import 'product_detail_layout/product_detail_desktop_layout.dart';
+import 'product_detail_layout/product_detail_mobile_layout.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   ProductDetailScreen({

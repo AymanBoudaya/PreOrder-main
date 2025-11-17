@@ -1,5 +1,5 @@
 import 'package:caferesto/common/widgets/appbar/appbar.dart';
-import 'package:caferesto/common/widgets/brands/brand_card.dart';
+import 'package:caferesto/common/widgets/brands/etablissement_card.dart';
 import 'package:caferesto/common/widgets/products/sortable/sortable_products.dart';
 import 'package:caferesto/features/shop/controllers/product/all_products_controller.dart';
 import 'package:caferesto/features/shop/models/etablissement_model.dart';
@@ -52,7 +52,7 @@ class _BrandProductsState extends State<BrandProducts> {
 
     // Initialiser le chargement et charger les produits
     controller.setBrandCategoryFilter(''); // Reset filter when changing brand
-    
+
     // Toujours réinitialiser l'état de chargement et vider la liste avant de charger
     final brandId = widget.brand.id ?? '';
     controller.isLoading.value = true;
@@ -67,7 +67,8 @@ class _BrandProductsState extends State<BrandProducts> {
       return Scaffold(
         appBar: TAppBar(title: Text(widget.brand.name)),
         body: const Center(
-          child: Text('Les produits de cet établissement ne sont pas disponibles.'),
+          child: Text(
+              'Les produits de cet établissement ne sont pas disponibles.'),
         ),
       );
     }
@@ -89,7 +90,7 @@ class _BrandProductsState extends State<BrandProducts> {
           padding: EdgeInsets.all(AppSizes.defaultSpace),
           child: Column(
             children: [
-              BrandCard(showBorder: true, brand: widget.brand),
+              EtablissementCard(showBorder: true, brand: widget.brand),
               SizedBox(height: AppSizes.spaceBtwSections),
               _CategoryFilterBar(),
               SizedBox(height: AppSizes.spaceBtwSections),
@@ -157,7 +158,8 @@ class _CategoryFilterBar extends StatelessWidget {
               child: ChoiceChip(
                 label: const Text('Tout'),
                 selected: selected.isEmpty,
-                onSelected: (_) => productsController.setBrandCategoryFilter(''),
+                onSelected: (_) =>
+                    productsController.setBrandCategoryFilter(''),
               ),
             ),
             ...categoryIds.map((id) => Padding(

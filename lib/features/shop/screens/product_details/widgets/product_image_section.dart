@@ -1,6 +1,6 @@
 import 'package:caferesto/features/shop/models/produit_model.dart';
 import 'package:flutter/material.dart';
-import 'product_detail_image_slider.dart';
+import '../product_detail_layout/product_detail_image_slider.dart';
 import 'product_image_placeholder.dart';
 
 class ProductImageSection extends StatelessWidget {

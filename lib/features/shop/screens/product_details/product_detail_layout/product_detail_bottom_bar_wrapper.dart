@@ -3,7 +3,7 @@ import 'package:caferesto/features/shop/models/produit_model.dart';
 import 'package:caferesto/features/shop/screens/cart/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'product_bottom_bar.dart';
+import '../widgets/product_bottom_bar.dart';
 
 class ProductDetailBottomBarWrapper extends StatelessWidget {
   const ProductDetailBottomBarWrapper({
