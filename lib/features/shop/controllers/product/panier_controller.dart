@@ -61,8 +61,6 @@ class PanierController extends GetxController {
 
     // Récupère l'établissement du premier produit du panier
     final currentEtablissementId = cartItems.first.etablissementId;
-    print('Current Etablissement ID in cart: $currentEtablissementId');
-    print('Current Etablissement ID in cart: ${product.etablissementId}');
     // Vérifie si l'établissement du produit correspond
     if (product.etablissementId == currentEtablissementId) {
       return true;
@@ -75,8 +73,6 @@ class PanierController extends GetxController {
       return false;
     }
   }
-
-  // --- Méthodes helper --------------------------------------------------------
 
   /// Vérifie si une variante est sélectionnée
   bool aVarianteSelectionnee() {

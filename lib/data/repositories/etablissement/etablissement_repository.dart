@@ -94,7 +94,7 @@ class EtablissementRepository {
         try {
           // Récupérer tous les produits en une seule requête
           final countsResponse = await _db
-              .from('produits')
+              .from(_table)
               .select('etablissement_id')
               .inFilter('etablissement_id', etablissementIds);
 
@@ -155,7 +155,7 @@ class EtablissementRepository {
         try {
           // Récupérer tous les produits en une seule requête
           final countsResponse = await _db
-              .from('produits')
+              .from(_table)
               .select('etablissement_id')
               .inFilter('etablissement_id', etablissementIds);
 
@@ -205,7 +205,7 @@ class EtablissementRepository {
 
       // 2. Supprimer les produits associés
       try {
-        await _db.from('produits').delete().eq('etablissement_id', id);
+        await _db.from(_table).delete().eq('etablissement_id', id);
         print('Produits supprimés pour établissement: $id');
       } catch (e) {
         print('Aucun produit à supprimer: $e');
@@ -227,11 +227,10 @@ class EtablissementRepository {
       String etablissementId) async {
     try {
       final response = await _db
-          .from('produits') // your table name in Supabase
+          .from(_table) 
           .select('*')
           .eq('id_etablissement', etablissementId);
 
-      // Convert the result into a list of ProductModel
       final produits =
           (response as List).map((p) => ProduitModel.fromJson(p)).toList();
       print('produits $produits');

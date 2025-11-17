@@ -39,7 +39,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
 
     return Scaffold(
       appBar: TAppBar(
-        showBackArrow: true,
         title: Text(
           'Catégories',
           style: Theme.of(context).textTheme.headlineMedium,
