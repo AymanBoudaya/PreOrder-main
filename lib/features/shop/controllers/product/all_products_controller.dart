@@ -221,12 +221,6 @@ class AllProductsController extends GetxController {
     print('Produits de la marque triés par: $sortOption');
   }
 
-  /// Permet d'assigner une nouvelle liste (utilisé dans la recherche)
-  void assignProducts(List<ProduitModel> newProducts) {
-    products.assignAll(newProducts);
-    sortProducts(selectedSortOption.value);
-  }
-
   /// Charger tous les établissements manquants en batch (optimisation)
   Future<List<ProduitModel>> _loadEtablissementsBatch(
       List<ProduitModel> produits) async {
