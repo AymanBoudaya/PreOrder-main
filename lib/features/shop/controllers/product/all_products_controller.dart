@@ -182,7 +182,7 @@ class AllProductsController extends GetxController {
     selectedBrandCategoryId.value = categoryId;
   }
 
-  /// Trie les produits d'une marque
+  /// Trie les produits d'un établissement
   void sortBrandProducts(String sortOption) {
     selectedSortOption.value = sortOption;
 

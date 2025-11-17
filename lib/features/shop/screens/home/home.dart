@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                     padding: EdgeInsets.all(0),
                     showActionButton: true,
                     onPressed: () => Get.to(() => AllProducts(
-                          title: 'Produits populaires',
+                          title: 'Tout les produits populaires',
                           futureMethod: controller.fetchAllFeaturedProducts(),
                         )),
                   ),

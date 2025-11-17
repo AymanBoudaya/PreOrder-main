@@ -73,7 +73,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
               Obx(() {
                 // Afficher le shimmer pendant le chargement
                 if (categoryController.isLoading.value) {
-                  return const TbrandsShimmer();
+                  return const StoreShimmer();
                 }
 
                 // Récupérer toutes les catégories (pas seulement les vedettes)
@@ -95,7 +95,8 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
                 return LayoutBuilder(
                   builder: (context, constraints) {
                     final crossAxisCount = constraints.maxWidth < 600 ? 1 : 2;
-                    final mainAxisExtent = constraints.maxWidth < 400 ? 90.0 : 80.0;
+                    final mainAxisExtent =
+                        constraints.maxWidth < 400 ? 90.0 : 80.0;
 
                     return GridLayout(
                       itemCount: allCategories.length,
@@ -122,4 +123,3 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
     );
   }
 }
-
