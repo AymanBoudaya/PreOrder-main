@@ -1,7 +1,7 @@
 import 'package:caferesto/common/widgets/layouts/grid_layout.dart';
 import 'package:caferesto/common/widgets/products/cart/cart_menu_icon.dart';
 import 'package:caferesto/common/widgets/brands/brand_card.dart';
-import 'package:caferesto/common/widgets/shimmer/brands_shimmer.dart';
+import 'package:caferesto/common/widgets/shimmer/store_shimmer.dart';
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
 import 'package:caferesto/features/shop/controllers/etablissement_controller.dart';
 import 'package:caferesto/features/shop/screens/brand/brand_products.dart';
