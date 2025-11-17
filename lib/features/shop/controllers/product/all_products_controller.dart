@@ -227,18 +227,6 @@ class AllProductsController extends GetxController {
     sortProducts(selectedSortOption.value);
   }
 
-  // Recherche rapide
-  List<ProduitModel> searchProducts(String query) {
-    if (query.isEmpty) return products;
-
-    final searchText = query.toLowerCase();
-    return products.where((product) {
-      return product.name.toLowerCase().contains(searchText) ||
-          (product.description ?? '').toLowerCase().contains(searchText); // ||
-      // (product.categoryName ?? '').toLowerCase().contains(searchText);
-    }).toList();
-  }
-
   /// Charger tous les établissements manquants en batch (optimisation)
   Future<List<ProduitModel>> _loadEtablissementsBatch(
       List<ProduitModel> produits) async {

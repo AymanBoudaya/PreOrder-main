@@ -36,30 +36,6 @@ class ProduitRepository extends GetxController {
     }
   }
 
-  Future<List<String>> getAllCategories() async {
-    final data = await _db.from('categories').select('name');
-    return data.map<String>((c) => c['name'] as String).toList();
-  }
-
-  Future<List<String>> getAllEtablissementsNames() async {
-    final data = await _db.from('etablissements').select('name');
-    return data.map<String>((e) => e['name'] as String).toList();
-  }
-
-  /// Optional: Search directly in Supabase (server-side search)
-  Future<List<ProduitModel>> searchProducts(String query) async {
-    final response = await _db
-        .from(_table)
-        .select('*')
-        .or('name.ilike.%$query%,description.ilike.%$query%')
-        .order('created_at', ascending: false)
-        .limit(20);
-
-    if (response.isEmpty) return [];
-
-    return response.map((e) => ProduitModel.fromMap(e)).toList();
-  }
-
   Future<List<ProduitModel>> getAllProductsPaginated({
     int? page,
     int? limit,
@@ -133,29 +109,6 @@ class ProduitRepository extends GetxController {
           i, i + chunkSize > list.length ? list.length : i + chunkSize));
     }
     return chunks;
-  }
-
-  Future<List<ProduitModel>> getProductsForBrand({
-    required String etablissementId,
-    int limit = -1,
-  }) async {
-    try {
-      final query = _db
-          .from(_table)
-          .select('*')
-          .eq('etablissement_id', etablissementId)
-          .order('name', ascending: true);
-
-      final response = limit == -1 ? await query : await query.limit(limit);
-
-      return (response as List<dynamic>)
-          .map((json) => ProduitModel.fromJson(json))
-          .toList();
-    } on PostgrestException catch (e) {
-      throw Exception('Erreur Supabase: ${e.message}');
-    } catch (e) {
-      throw Exception('Erreur lors du chargement des produits: $e');
-    }
   }
 
   /// Récupérer un produit par son ID
@@ -581,60 +534,6 @@ class ProduitRepository extends GetxController {
     }
   }
 
-// Recherche améliorée avec gestion correcte des types
-  Future<List<ProduitModel>> searchProductsWithFilters({
-    String? query,
-    String? categoryId,
-    String? etablissementId,
-    String? sortBy,
-  }) async {
-    try {
-      // Utiliser dynamic pour éviter les conflits de types
-      dynamic request = _db.from(_table).select('''
-      *, 
-      etablissement:etablissement_id(*),
-      category:categorie_id(*)
-    ''');
-
-      // Appliquer les filtres
-      if (query != null && query.isNotEmpty) {
-        request = request.or('nom.ilike.%$query%,description.ilike.%$query%');
-      }
-
-      if (categoryId != null && categoryId.isNotEmpty) {
-        request = request.eq('categorie_id', categoryId);
-      }
-
-      if (etablissementId != null && etablissementId.isNotEmpty) {
-        request = request.eq('etablissement_id', etablissementId);
-      }
-
-      // Appliquer le tri avec gestion de type
-      switch (sortBy) {
-        case 'Prix ↑':
-          request = (request as dynamic).order('prix', ascending: true);
-          break;
-        case 'Prix ↓':
-          request = (request as dynamic).order('prix', ascending: false);
-          break;
-        case 'Nom A-Z':
-          request = (request as dynamic).order('nom', ascending: true);
-          break;
-        case 'Popularité':
-          request = (request as dynamic).order('is_featured', ascending: false);
-          break;
-        default:
-          request = (request as dynamic).order('created_at', ascending: false);
-      }
-
-      final response = await request;
-      return response.map((e) => ProduitModel.fromMap(e)).toList();
-    } catch (e) {
-      print('Erreur searchProductsWithFilters: $e');
-      return [];
-    }
-  }
-
   /// Get multiple products by their IDs (for favorites)
   Future<List<ProduitModel>> getProductsByIds(List<String> productIds) async {
     if (productIds.isEmpty) return [];
@@ -664,11 +563,5 @@ class ProduitRepository extends GetxController {
     } catch (e) {
       throw 'Echec de chargement des produits : ${e.toString()}';
     }
-  }
-
-  /// Alias for getProductsByIds to maintain compatibility
-  Future<List<ProduitModel>> getFavoriteProducts(
-      List<String> productIds) async {
-    return getProductsByIds(productIds);
   }
 }
