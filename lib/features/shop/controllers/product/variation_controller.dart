@@ -15,7 +15,8 @@ class VariationController extends GetxController {
   final RxMap<String, dynamic> selectedAttributes = <String, dynamic>{}.obs;
   final RxString variationStockStatus = ''.obs;
   // Use Map<String, String>? to match CartItemModel.selectedVariation
-  final Rx<Map<String, String>?> selectedVariation = Rx<Map<String, String>?>(null);
+  final Rx<Map<String, String>?> selectedVariation =
+      Rx<Map<String, String>?>(null);
 
   /// -- Check if selected attributes match variation attributes
   RxString selectedSize = ''.obs;
@@ -33,9 +34,7 @@ class VariationController extends GetxController {
     selectedVariation.value = {
       'id': variationId,
       'taille': size,
-      'size': size, // Support both French and English keys
       'prix': price.toString(),
-      'price': price.toString(), // Support both French and English keys
     };
   }
 
@@ -60,5 +59,4 @@ class VariationController extends GetxController {
     // Also clear selectedSize and selectedPrice to keep UI in sync
     clearVariation();
   }
-
 }

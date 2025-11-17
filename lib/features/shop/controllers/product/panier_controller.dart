@@ -45,8 +45,8 @@ class PanierController extends GetxController {
     if (index >= 0) {
       cartItems[index] = cartItems[index].copyWith(
         selectedVariation: {
-          'size': newSize,
-          'price': newPrice.toString(),
+          'taille': newSize,
+          'prix': newPrice.toString(),
         },
         price: newPrice,
       );
@@ -90,8 +90,6 @@ class PanierController extends GetxController {
         : "";
     return '${product.id}-$variationId';
   }
-
-  // --- Gestion des quantités ---------------------------------------------------
 
   /// Met à jour la quantité temporaire d'un produit
   void mettreAJourQuantiteTemporaire(ProduitModel product, int quantity) {
@@ -176,11 +174,11 @@ class PanierController extends GetxController {
     }
 
     // Get the price from variation map (variation is not null here)
-    final priceStr = variation['prix'] ?? variation['price'] ?? '0.0';
+    final priceStr = variation['prix'] ?? '0.0';
     final price = double.tryParse(priceStr) ?? 0.0;
 
     // Get the size from variation map (variation is not null here)
-    final size = variation['taille'] ?? variation['size'] ?? selectedSize;
+    final size = variation['taille'] ?? selectedSize;
 
     // Créer la nouvelle structure de variation
     final newVariation = <String, String>{
@@ -267,7 +265,7 @@ class PanierController extends GetxController {
     
     // Get price from variation map or product
     final price = isVariation && variation != null
-        ? (double.tryParse(variation['prix'] ?? variation['price'] ?? '0.0') ?? 0.0)
+        ? (double.tryParse(variation['prix'] ?? '0.0') ?? 0.0)
         : (product.salePrice > 0.0 ? product.salePrice : product.price);
 
     // Use variation map directly if it exists, otherwise null

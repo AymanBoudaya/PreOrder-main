@@ -369,8 +369,8 @@ class ProductSizePrice {
 
   factory ProductSizePrice.fromMap(Map<String, dynamic> map) {
     return ProductSizePrice(
-      size: map['taille']?.toString() ?? map['size']?.toString() ?? '',
-      price: (map['prix'] ?? map['price'] ?? 0.0).toDouble(),
+      size: map['taille']?.toString() ?? '',
+      price: (map['prix'] ?? 0.0).toDouble(),
     );
   }
 
@@ -397,5 +397,5 @@ class ProductSizePrice {
   int get hashCode => Object.hash(size, price);
 
   @override
-  String toString() => 'ProductSizePrice(size: $size, price: $price)';
+  String toString() => 'ProductSizePrice(taille: $size, prix: $price)';
 }

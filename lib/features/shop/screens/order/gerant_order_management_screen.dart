@@ -637,7 +637,6 @@ class _GerantOrderManagementScreenState
               String? taille;
               if (item.selectedVariation != null) {
                 taille = item.selectedVariation!['taille'] ??
-                    item.selectedVariation!['size'] ??
                     (item.variationId.isNotEmpty ? item.variationId : null);
               } else if (item.variationId.isNotEmpty) {
                 taille = item.variationId;
