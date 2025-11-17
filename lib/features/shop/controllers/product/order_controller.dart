@@ -33,7 +33,7 @@ class OrderController extends GetxController {
 
   final orderRepository = Get.put(OrderRepository());
   final produitRepository = ProduitRepository.instance;
-  final cartController = CartController.instance;
+  final panierController = PanierController.instance;
   // UserController sera obtenu de manière sécurisée
   UserController get userController {
     try {
@@ -566,12 +566,12 @@ class OrderController extends GetxController {
       final hasAddress = selectedAddress.id.isNotEmpty;
 
       // Vérifier si on modifie une commande existante
-      final editingOrderId = cartController.editingOrderId.value;
+      final editingOrderId = panierController.editingOrderId.value;
       if (editingOrderId.isNotEmpty) {
         // Mettre à jour la commande existante
         await mettreAJourCommandeExistante(
           orderId: editingOrderId,
-          newItems: cartController.cartItems.toList(),
+          newItems: panierController.cartItems.toList(),
           totalAmount: totalAmount,
           pickupDay: pickupDay ?? '',
           pickupTimeRange: pickupTimeRange ?? '',
@@ -580,7 +580,7 @@ class OrderController extends GetxController {
       } else {
         // Calculer le temps de préparation total de la commande
         preparationTime = _calculerTempsPreparationCommande(
-            cartController.cartItems.toList());
+            panierController.cartItems.toList());
 
         // Si pas de créneau horaire défini OU si créneau auto-défini, calculer l'heure d'arrivée réelle du client
         clientArrivalTime = null; // Réinitialiser pour chaque nouvelle commande
@@ -680,7 +680,7 @@ class OrderController extends GetxController {
           paymentMethod: checkoutController.paymentMethod,
           address: hasAddress ? selectedAddress : null, // Adresse optionnelle
           deliveryDate: null, // Devrait être null initialement
-          items: cartController.cartItems.toList(),
+          items: panierController.cartItems.toList(),
           pickupDateTime: pickupDateTime,
           pickupDay: pickupDay,
           pickupTimeRange: pickupTimeRange,
@@ -738,10 +738,10 @@ class OrderController extends GetxController {
         }
       }
 
-      cartController.viderPanier();
+      panierController.viderPanier();
       TFullScreenLoader.stopLoading();
 
-      final isEditing = cartController.editingOrderId.value.isNotEmpty;
+      final isEditing = panierController.editingOrderId.value.isNotEmpty;
 
       // Construire le sous-titre avec les informations de la commande
       String subTitle = isEditing

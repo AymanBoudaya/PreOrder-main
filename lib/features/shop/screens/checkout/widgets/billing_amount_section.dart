@@ -19,9 +19,9 @@ class TBillingAmountSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartController = CartController.instance;
-    final subTotal = cartController.totalCartPrice.value;
-    final preparationTime = cartController.calculerTempsPreparation();
+    final panierController = PanierController.instance;
+    final subTotal = panierController.totalCartPrice.value;
+    final preparationTime = panierController.calculerTempsPreparation();
     return Column(
       children: [
         /// Subtotal

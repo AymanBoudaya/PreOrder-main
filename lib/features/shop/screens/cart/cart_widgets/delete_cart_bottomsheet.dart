@@ -11,7 +11,7 @@ class DeleteAllBottomSheet extends StatelessWidget {
     required this.controller,
   });
 
-  final CartController controller;
+  final PanierController controller;
 
   @override
   Widget build(BuildContext context) {

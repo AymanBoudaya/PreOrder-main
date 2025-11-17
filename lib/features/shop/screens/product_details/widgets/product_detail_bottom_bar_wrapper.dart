@@ -19,7 +19,7 @@ class ProductDetailBottomBarWrapper extends StatelessWidget {
   final bool isSmallScreen;
   final VoidCallback? onVariationSelected;
 
-  void _handleMainAction(CartController controller) {
+  void _handleMainAction(PanierController controller) {
     if (!controller.peutAjouterProduit(product)) return;
 
     if (product.productType == 'variable') {
@@ -44,8 +44,8 @@ class ProductDetailBottomBarWrapper extends StatelessWidget {
       // Vérifier si la variation SPÉCIFIQUE est dans le panier (pour le mode ajout)
       final selectedSize = controller.variationController.selectedSize.value;
       if (selectedSize.isNotEmpty) {
-        final variationQuantity =
-            controller.obtenirQuantiteVariationDansPanier(product.id, selectedSize);
+        final variationQuantity = controller.obtenirQuantiteVariationDansPanier(
+            product.id, selectedSize);
         if (variationQuantity > 0) {
           // Cette variation spécifique est déjà dans le panier, naviguer vers le panier
           Get.to(() => const CartScreen());
@@ -66,7 +66,7 @@ class ProductDetailBottomBarWrapper extends StatelessWidget {
     controller.ajouterAuPanier(product);
   }
 
-  void _handleIncrement(CartController controller) {
+  void _handleIncrement(PanierController controller) {
     if (!controller.peutAjouterProduit(product)) return;
     if (product.productType == 'single' || controller.aVarianteSelectionnee()) {
       // Obtenir la quantité temporaire actuelle et l'incrémenter
@@ -75,7 +75,7 @@ class ProductDetailBottomBarWrapper extends StatelessWidget {
     }
   }
 
-  void _handleDecrement(CartController controller) {
+  void _handleDecrement(PanierController controller) {
     if (product.productType == 'single' || controller.aVarianteSelectionnee()) {
       // Obtenir la quantité temporaire actuelle et la décrémenter
       final currentQuantity = controller.obtenirQuantiteTemporaire(product);
@@ -88,7 +88,7 @@ class ProductDetailBottomBarWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use safe instance getter
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
 
     return ProductBottomBar(
       product: product,

@@ -19,11 +19,11 @@ class ProductQuantityControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
 
     return Obx(() {
       // Safety check: ensure controller is initialized
-      if (!Get.isRegistered<CartController>()) {
+      if (!Get.isRegistered<PanierController>()) {
         return const SizedBox.shrink();
       }
       // Utiliser obtenirQuantiteTemporaire qui gère correctement les variations et quantités temporaires

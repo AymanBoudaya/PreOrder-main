@@ -73,15 +73,16 @@ class OrderListController extends GetxController
     }
 
     // Charger les articles de la commande dans le panier
-    final cartController = CartController.instance;
-    cartController.chargerArticlesCommandeDansPanier(order.items, order.id);
+    final panierController = PanierController.instance;
+    panierController.chargerArticlesCommandeDansPanier(order.items, order.id);
 
     // Naviguer vers le panier
     Get.to(() => const CartScreen());
 
     TLoaders.successSnackBar(
       title: "Commande chargée",
-      message: "La commande a été chargée dans votre panier. Vous pouvez maintenant la modifier.",
+      message:
+          "La commande a été chargée dans votre panier. Vous pouvez maintenant la modifier.",
     );
   }
 }

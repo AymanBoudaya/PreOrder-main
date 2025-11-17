@@ -6,13 +6,13 @@ import '../../models/cart_item_model.dart';
 import '../../models/produit_model.dart';
 import 'variation_controller.dart';
 
-class CartController extends GetxController {
-  static CartController get instance {
+class PanierController extends GetxController {
+  static PanierController get instance {
     try {
-      return Get.find<CartController>();
+      return Get.find<PanierController>();
     } catch (e) {
       // Si non trouvé, le créer (ne devrait pas arriver avec un binding approprié)
-      return Get.put(CartController(), permanent: true);
+      return Get.put(PanierController(), permanent: true);
     }
   }
 
@@ -27,7 +27,7 @@ class CartController extends GetxController {
   // Obtenir VariationController depuis l'injection de dépendance GetX
   VariationController get variationController => VariationController.instance;
 
-  CartController() {
+  PanierController() {
     chargerArticlesPanier();
   }
 
@@ -339,7 +339,7 @@ class CartController extends GetxController {
         );
       } else {
         dialogRetirerDuPanier(index);
-        return; // Ne pas appeler mettreAJourPanier() ici, c'est appelé dans dialogRetirerDuPanier
+        return; 
       }
       mettreAJourPanier();
     }
@@ -450,27 +450,6 @@ class CartController extends GetxController {
     cartItems.addAll(orderItems);
     editingOrderId.value = orderId;
     mettreAJourPanier();
-  }
-
-  /// Vérifie si une commande est en cours de modification
-  bool get estEnModificationCommande => editingOrderId.value.isNotEmpty;
-
-  /// Vérifie si on peut procéder au paiement
-  bool peutPasserAuPaiement() {
-    if (cartItems.isEmpty) return false;
-
-    for (final item in cartItems) {
-      if (item.quantity <= 0) {
-        return false; // Empêcher le paiement si la quantité est 0
-      }
-      final product = item.product;
-      if (product != null && product.productType == 'variable') {
-        if (item.selectedVariation == null || item.selectedVariation!.isEmpty) {
-          return false;
-        }
-      }
-    }
-    return true;
   }
 
   /// Obtient la quantité d'un produit dans le panier (première occurrence)

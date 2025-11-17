@@ -17,12 +17,13 @@ class ProductPriceDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use safe instance getters
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
     final variationController = VariationController.instance;
 
     return Obx(() {
       // Safety check: ensure controllers are initialized
-      if (!Get.isRegistered<CartController>() || !Get.isRegistered<VariationController>()) {
+      if (!Get.isRegistered<PanierController>() ||
+          !Get.isRegistered<VariationController>()) {
         return const SizedBox.shrink();
       }
       double unitPrice;

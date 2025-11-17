@@ -20,11 +20,11 @@ class ProductCardAddToCartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartController = CartController.instance;
+    final panierController = PanierController.instance;
 
     return Obx(() {
       final productQuantityInCart =
-          cartController.obtenirQuantiteProduitDansPanier(product.id);
+          panierController.obtenirQuantiteProduitDansPanier(product.id);
 
       return Container(
         height: 32, // Slightly larger for detail page
@@ -39,16 +39,17 @@ class ProductCardAddToCartButton extends StatelessWidget {
           duration: const Duration(milliseconds: 250),
           child: productQuantityInCart > 0
               ? _buildCounterWidget(
-                  context, cartController, productQuantityInCart)
-              : _buildAddButton(context, cartController),
+                  context, panierController, productQuantityInCart)
+              : _buildAddButton(context, panierController),
         ),
       );
     });
   }
 
-  Widget _buildAddButton(BuildContext context, CartController cartController) {
+  Widget _buildAddButton(
+      BuildContext context, PanierController panierController) {
     return GestureDetector(
-      onTap: () => _handleAddToCart(cartController),
+      onTap: () => _handleAddToCart(panierController),
       child: Container(
         width: 32,
         height: 32,
@@ -67,7 +68,7 @@ class ProductCardAddToCartButton extends StatelessWidget {
   }
 
   Widget _buildCounterWidget(
-      BuildContext context, CartController cartController, int quantity) {
+      BuildContext context, PanierController panierController, int quantity) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4), // More padding
       child: Row(
@@ -75,7 +76,7 @@ class ProductCardAddToCartButton extends StatelessWidget {
         children: [
           // DECREMENT BUTTON
           GestureDetector(
-            onTap: () => _handleDecrement(cartController),
+            onTap: () => _handleDecrement(panierController),
             child: Container(
               width: 24, // Slightly larger
               height: 24,
@@ -109,7 +110,7 @@ class ProductCardAddToCartButton extends StatelessWidget {
 
           // INCREMENT BUTTON
           GestureDetector(
-            onTap: () => _handleIncrement(cartController),
+            onTap: () => _handleIncrement(panierController),
             child: Container(
               width: 24,
               height: 24,
@@ -131,9 +132,9 @@ class ProductCardAddToCartButton extends StatelessWidget {
     );
   }
 
-  void _handleAddToCart(CartController cartController) {
+  void _handleAddToCart(PanierController panierController) {
     // Vérifier si on peut ajouter ce produit
-    if (!cartController.peutAjouterProduit(product)) return;
+    if (!panierController.peutAjouterProduit(product)) return;
 
     // Pour les produits variables, rediriger vers la page de détail pour choisir la taille
     if (!isSingleProduct) {
@@ -143,14 +144,14 @@ class ProductCardAddToCartButton extends StatelessWidget {
 
     // Pour les produits simples, ajouter directement au panier
     if (isSingleProduct) {
-      final cartItem = cartController.produitVersArticlePanier(product, 1);
-      cartController.ajouterUnAuPanier(cartItem);
+      final cartItem = panierController.produitVersArticlePanier(product, 1);
+      panierController.ajouterUnAuPanier(cartItem);
     }
   }
 
-  void _handleIncrement(CartController cartController) {
+  void _handleIncrement(PanierController panierController) {
     // Vérifier si on peut ajouter ce produit
-    if (!cartController.peutAjouterProduit(product)) return;
+    if (!panierController.peutAjouterProduit(product)) return;
 
     // Pour les produits variables, rediriger vers la page de détail pour choisir la taille
     if (!isSingleProduct) {
@@ -160,15 +161,15 @@ class ProductCardAddToCartButton extends StatelessWidget {
 
     // Pour les produits simples, ajouter directement au panier
     if (isSingleProduct) {
-      final cartItem = cartController.produitVersArticlePanier(product, 1);
-      cartController.ajouterUnAuPanier(cartItem);
+      final cartItem = panierController.produitVersArticlePanier(product, 1);
+      panierController.ajouterUnAuPanier(cartItem);
     }
   }
 
-  void _handleDecrement(CartController cartController) {
+  void _handleDecrement(PanierController panierController) {
     if (isSingleProduct) {
-      final cartItem = cartController.produitVersArticlePanier(product, 1);
-      cartController.retirerUnDuPanier(cartItem);
+      final cartItem = panierController.produitVersArticlePanier(product, 1);
+      panierController.retirerUnDuPanier(cartItem);
     }
   }
 }

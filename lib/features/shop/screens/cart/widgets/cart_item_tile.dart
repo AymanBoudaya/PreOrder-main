@@ -28,7 +28,7 @@ class CartItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
     final dark = THelperFunctions.isDarkMode(context);
     final hasImage = item.image != null && item.image!.isNotEmpty;
 

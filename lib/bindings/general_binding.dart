@@ -26,7 +26,8 @@ class GeneralBinding extends Bindings {
     // Repositories d'abord
     Get.lazyPut<ProduitRepository>(() => ProduitRepository(), fenix: true);
     Get.lazyPut<UserRepository>(() => UserRepository(), fenix: true);
-    Get.lazyPut<EtablissementRepository>(() => EtablissementRepository(), fenix: true);
+    Get.lazyPut<EtablissementRepository>(() => EtablissementRepository(),
+        fenix: true);
     Get.lazyPut<OrderRepository>(() => OrderRepository(), fenix: true);
     Get.lazyPut<AddressRepository>(() => AddressRepository(), fenix: true);
     Get.lazyPut<BannerRepository>(() => BannerRepository(), fenix: true);
@@ -40,13 +41,14 @@ class GeneralBinding extends Bindings {
 
     // Controllers qui dépendent de UserController
     Get.lazyPut<AddressController>(() => AddressController(), fenix: true);
-    Get.lazyPut<CartController>(() => CartController(), fenix: true);
+    Get.lazyPut<PanierController>(() => PanierController(), fenix: true);
     Get.lazyPut<CheckoutController>(() => CheckoutController(), fenix: true);
     Get.lazyPut(() => OrderController());
     Get.lazyPut<FavoritesController>(() => FavoritesController(), fenix: true);
     Get.lazyPut<ShareController>(() => ShareController(), fenix: true);
     Get.lazyPut<VariationController>(() => VariationController(), fenix: true);
-    Get.lazyPut<UserManagementController>(() => UserManagementController(), fenix: true);
+    Get.lazyPut<UserManagementController>(() => UserManagementController(),
+        fenix: true);
     Get.lazyPut<EtablissementController>(
         () => EtablissementController(Get.find<EtablissementRepository>()),
         fenix: true);

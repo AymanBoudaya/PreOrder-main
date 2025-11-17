@@ -34,27 +34,31 @@ class ProductDetailScreen extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (Get.isRegistered<VariationController>()) {
           final variationController = VariationController.instance;
-          final cartController = CartController.instance;
-          
+          final panierController = PanierController.instance;
+
           // Find the size and price for this variation
           final sizePrice = product.sizesPrices.firstWhereOrNull(
             (sp) => sp.size == initialVariationId,
           );
           if (sizePrice != null) {
             // Select the variation
-            variationController.selectVariation(sizePrice.size, sizePrice.price);
-            
+            variationController.selectVariation(
+                sizePrice.size, sizePrice.price);
+
             // Initialize temp quantity with the current cart item's quantity if not already set
             // This ensures quantity controls show the correct value
-            final currentTempQuantity = cartController.obtenirQuantiteTemporaire(product);
+            final currentTempQuantity =
+                panierController.obtenirQuantiteTemporaire(product);
             if (currentTempQuantity == 0) {
               // Obtenir la quantité du panier pour cette variation
-              final cartQuantity = cartController.obtenirQuantiteVariationDansPanier(
+              final cartQuantity =
+                  panierController.obtenirQuantiteVariationDansPanier(
                 product.id,
                 initialVariationId!,
               );
               if (cartQuantity > 0) {
-                cartController.mettreAJourQuantiteTemporaire(product, cartQuantity);
+                panierController.mettreAJourQuantiteTemporaire(
+                    product, cartQuantity);
               }
             }
           }

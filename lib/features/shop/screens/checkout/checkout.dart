@@ -23,14 +23,14 @@ class CheckoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartController = Get.find<CartController>();
+    final panierController = Get.find<PanierController>();
     // S'assurer que UserController est initialisé
     try {
       Get.find<UserController>();
     } catch (e) {
       Get.put(UserController(), permanent: true);
     }
-    final subTotal = cartController.totalCartPrice.value;
+    final subTotal = panierController.totalCartPrice.value;
     // Use instance getter which handles creation if needed
     final orderController = OrderController.instance;
     final totalAmount = TPricingCalculator.calculateTotalPrice(subTotal, 'tn');
@@ -121,9 +121,9 @@ class CheckoutScreen extends StatelessWidget {
   // WIDGET : Aucun créneau sélectionné
   Widget _buildNoTimeSlotWidget(OrderController orderController) {
     final dark = THelperFunctions.isDarkMode(Get.context!);
-    final cartController = Get.find<CartController>();
-    final firstItem = cartController.cartItems.isNotEmpty
-        ? cartController.cartItems.first
+    final panierController = Get.find<PanierController>();
+    final firstItem = panierController.cartItems.isNotEmpty
+        ? panierController.cartItems.first
         : null;
 
     if (firstItem == null) {
@@ -327,9 +327,9 @@ class CheckoutScreen extends StatelessWidget {
             TextButton(
               onPressed: () async {
                 final dark = THelperFunctions.isDarkMode(Get.context!);
-                final cartController = Get.find<CartController>();
-                final firstItem = cartController.cartItems.isNotEmpty
-                    ? cartController.cartItems.first
+                final panierController = Get.find<PanierController>();
+                final firstItem = panierController.cartItems.isNotEmpty
+                    ? panierController.cartItems.first
                     : null;
                 if (firstItem == null) {
                   TLoaders.warningSnackBar(
@@ -418,11 +418,11 @@ class CheckoutScreen extends StatelessWidget {
     double totalAmount,
     BuildContext context,
   ) async {
-    final cartController = CartController.instance;
+    final panierController = PanierController.instance;
     final addressController = Get.find<AddressController>();
 
     // Vérifier panier
-    if (cartController.cartItems.isEmpty) {
+    if (panierController.cartItems.isEmpty) {
       TLoaders.warningSnackBar(
         title: 'Panier vide',
         message: 'Veuillez ajouter des produits au panier',
@@ -431,14 +431,14 @@ class CheckoutScreen extends StatelessWidget {
     }
 
     // Calcul etablissementId + date/heure
-    final etablissementId = cartController.cartItems.first.etablissementId;
+    final etablissementId = panierController.cartItems.first.etablissementId;
 
     // Vérifier créneau - si aucun n'est sélectionné, calculer un créneau par défaut
     bool creneauAutoDefini = false;
     if (orderController.selectedSlot.value == null ||
         orderController.selectedDay.value == null) {
       // Calculer le temps de préparation de la commande
-      final preparationTime = cartController.calculerTempsPreparation();
+      final preparationTime = panierController.calculerTempsPreparation();
 
       // Calculer et définir un créneau par défaut (1h + 15 min + temps de préparation)
       final creneauValide = await orderController.calculerCreneauParDefaut(
@@ -464,9 +464,10 @@ class CheckoutScreen extends StatelessWidget {
     }
 
     // Récupérer l'adresse seulement si elle existe (optionnelle)
-    final selectedAddressId = addressController.selectedAddress.value.id.isNotEmpty
-        ? addressController.selectedAddress.value.id
-        : null;
+    final selectedAddressId =
+        addressController.selectedAddress.value.id.isNotEmpty
+            ? addressController.selectedAddress.value.id
+            : null;
 
     // Calculate pickupDateTime based on selected day
     final now = DateTime.now();
@@ -503,7 +504,8 @@ class CheckoutScreen extends StatelessWidget {
       pickupDateTime: pickupDateTime,
       etablissementId: etablissementId,
       addressId: selectedAddressId, // plus de ""
-      creneauAutoDefini: creneauAutoDefini, // Passer l'info si le créneau a été auto-défini
+      creneauAutoDefini:
+          creneauAutoDefini, // Passer l'info si le créneau a été auto-défini
     );
   }
 }

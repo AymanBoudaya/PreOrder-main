@@ -16,7 +16,7 @@ class TimeSlotModal {
     // Use instance getter which handles creation if needed
     final orderController = OrderController.instance;
 
-    final cartController = CartController.instance;
+    final panierController = PanierController.instance;
 
     // Use Get.put with tag or find if exists to avoid duplicates
     HoraireController horaireController;
@@ -78,7 +78,7 @@ class TimeSlotModal {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (_) => _buildTimeSlotModalContent(
-          context, dark, horaireController, orderController, cartController),
+          context, dark, horaireController, orderController, panierController),
     );
   }
 
@@ -87,7 +87,7 @@ class TimeSlotModal {
     bool dark,
     HoraireController horaireController,
     OrderController orderController,
-    CartController cartController,
+    PanierController panierController,
   ) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -112,7 +112,7 @@ class TimeSlotModal {
 
           /// Bouton de confirmation
           _buildConfirmButton(
-              orderController, horaireController, cartController, context),
+              orderController, horaireController, panierController, context),
         ],
       ),
     );
@@ -316,7 +316,7 @@ class TimeSlotModal {
   Widget _buildConfirmButton(
     OrderController orderController,
     HoraireController horaireController,
-    CartController cartController,
+    PanierController panierController,
     BuildContext context,
   ) {
     return Obx(() {
@@ -330,7 +330,7 @@ class TimeSlotModal {
       return ElevatedButton.icon(
         onPressed: hasSelection
             ? () => _confirmOrder(
-                orderController, horaireController, cartController, context)
+                orderController, horaireController, panierController, context)
             : null,
         icon: const Icon(Icons.check),
         label: const Text("Confirmer le créneau"),
@@ -349,7 +349,7 @@ class TimeSlotModal {
   Future<void> _confirmOrder(
     OrderController orderController,
     HoraireController horaireController,
-    CartController cartController,
+    PanierController panierController,
     BuildContext context,
   ) async {
     try {

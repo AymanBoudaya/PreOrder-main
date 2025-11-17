@@ -14,7 +14,7 @@ class CartItemVariantButtons extends StatelessWidget {
   });
 
   final CartItemModel cartItem;
-  final CartController controller;
+  final PanierController controller;
   final VoidCallback onEdit;
   final VoidCallback onAdd;
 
@@ -25,7 +25,7 @@ class CartItemVariantButtons extends StatelessWidget {
 
     return Obx(() {
       // Safety check: ensure controller is initialized
-      if (!Get.isRegistered<CartController>()) {
+      if (!Get.isRegistered<PanierController>()) {
         return const SizedBox.shrink();
       }
       // Vérifie si la variation actuelle est déjà dans le panier

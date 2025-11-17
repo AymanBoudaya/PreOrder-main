@@ -30,12 +30,12 @@ class TCartItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get controller once outside Obx to avoid repeated lookups using safe instance getter
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
     final dark = THelperFunctions.isDarkMode(context);
 
     return Obx(() {
       // Safety check: ensure controller is initialized
-      if (!Get.isRegistered<CartController>()) {
+      if (!Get.isRegistered<PanierController>()) {
         return const SizedBox.shrink();
       }
       final items = controller.cartItems;
@@ -84,7 +84,8 @@ class TCartItems extends StatelessWidget {
                           ),
 
                           /// Current Variation Display
-                          if (cartItem.product?.productType == 'variable' && cartItem.selectedVariation != null &&
+                          if (cartItem.product?.productType == 'variable' &&
+                              cartItem.selectedVariation != null &&
                               cartItem.selectedVariation!.isNotEmpty) ...[
                             const SizedBox(height: 4),
                             Text(
@@ -122,7 +123,8 @@ class TCartItems extends StatelessWidget {
                       IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
-                        onPressed: () => controller.dialogRetirerDuPanier(index),
+                        onPressed: () =>
+                            controller.dialogRetirerDuPanier(index),
                         icon: Icon(
                           Icons.delete_outline,
                           size: 20,
@@ -152,7 +154,9 @@ class TCartItems extends StatelessWidget {
                           '${item.quantity} x ${item.price.toStringAsFixed(2)} DT',
                           style: TextStyle(
                             fontSize: 14,
-                            color: dark ? Colors.grey.shade300 : Colors.grey.shade700,
+                            color: dark
+                                ? Colors.grey.shade300
+                                : Colors.grey.shade700,
                           ),
                         ),
                         // Total Price
@@ -181,7 +185,8 @@ class TCartItems extends StatelessWidget {
                       /// Total Price
                       Obx(() {
                         // Get updated cart item from controller
-                        final currentItem = controller.cartItems.firstWhereOrNull(
+                        final currentItem =
+                            controller.cartItems.firstWhereOrNull(
                           (item) =>
                               item.productId == cartItem.productId &&
                               item.variationId == cartItem.variationId,
@@ -220,7 +225,7 @@ class TCartItems extends StatelessWidget {
     }
 
     // Find the cart item index
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
     final cartItemIndex = controller.cartItems.indexWhere(
       (item) =>
           item.productId == cartItem.productId &&
@@ -248,7 +253,7 @@ class TCartItems extends StatelessWidget {
       if (sizePrice != null) {
         // Select the variation first
         variationController.selectVariation(sizePrice.size, sizePrice.price);
-        
+
         // Initialiser la quantité temporaire avec la quantité actuelle de l'article du panier
         // Cela garantit que les contrôles de quantité affichent la bonne valeur
         controller.mettreAJourQuantiteTemporaire(product, cartItem.quantity);
@@ -287,7 +292,7 @@ class TCartItems extends StatelessWidget {
 
     // Réinitialiser la quantité temporaire pour ce produit lors de l'ajout d'une nouvelle variante
     // Cela garantit que la quantité commence à zéro pour la nouvelle variante
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
     controller.reinitialiserQuantiteTemporaireProduit(product.id);
 
     // Navigate to product detail

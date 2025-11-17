@@ -10,14 +10,14 @@ class CartAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
     return TAppBar(
       title: Text('Panier', style: Theme.of(context).textTheme.headlineSmall),
       showBackArrow: true,
       actions: [
         Obx(() {
           // Safety check: ensure controller is initialized
-          if (!Get.isRegistered<CartController>()) {
+          if (!Get.isRegistered<PanierController>()) {
             return const SizedBox.shrink();
           }
           if (controller.cartItems.isEmpty) return const SizedBox.shrink();

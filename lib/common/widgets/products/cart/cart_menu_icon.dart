@@ -19,7 +19,7 @@ class TCartCounterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CartController());
+    final controller = Get.put(PanierController());
     final dark = THelperFunctions.isDarkMode(context);
     return Stack(
       children: [
@@ -42,9 +42,9 @@ class TCartCounterIcon extends StatelessWidget {
                 () => Text(
                   controller.cartItemsCount.value.toString(),
                   style: Theme.of(context).textTheme.labelLarge!.apply(
-                    color: AppColors.white,
-                    fontSizeFactor: 0.8,
-                  ),
+                        color: AppColors.white,
+                        fontSizeFactor: 0.8,
+                      ),
                 ),
               ),
             ),

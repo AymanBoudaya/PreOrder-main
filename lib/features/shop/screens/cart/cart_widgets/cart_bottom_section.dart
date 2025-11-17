@@ -9,7 +9,7 @@ class CartBottomSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = CartController.instance;
+    final controller = PanierController.instance;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -62,7 +62,7 @@ class CartBottomSection extends StatelessWidget {
 }
 
 class _TotalPrice extends StatelessWidget {
-  final CartController controller;
+  final PanierController controller;
   const _TotalPrice({required this.controller});
 
   String _formatPreparationTime(int minutes) {

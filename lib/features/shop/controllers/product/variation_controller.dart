@@ -58,18 +58,6 @@ class VariationController extends GetxController {
     super.onClose();
   }
 
-  /// -- Get available attribute values based on stock
-  Set<String?> getAttributesAvailabilityInVariation(
-      List<ProductVariationModel> variations, String attributeName) {
-    return variations
-        .where((variation) =>
-            variation.attributeValues[attributeName] != null &&
-            variation.attributeValues[attributeName]!.isNotEmpty &&
-            variation.stock > 0)
-        .map((variation) => variation.attributeValues[attributeName])
-        .toSet();
-  }
-
   String getVariationPrice() {
     return (selectedVariation.value.salePrice > 0
             ? selectedVariation.value.salePrice

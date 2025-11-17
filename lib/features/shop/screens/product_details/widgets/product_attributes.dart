@@ -28,20 +28,20 @@ class TProductAttributes extends StatelessWidget {
   Widget build(BuildContext context) {
     // Safe access to controllers using instance getters
     final variationController = VariationController.instance;
-    final cartController = CartController.instance;
+    final panierController = PanierController.instance;
     final dark = THelperFunctions.isDarkMode(context);
 
     return Obx(() {
       // Safety check: ensure controllers are initialized
       if (!Get.isRegistered<VariationController>() ||
-          !Get.isRegistered<CartController>()) {
+          !Get.isRegistered<PanierController>()) {
         return const SizedBox.shrink();
       }
       final selectedSize = variationController.selectedSize.value;
 
       // ✅ Ensemble des variations déjà ajoutées au panier
       final variationsInCartSet =
-          cartController.obtenirVariationsDansPanierSet(product.id);
+          panierController.obtenirVariationsDansPanierSet(product.id);
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,7 @@ class TProductAttributes extends StatelessWidget {
 
               // Obtenir la quantité de cette variation dans le panier
               final variationQuantity = isInCart
-                  ? cartController.obtenirQuantiteVariationDansPanier(
+                  ? panierController.obtenirQuantiteVariationDansPanier(
                       product.id, sp.size)
                   : 0;
 
