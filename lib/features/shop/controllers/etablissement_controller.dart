@@ -33,8 +33,6 @@ class EtablissementController extends GetxController {
   }
 
   Future<void> _loadEtablissementsAccordingToRole() async {
-    debugPrint(
-        "🟢 [EtablissementController] Chargement des établissements selon le rôle de l'utilisateur");
     try {
       final userRole = userController.userRole;
       final userId = userController.user.value.id;
@@ -396,7 +394,6 @@ class EtablissementController extends GetxController {
     }
   }
 
-  // Pour Admin - tous les établissements
   Future<List<Etablissement>> getTousEtablissements() async {
     debugPrint("🟢 [EtablissementController] Chargement de tous les établissements");
     try {
@@ -412,56 +409,7 @@ class EtablissementController extends GetxController {
       isLoading.value = false;
     }
   }
-
-  // Pour Store - charger tous les établissements approuvés (indépendamment du rôle)
-  Future<List<Etablissement>> getApprovedEtablissementsForStore(
-      {bool refreshOnly = false}) async {
-    try {
-      if (!refreshOnly && etablissements.isEmpty) {
-        isLoading.value = true;
-      }
-      // Charger tous les établissements depuis le repository
-      final data = await repo.getAllEtablissements();
-      // Filtrer pour ne garder que les établissements approuvés
-      final approved =
-          data.where((e) => e.statut == StatutEtablissement.approuve).toList();
-      // Mettre à jour la liste réactive avec tous les établissements approuvés
-      etablissements.assignAll(approved);
-      return approved;
-    } catch (e) {
-      TLoaders.errorSnackBar(message: 'Erreur chargement établissements: $e');
-      rethrow;
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<Etablissement?> getEtablissementWithOwner(String id) async {
-    try {
-      // Chercher d'abord dans la liste locale
-      var etablissement = etablissements.firstWhereOrNull((e) => e.id == id);
-
-      if (etablissement != null && etablissement.owner != null) {
-        return etablissement;
-      }
-
-      // Sinon charger depuis l'API
-      final tousEtablissements = await getTousEtablissementsPourProduit();
-      etablissement = tousEtablissements.firstWhereOrNull((e) => e.id == id);
-
-      // Si toujours pas d'owner, utiliser l'utilisateur courant
-      if (etablissement != null && etablissement.owner == null) {
-        etablissement =
-            etablissement.copyWith(owner: userController.user.value);
-      }
-
-      return etablissement;
-    } catch (e) {
-      _logError('récupération avec owner', e);
-      return null;
-    }
-  }
-
+  
   bool isRecentEtablissement(Etablissement e) {
     final now = DateTime.now();
     final diff = now.difference(e.createdAt); // le "!" car on a déjà vérifié
@@ -525,17 +473,6 @@ class EtablissementController extends GetxController {
     return result ?? false;
   }
 
-  // Récupérer un établissement par ID
-  Future<Etablissement?> getEtablissementById(String id) async {
-    try {
-      final tousEtablissements = await getTousEtablissementsPourProduit();
-      return tousEtablissements.firstWhereOrNull((etab) => etab.id == id);
-    } catch (e) {
-      _logError('récupération par ID', e);
-      return null;
-    }
-  }
-
   bool _isUserGerant() {
     final userRole = userController.userRole;
     return userRole == 'Gérant';
@@ -567,17 +504,6 @@ class EtablissementController extends GetxController {
     }
   }
 
-  // Pour les produits - sans loading state
-  Future<List<Etablissement>> getTousEtablissementsPourProduit() async {
-    try {
-      final data = await repo.getAllEtablissements();
-      return data;
-    } catch (e, stack) {
-      _logError('récupération établissements pour produit', e, stack);
-      return [];
-    }
-  }
-
   void _logError(String action, Object error, [StackTrace? stack]) {
     print('Erreur $action: $error');
     if (stack != null) {
@@ -601,15 +527,4 @@ class EtablissementController extends GetxController {
     }
   }
 
-  /// -- Charger ETS pour une catégorie
-  Future<List<Etablissement>> getBrandsForCategory(String categoryId) async {
-    try {
-      final brands = await repo.getBrandsForCategory(categoryId);
-
-      return brands;
-    } catch (e) {
-      TLoaders.errorSnackBar(title: 'Erreur', message: e.toString());
-      return [];
-    }
-  }
 }

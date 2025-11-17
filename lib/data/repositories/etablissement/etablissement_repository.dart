@@ -58,13 +58,9 @@ class EtablissementRepository {
   // Changement de statut
   Future<bool> changeStatut(String id, StatutEtablissement newStatut) async {
     try {
-      print('Changement statut établissement $id: ${newStatut.value}');
-
       await _db
           .from(_table)
           .update({'statut': newStatut.value}).eq('id', id);
-
-      print('Statut établissement $id changé avec succès');
       return true;
     } catch (e, stack) {
       print('Erreur changement statut établissement $id: $e');
@@ -72,68 +68,6 @@ class EtablissementRepository {
       rethrow;
     }
   }
-
-  Future<List<Etablissement>> getFeaturedEtablissements() async {
-    try {
-      final response = await _db
-          .from(_table)
-          .select('*, id_owner:users!id_owner(*)') // Jointure explicite
-          .eq('is_featured', true)
-          .limit(4)
-          .order('created_at', ascending: false);
-      
-      final etablissements = response
-          .map<Etablissement>((json) => Etablissement.fromJson(json))
-          .toList();
-
-      if (etablissements.isEmpty) return etablissements;
-
-      // Optimisation: Compter tous les produits en UNE seule requête batch
-      final etablissementIds = etablissements
-          .map((e) => e.id)
-          .whereType<String>()
-          .where((id) => id.isNotEmpty)
-          .toList();
-
-      if (etablissementIds.isNotEmpty) {
-        try {
-          // Récupérer tous les produits en une seule requête
-          final countsResponse = await _db
-              .from('produits')
-              .select('etablissement_id')
-              .inFilter('etablissement_id', etablissementIds);
-
-          // Compter les produits par établissement
-          final productCounts = <String, int>{};
-          for (var product in countsResponse as List) {
-            final etabId = product['etablissement_id']?.toString() ?? '';
-            if (etabId.isNotEmpty) {
-              productCounts[etabId] = (productCounts[etabId] ?? 0) + 1;
-            }
-          }
-
-          // Assigner les comptages
-          for (int i = 0; i < etablissements.length; i++) {
-            final etablissement = etablissements[i];
-            if (etablissement.id != null && etablissement.id!.isNotEmpty) {
-              final count = productCounts[etablissement.id!] ?? 0;
-              etablissements[i] = etablissement.copyWith(nbProduits: count.toDouble());
-            }
-          }
-        } catch (e) {
-          print('Erreur comptage produits batch: $e');
-          // En cas d'erreur, laisser nbProduits à 0 pour tous
-        }
-      }
-
-      return etablissements;
-    } on PostgrestException catch (e) {
-      throw 'Database error: ${e.message}';
-    } catch (e) {
-      throw 'Echec de chargement des produits en vedette : ${e.toString()}';
-    }
-  }
-
   // Récupérer tous les établissements avec le nombre de produits
   Future<List<Etablissement>> getAllEtablissements() async {
     try {
@@ -256,15 +190,7 @@ class EtablissementRepository {
     }
   }
 
-  Future<List<Etablissement>> getBrandsForCategory(String categoryId) async {
-    try {
-      return [];
-    } on PostgrestException catch (e) {
-      throw 'Erreur Supabase: ${e.message}';
-    } catch (e) {
-      throw 'Quelque chose s\'est mal passée lors de la récupération des bannières.';
-    }
-  }
+
 
   // Suppression avec gestion des dépendances
   Future<bool> deleteEtablissement(String id) async {

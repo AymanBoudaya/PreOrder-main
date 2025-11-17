@@ -82,8 +82,7 @@ class AddressController extends GetxController {
     }
   }
 
-  /// ───────────────────────────────────────────────
-  /// SELECT ADDRESS
+  /// Sélectionner une addresse
   Future selectAddress(AddressModel newSelectedAddress) async {
     try {
       Get.defaultDialog(
@@ -96,14 +95,14 @@ class AddressController extends GetxController {
 
       // Unselect previous
       if (selectedAddress.value.id.isNotEmpty) {
-        await addressRepository.updateSelectedField(
+        await addressRepository.selectOtherAddress(
             selectedAddress.value.id, false);
       }
 
       // Set new one
       newSelectedAddress.selectedAddress = true;
       selectedAddress.value = newSelectedAddress;
-      await addressRepository.updateSelectedField(
+      await addressRepository.selectOtherAddress(
           selectedAddress.value.id, true);
 
       Get.back();

@@ -30,7 +30,7 @@ class BannerRepository extends GetxController {
     }
   }
 
-  /// Charger les bannières mises en avant
+  /// Charger les bannières en vedette
   Future<List<BannerModel>> getFeaturedBanners() async {
     try {
       final response = await _db
@@ -96,8 +96,7 @@ class BannerRepository extends GetxController {
     }
   }
 
-  /// Upload d'image compatible Web & Mobile
-  /// [file] peut être XFile (mobile) ou Uint8List (web)
+  /// Upload d'image compatible Web & Mobile peut être XFile (mobile) ou Uint8List (web)
   Future<String> uploadBannerImage(dynamic file, {bool isMobile = false}) async {
     try {
       final fileName = 'banner_${DateTime.now().millisecondsSinceEpoch}.${isMobile ? 'jpg' : 'png'}';
