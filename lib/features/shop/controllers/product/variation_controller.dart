@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 
-import '../../models/product_variation_model.dart';
 import '../../models/produit_model.dart';
 
 class VariationController extends GetxController {
@@ -15,8 +14,8 @@ class VariationController extends GetxController {
   /// Variables
   final RxMap<String, dynamic> selectedAttributes = <String, dynamic>{}.obs;
   final RxString variationStockStatus = ''.obs;
-  final Rx<ProductVariationModel> selectedVariation =
-      ProductVariationModel.empty().obs;
+  // Use Map<String, String>? to match CartItemModel.selectedVariation
+  final Rx<Map<String, String>?> selectedVariation = Rx<Map<String, String>?>(null);
 
   /// -- Check if selected attributes match variation attributes
   RxString selectedSize = ''.obs;
@@ -30,25 +29,20 @@ class VariationController extends GetxController {
     // This ensures consistency between cart items and product variations
     final variationId = size;
 
-    // Create or update the variation model
-    selectedVariation.value = ProductVariationModel(
-      id: variationId,
-      attributeValues: {
-        'id': variationId,
-        'taille': size,
-        'size': size, // Support both French and English keys
-        'prix': price.toString(),
-        'price': price.toString(), // Support both French and English keys
-      },
-      price: price,
-      salePrice: 0.0,
-      stock: 10, // example or dynamic value
-    );
+    // Create or update the variation map (matching CartItemModel structure)
+    selectedVariation.value = {
+      'id': variationId,
+      'taille': size,
+      'size': size, // Support both French and English keys
+      'prix': price.toString(),
+      'price': price.toString(), // Support both French and English keys
+    };
   }
 
   void clearVariation() {
     selectedSize.value = '';
     selectedPrice.value = 0.0;
+    selectedVariation.value = null;
   }
 
   @override
@@ -58,46 +52,13 @@ class VariationController extends GetxController {
     super.onClose();
   }
 
-  String getVariationPrice() {
-    return (selectedVariation.value.salePrice > 0
-            ? selectedVariation.value.salePrice
-            : selectedVariation.value.price)
-        .toString();
-  }
-
-  /// -- Update stock status text
-  void getProductVariationStockStatus() {
-    variationStockStatus.value =
-        selectedVariation.value.stock > 0 ? 'En Stock' : 'Hors Stock';
-  }
-
   /// -- Reset all selections
   void resetSelectedAttributes() {
     selectedAttributes.clear();
     variationStockStatus.value = '';
-    selectedVariation.value = ProductVariationModel.empty();
+    selectedVariation.value = null;
     // Also clear selectedSize and selectedPrice to keep UI in sync
     clearVariation();
   }
 
-  /// -- Initialize variation from variation ID (size)
-  void initializeFromVariationId(String variationId, {double? price}) {
-    if (variationId.isEmpty) return;
-    // If price is provided, use it; otherwise try to get from selectedPrice
-    final variationPrice =
-        price ?? (selectedPrice.value > 0 ? selectedPrice.value : 0.0);
-    selectVariation(variationId, variationPrice);
-  }
-
-  /// -- Initialize variation from product and size
-  void initializeFromProductAndSize(ProduitModel product, String size) {
-    if (size.isEmpty) return;
-    // Find the size in product.sizesPrices
-    final sizePrice = product.sizesPrices.firstWhereOrNull(
-      (sp) => sp.size == size,
-    );
-    if (sizePrice != null) {
-      selectVariation(sizePrice.size, sizePrice.price);
-    }
-  }
 }
