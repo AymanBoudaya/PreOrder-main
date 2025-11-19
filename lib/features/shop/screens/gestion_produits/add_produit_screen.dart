@@ -703,7 +703,6 @@ class _AddProduitScreenState extends State<AddProduitScreen>
                                   ],
                                 ),
                                 const SizedBox(height: 8),
-                                // Small helper text
                                 Text(
                                   'Les champs marqués d\'un * sont requis.',
                                   style: Theme.of(context).textTheme.bodySmall,

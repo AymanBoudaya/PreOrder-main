@@ -142,7 +142,7 @@ class THelperFunctions {
     }
   }
 
-  // Méthodes helper pour le statut
+  // Méthode pour le statut
   static String getStatutText(StatutEtablissement statut) {
     switch (statut) {
       case StatutEtablissement.approuve:
@@ -151,6 +151,17 @@ class THelperFunctions {
         return 'Rejeté ✗';
       case StatutEtablissement.en_attente:
         return 'En attente de validation';
+    }
+  }
+
+    static Color getStatutColor(StatutEtablissement statut) {
+    switch (statut) {
+      case StatutEtablissement.approuve:
+        return Colors.green;
+      case StatutEtablissement.rejete:
+        return Colors.red;
+      case StatutEtablissement.en_attente:
+        return Colors.orange;
     }
   }
 }

@@ -16,7 +16,6 @@ import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../shop/controllers/product/horaire_controller.dart';
 import '../../../shop/models/etablissement_model.dart';
 import '../../../shop/models/horaire_model.dart';
-import '../../../shop/models/jour_semaine.dart';
 import '../../../shop/models/statut_etablissement_model.dart';
 import '../../controllers/user_controller.dart';
 import '../categories/widgets/category_form_widgets.dart';
@@ -420,7 +419,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
                         width: 12,
                         height: 12,
                         decoration: BoxDecoration(
-                          color: _getStatutColor(statut),
+                          color: THelperFunctions.getStatutColor(statut),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -544,7 +543,6 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
   }
 
   Widget _buildHorairesPreview() {
-    final dark = THelperFunctions.isDarkMode(context);
     final horairesOuverts = _horaireController.horaires
         .where((h) => h.estOuvert && h.isValid)
         .toList();
@@ -629,19 +627,6 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
         ],
       ),
     );
-  }
-
-
-
-  Color _getStatutColor(StatutEtablissement statut) {
-    switch (statut) {
-      case StatutEtablissement.approuve:
-        return Colors.green;
-      case StatutEtablissement.rejete:
-        return Colors.red;
-      case StatutEtablissement.en_attente:
-        return Colors.orange;
-    }
   }
 
   @override

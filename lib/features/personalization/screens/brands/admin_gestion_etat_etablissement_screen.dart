@@ -84,7 +84,7 @@ class _AdminGestionEtablissementsScreenState
                 title: Text(THelperFunctions.getStatutText(statut)),
                 value: statut,
                 groupValue: etab.statut,
-                activeColor: _getStatutColor(statut),
+                activeColor: THelperFunctions.getStatutColor(statut),
                 onChanged: (value) {
                   Navigator.pop(context, value);
                 },
@@ -103,17 +103,6 @@ class _AdminGestionEtablissementsScreenState
         _loadEtablissements(); // Rafraîchir la liste
       }
       setState(() => _isLoading = false);
-    }
-  }
-
-  Color _getStatutColor(StatutEtablissement statut) {
-    switch (statut) {
-      case StatutEtablissement.approuve:
-        return Colors.green;
-      case StatutEtablissement.rejete:
-        return Colors.red;
-      case StatutEtablissement.en_attente:
-        return Colors.orange;
     }
   }
 
@@ -155,7 +144,7 @@ class _AdminGestionEtablissementsScreenState
                       margin: const EdgeInsets.all(8),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: _getStatutColor(etab.statut),
+                          backgroundColor: THelperFunctions.getStatutColor(etab.statut),
                           child: const Icon(Icons.store, color: Colors.white),
                         ),
                         title: Text(etab.name),
@@ -167,7 +156,7 @@ class _AdminGestionEtablissementsScreenState
                             Text(
                               THelperFunctions.getStatutText(etab.statut),
                               style: TextStyle(
-                                color: _getStatutColor(etab.statut),
+                                color: THelperFunctions.getStatutColor(etab.statut),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
