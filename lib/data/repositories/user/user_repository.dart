@@ -12,7 +12,8 @@ class UserRepository extends GetxController {
 
   final SupabaseClient _client = Supabase.instance.client;
   final _table = 'users';
-  final authRepo = Get.find<AuthenticationRepository>();
+  
+  AuthenticationRepository get authRepo => Get.find<AuthenticationRepository>();
 
   /// Sauvegarder ou mettre à jour un utilisateur
   Future<void> saveUserRecord(UserModel user) async {

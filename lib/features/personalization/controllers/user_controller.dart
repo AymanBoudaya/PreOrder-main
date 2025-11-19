@@ -19,7 +19,8 @@ class UserController extends GetxController {
 
   final profileLoading = false.obs;
   Rx<UserModel> user = UserModel.empty().obs;
-  final authRepo = Get.find<AuthenticationRepository>();
+  
+  AuthenticationRepository get authRepo => Get.find<AuthenticationRepository>();
 
   // Lazy access to UserRepository to avoid initialization issues
   UserRepository get userRepository {

@@ -23,16 +23,23 @@ class GeneralBinding extends Bindings {
   @override
   void dependencies() {
     // Repositories d'abord
+    // Note: UserRepository, UserController, and AuthenticationRepository
+    // are already registered in main.dart with permanent: true
+    // So we only register them here if they don't exist (shouldn't happen, but safe check)
+    if (!Get.isRegistered<UserRepository>()) {
+      Get.lazyPut<UserRepository>(() => UserRepository(), fenix: true);
+    }
+    if (!Get.isRegistered<UserController>()) {
+      Get.lazyPut<UserController>(() => UserController(), fenix: true);
+    }
+
     Get.lazyPut<ProduitRepository>(() => ProduitRepository(), fenix: true);
-    Get.lazyPut<UserRepository>(() => UserRepository(), fenix: true);
     Get.lazyPut<EtablissementRepository>(() => EtablissementRepository(),
         fenix: true);
     Get.lazyPut<OrderRepository>(() => OrderRepository(), fenix: true);
     Get.lazyPut<AddressRepository>(() => AddressRepository(), fenix: true);
     Get.lazyPut<BannerRepository>(() => BannerRepository(), fenix: true);
 
-    // UserController doit être créé avant OrderController car OrderController en dépend
-    Get.lazyPut<UserController>(() => UserController(), fenix: true);
     Get.lazyPut<NetworkManager>(() => NetworkManager(), fenix: true);
 
     // Controllers d'authentification

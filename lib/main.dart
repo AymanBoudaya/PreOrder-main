@@ -8,6 +8,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app.dart';
 import 'data/repositories/authentication/authentication_repository.dart';
+import 'data/repositories/user/user_repository.dart';
+import 'features/personalization/controllers/user_controller.dart';
 
 Future<void> main() async {
   // Assurer l'initialisation du binding des widgets Flutter
@@ -26,8 +28,11 @@ Future<void> main() async {
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-  // Injecter votre repository d'authentification (à remplacer par votre implémentation)
-  Get.put(AuthenticationRepository());
+  Get.put<UserRepository>(UserRepository(), permanent: true);
+  Get.put<UserController>(UserController(), permanent: true);
+  
+  // NOW AuthenticationRepository can safely find its dependencies
+  Get.put<AuthenticationRepository>(AuthenticationRepository(), permanent: true);
 
   // Utiliser la stratégie d'URL basée sur le chemin pour Flutter web (optionnel)
   usePathUrlStrategy();
