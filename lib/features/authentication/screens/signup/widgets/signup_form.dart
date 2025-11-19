@@ -4,43 +4,10 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:caferesto/features/authentication/controllers/signup/signup_controller.dart';
 
+import '../../../../../utils/constants/enums.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
 import '../../../../../utils/validators/validation.dart';
-
-enum UserRole {
-  Client('Client', 'Client'),
-  Gerant('Gérant', 'Gérant');
-
-  final String dbValue;
-  final String label;
-  const UserRole(this.dbValue, this.label);
-
-  static UserRole? fromDb(String? value) {
-    if (value == null) return null;
-    return UserRole.values.firstWhere(
-      (role) => role.dbValue == value,
-      orElse: () => UserRole.Client,
-    );
-  }
-}
-
-enum UserGender {
-  Homme('Homme', 'Homme'),
-  Femme('Femme', 'Femme');
-
-  final String dbValue;
-  final String label;
-  const UserGender(this.dbValue, this.label);
-
-  static UserGender? fromDb(String? value) {
-    if (value == null) return null;
-    return UserGender.values.firstWhere(
-      (role) => role.dbValue == value,
-      orElse: () => UserGender.Homme,
-    );
-  }
-}
 
 class TSignupform extends StatelessWidget {
   const TSignupform({

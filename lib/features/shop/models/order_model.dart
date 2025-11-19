@@ -49,9 +49,6 @@ class OrderModel {
       this.clientArrivalTime,
       this.codeRetrait});
 
-  // -------------------------
-  // Computed / helper getters
-  // -------------------------
   String get formattedOrderDate => THelperFunctions.getFormattedDate(orderDate);
 
   String get formattedDeliveryDate => deliveryDate != null

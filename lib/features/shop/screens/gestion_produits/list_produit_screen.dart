@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../../../utils/produit_helper.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../../personalization/controllers/user_controller.dart';
@@ -12,7 +13,6 @@ import '../../controllers/product/produit_controller.dart';
 import '../../controllers/category_controller.dart';
 import '../../models/produit_model.dart';
 import 'add_produit_screen.dart';
-import '../../models/statut_etablissement_model.dart';
 
 class ListProduitScreen extends StatefulWidget {
   const ListProduitScreen({super.key});

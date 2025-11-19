@@ -7,10 +7,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../utils/constants/enums.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../etablissement_controller.dart';
-
-enum ProduitFilter { all, stockables, nonStockables, rupture }
 
 class ProduitController extends GetxController {
 

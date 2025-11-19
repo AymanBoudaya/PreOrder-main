@@ -1,4 +1,5 @@
 import 'package:caferesto/utils/constants/colors.dart';
+import 'package:caferesto/utils/constants/image_strings.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:caferesto/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ class TOrderListItems extends StatelessWidget {
     final listController = Get.put(OrderListController());
     final orderController = listController.orderController;
     final dark = THelperFunctions.isDarkMode(context);
-    // final AddressController contro = Get.find();
 
     return Column(
       children: [
@@ -44,7 +44,7 @@ class TOrderListItems extends StatelessWidget {
         ),
         const SizedBox(height: AppSizes.spaceBtwSections),
 
-        // Orders List
+        // Liste des commandes
         Expanded(
           child: RefreshIndicator(
             onRefresh: listController.loadOrders,
@@ -104,10 +104,10 @@ class TOrderListItems extends StatelessWidget {
     );
   }
 
-  // Empty state
+  // Aucune commande statut
   Widget _buildEmpty(BuildContext context) => TAnimationLoaderWidget(
         text: "Aucune commande",
-        animation: 'assets/animations/empty_order.json',
+        animation: TImages.pencilAnimation,
         showAction: true,
         actionText: 'Faire des courses',
         onActionPressed: () => Get.offAll(() => const NavigationMenu()),

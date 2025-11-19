@@ -2,43 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../features/shop/models/jour_semaine.dart';
-import '../../features/shop/models/statut_etablissement_model.dart';
+import '../constants/enums.dart';
 
 class THelperFunctions {
-  static Color? getColor(String value) {
-    /// Define your product specific colors here and it will match the attribute colors and show specific 🟠🟡🟢🔵🟣🟤
-
-    if (value == 'Green') {
-      return Colors.green;
-    } else if (value == 'Red') {
-      return Colors.red;
-    } else if (value == 'Blue') {
-      return Colors.blue;
-    } else if (value == 'Pink') {
-      return Colors.pink;
-    } else if (value == 'Grey') {
-      return Colors.grey;
-    } else if (value == 'Purple') {
-      return Colors.purple;
-    } else if (value == 'Black') {
-      return Colors.black;
-    } else if (value == 'White') {
-      return Colors.white;
-    } else if (value == 'Yellow') {
-      return Colors.yellow;
-    } else if (value == 'Orange') {
-      return Colors.deepOrange;
-    } else if (value == 'Brown') {
-      return Colors.brown;
-    } else if (value == 'Teal') {
-      return Colors.teal;
-    } else if (value == 'Indigo') {
-      return Colors.indigo;
-    } else {
-      return null;
-    }
-  }
 
   static bool isDarkMode(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
@@ -142,6 +108,28 @@ class THelperFunctions {
     }
   }
 
+
+  // Fonctions utilitaires privées
+  static JourSemaine getJourSemaineFromDateTime(DateTime date) {
+    switch (date.weekday) {
+      case 1:
+        return JourSemaine.lundi;
+      case 2:
+        return JourSemaine.mardi;
+      case 3:
+        return JourSemaine.mercredi;
+      case 4:
+        return JourSemaine.jeudi;
+      case 5:
+        return JourSemaine.vendredi;
+      case 6:
+        return JourSemaine.samedi;
+      case 7:
+        return JourSemaine.dimanche;
+      default:
+        return JourSemaine.lundi;
+    }
+  }
   // Méthode pour le statut
   static String getStatutText(StatutEtablissement statut) {
     switch (statut) {
@@ -154,6 +142,8 @@ class THelperFunctions {
     }
   }
 
+
+
     static Color getStatutColor(StatutEtablissement statut) {
     switch (statut) {
       case StatutEtablissement.approuve:
@@ -162,6 +152,17 @@ class THelperFunctions {
         return Colors.red;
       case StatutEtablissement.en_attente:
         return Colors.orange;
+    }
+  }
+
+    static (Color, String) getStatutInfo(StatutEtablissement statut) {
+    switch (statut) {
+      case StatutEtablissement.en_attente:
+        return (Colors.orange, "En attente");
+      case StatutEtablissement.approuve:
+        return (Colors.green, "Approuvé");
+      case StatutEtablissement.rejete:
+        return (Colors.red, "Rejeté");
     }
   }
 }

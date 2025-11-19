@@ -1,4 +1,4 @@
-import 'jour_semaine.dart';
+import '../../../utils/constants/enums.dart';
 
 class Horaire {
   final String? id;

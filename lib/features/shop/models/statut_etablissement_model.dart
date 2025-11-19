@@ -1,5 +1,4 @@
-// models/statut_etablissement_model.dart
-enum StatutEtablissement { en_attente, approuve, rejete }
+import '../../../utils/constants/enums.dart';
 
 extension StatutEtablissementExt on StatutEtablissement {
   String get value {

@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../../../data/repositories/authentication/authentication_repository.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/helpers/network_manager.dart';
 import '../../../../utils/popups/full_screen_loader.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../screens/signup/otp_verification_screen.dart';
-import '../../screens/signup/widgets/signup_form.dart';
 
 class SignupController extends GetxController {
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/controllers/etablissement_controller.dart';
@@ -13,7 +14,6 @@ import '../brands/mon_etablissement_screen.dart';
 import '../users/admin_user_management_screen.dart';
 import '../banners/banner_management_screen.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../../../shop/models/statut_etablissement_model.dart';
 import 'admin_dashboard_screen.dart';
 import 'gerant_dashboard_screen.dart';
 

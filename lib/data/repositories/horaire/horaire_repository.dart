@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../features/shop/models/horaire_model.dart';
-import '../../../features/shop/models/jour_semaine.dart';
+import '../../../utils/constants/enums.dart';
 
 class HoraireRepository {
   final supabase = Supabase.instance.client;

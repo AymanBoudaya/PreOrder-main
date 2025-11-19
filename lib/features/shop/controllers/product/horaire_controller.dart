@@ -1,7 +1,8 @@
+import 'package:caferesto/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
 import '../../../../data/repositories/horaire/horaire_repository.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../models/horaire_model.dart';
-import '../../models/jour_semaine.dart';
 
 class HoraireController extends GetxController {
   final HoraireRepository repository;
@@ -213,7 +214,7 @@ class HoraireController extends GetxController {
     if (!hasHoraires.value || horaires.isEmpty) return false;
 
     final now = DateTime.now();
-    final today = _getJourSemaineFromDateTime(now);
+    final today = THelperFunctions.getJourSemaineFromDateTime(now);
     final currentTime =
         '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
 
@@ -226,7 +227,7 @@ class HoraireController extends GetxController {
 
   // Obtenir les horaires d'aujourd'hui
   Horaire? get horaireAujourdhui {
-    final today = _getJourSemaineFromDateTime(DateTime.now());
+    final today = THelperFunctions.getJourSemaineFromDateTime(DateTime.now());
     return getHoraireForDay(today);
   }
 
@@ -246,27 +247,6 @@ class HoraireController extends GetxController {
     return "${joursOuverts.length} jour(s) ouvert(s) par semaine";
   }
 
-  // Fonctions utilitaires privées
-  JourSemaine _getJourSemaineFromDateTime(DateTime date) {
-    switch (date.weekday) {
-      case 1:
-        return JourSemaine.lundi;
-      case 2:
-        return JourSemaine.mardi;
-      case 3:
-        return JourSemaine.mercredi;
-      case 4:
-        return JourSemaine.jeudi;
-      case 5:
-        return JourSemaine.vendredi;
-      case 6:
-        return JourSemaine.samedi;
-      case 7:
-        return JourSemaine.dimanche;
-      default:
-        return JourSemaine.lundi;
-    }
-  }
 
   bool _isTimeBetween(String currentTime, String startTime, String endTime) {
     try {

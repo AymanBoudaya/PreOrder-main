@@ -2,6 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../features/shop/models/etablissement_model.dart';
 import '../../../features/shop/models/produit_model.dart';
 import '../../../features/shop/models/statut_etablissement_model.dart';
+import '../../../utils/constants/enums.dart';
 
 class EtablissementRepository {
   final SupabaseClient _db = Supabase.instance.client;

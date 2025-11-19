@@ -11,9 +11,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../data/repositories/product/produit_repository.dart';
+import '../../../utils/constants/enums.dart';
 import '../models/produit_model.dart';
-
-enum CategoryFilter { all, featured }
 
 class CategoryController extends GetxController
     with GetTickerProviderStateMixin {

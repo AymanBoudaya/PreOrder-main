@@ -2,7 +2,6 @@ import 'package:caferesto/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/models/horaire_model.dart';
-import '../../../shop/models/jour_semaine.dart';
 import 'heure_button.dart';
 
 class HoraireTileAmeliore extends StatefulWidget {

@@ -1,3 +1,4 @@
+import '../../../utils/constants/enums.dart';
 import '../../personalization/models/user_model.dart';
 import 'horaire_model.dart';
 import 'statut_etablissement_model.dart';

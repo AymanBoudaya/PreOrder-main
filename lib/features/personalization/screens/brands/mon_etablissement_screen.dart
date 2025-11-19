@@ -7,6 +7,7 @@ import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../data/repositories/etablissement/etablissement_repository.dart';
 import '../../../../features/personalization/controllers/user_controller.dart';
 import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../shop/models/etablissement_model.dart';
@@ -368,7 +369,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
   }
 
   Widget _buildStatutBadge(StatutEtablissement statut) {
-    final (color, text) = _getStatutInfo(statut);
+    final (color, text) = THelperFunctions.getStatutInfo(statut);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -379,17 +380,6 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
           style: TextStyle(
               fontSize: 11, fontWeight: FontWeight.w600, color: color)),
     );
-  }
-
-  (Color, String) _getStatutInfo(StatutEtablissement statut) {
-    switch (statut) {
-      case StatutEtablissement.en_attente:
-        return (Colors.orange, "En attente");
-      case StatutEtablissement.approuve:
-        return (Colors.green, "Approuvé");
-      case StatutEtablissement.rejete:
-        return (Colors.red, "Rejeté");
-    }
   }
 
   void _showEtablissementOptions(Etablissement etablissement) {

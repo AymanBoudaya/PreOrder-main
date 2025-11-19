@@ -11,12 +11,12 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../data/repositories/horaire/horaire_repository.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../shop/controllers/product/horaire_controller.dart';
 import '../../../shop/models/etablissement_model.dart';
 import '../../../shop/models/horaire_model.dart';
-import '../../../shop/models/statut_etablissement_model.dart';
 import '../../controllers/user_controller.dart';
 import '../categories/widgets/category_form_widgets.dart';
 import '../etablissment/gestion_horaires_screen.dart';

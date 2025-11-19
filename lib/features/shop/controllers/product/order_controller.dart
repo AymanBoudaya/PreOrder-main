@@ -14,7 +14,6 @@ import '../../../../utils/popups/full_screen_loader.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../../personalization/controllers/address_controller.dart';
 import '../../models/cart_item_model.dart';
-import '../../models/jour_semaine.dart';
 import '../../models/order_model.dart';
 import '../../../../data/repositories/horaire/horaire_repository.dart';
 import 'panier_controller.dart';

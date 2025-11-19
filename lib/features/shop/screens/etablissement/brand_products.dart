@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/widgets/shimmer/brand_products_shimmer.dart';
+import '../../../../utils/constants/enums.dart';
 
 class BrandProducts extends StatefulWidget {
   const BrandProducts({super.key, required this.brand});

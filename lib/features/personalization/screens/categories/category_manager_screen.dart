@@ -6,6 +6,7 @@ import 'package:caferesto/features/shop/models/category_model.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../../shop/controllers/category_controller.dart';
 import '../widgets/loading_screen.dart';
 import 'add_category_screen.dart';

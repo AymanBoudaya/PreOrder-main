@@ -12,6 +12,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/list_tiles/settings_menu_tile.dart';
 import '../../../../common/widgets/list_tiles/user_profile_tile.dart';
 import '../../../../data/repositories/authentication/authentication_repository.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../notification/screens/notifications_screen.dart';
 import '../../../shop/screens/gestion_produits/list_produit_screen.dart';
@@ -24,7 +25,6 @@ import '../dashboard/gerant_dashboard_screen.dart';
 import '../banners/banner_management_screen.dart';
 import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../../../shop/models/statut_etablissement_model.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
