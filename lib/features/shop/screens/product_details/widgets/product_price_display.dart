@@ -16,16 +16,11 @@ class ProductPriceDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use safe instance getters
-    final controller = PanierController.instance;
-    final variationController = VariationController.instance;
+    // Use GetX dependency injection
+    final controller = Get.find<PanierController>();
+    final variationController = Get.find<VariationController>();
 
     return Obx(() {
-      // Safety check: ensure controllers are initialized
-      if (!Get.isRegistered<PanierController>() ||
-          !Get.isRegistered<VariationController>()) {
-        return const SizedBox.shrink();
-      }
       double unitPrice;
 
       // For variable products, use selected variation price if available

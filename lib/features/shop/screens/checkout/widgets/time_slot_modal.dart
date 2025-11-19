@@ -14,9 +14,10 @@ class TimeSlotModal {
   Future<void> openTimeSlotModal(
       BuildContext context, bool dark, ProduitModel product) async {
     // Use instance getter which handles creation if needed
-    final orderController = OrderController.instance;
+    final orderController = Get.find<OrderController>();
+    
 
-    final panierController = PanierController.instance;
+    final panierController = Get.find<PanierController>();
 
     // Use Get.put with tag or find if exists to avoid duplicates
     HoraireController horaireController;

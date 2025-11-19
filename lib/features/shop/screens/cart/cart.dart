@@ -17,7 +17,8 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = PanierController.instance;
+    final controller = Get.find<PanierController>();
+    
 
     return Scaffold(
       appBar: CartAppBar(onDeletePressed: () {

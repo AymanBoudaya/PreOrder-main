@@ -13,6 +13,7 @@ import '../../../personalization/controllers/user_controller.dart';
 import '../../controllers/category_controller.dart';
 import '../../controllers/etablissement_controller.dart';
 import '../../controllers/product/order_controller.dart';
+import '../../controllers/product/panier_controller.dart';
 import '../../controllers/product/produit_controller.dart';
 import '../../models/order_model.dart';
 
@@ -27,7 +28,8 @@ class GerantOrderManagementScreen extends StatefulWidget {
 class _GerantOrderManagementScreenState
     extends State<GerantOrderManagementScreen>
     with SingleTickerProviderStateMixin {
-  final OrderController orderController = OrderController.instance;
+  final OrderController orderController = Get.find<OrderController>();
+  final PanierController panierController = Get.find<PanierController>();
   final UserController userController = Get.find<UserController>();
   final EtablissementController etablissementController =
       EtablissementController.instance;

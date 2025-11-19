@@ -1,5 +1,6 @@
 import 'package:caferesto/utils/helpers/pricing_calculator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../../utils/constants/sizes.dart';
 import '../../../controllers/product/panier_controller.dart';
@@ -19,7 +20,8 @@ class TBillingAmountSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final panierController = PanierController.instance;
+    final panierController = Get.find<PanierController>();
+    
     final subTotal = panierController.totalCartPrice.value;
     final preparationTime = panierController.calculerTempsPreparation();
     return Column(

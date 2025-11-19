@@ -8,7 +8,8 @@ class CartHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = PanierController.instance;
+    final controller = Get.find<PanierController>();
+    
     return Padding(
       padding: const EdgeInsets.all(AppSizes.defaultSpace),
       child: Row(

@@ -22,18 +22,11 @@ import 'horaire_controller.dart';
 import '../../services/arrival_time_calculator_service.dart';
 
 class OrderController extends GetxController {
-  static OrderController get instance {
-    try {
-      return Get.find<OrderController>();
-    } catch (e) {
-      // Si non trouvé, le créer (ne devrait pas arriver si GeneralBinding est utilisé)
-      return Get.put(OrderController());
-    }
-  }
+
 
   final orderRepository = Get.put(OrderRepository());
   final produitRepository = ProduitRepository.instance;
-  final panierController = PanierController.instance;
+  final panierController = Get.find<PanierController>();
   // UserController sera obtenu de manière sécurisée
   UserController get userController {
     try {

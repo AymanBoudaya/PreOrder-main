@@ -25,7 +25,7 @@ class ProductDetailScreen extends StatelessWidget {
     if (!skipVariationReset && !isEditMode) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (Get.isRegistered<VariationController>()) {
-          final controller = VariationController.instance;
+          final controller = Get.find<VariationController>();
           controller.resetSelectedAttributes();
         }
       });
@@ -33,8 +33,8 @@ class ProductDetailScreen extends StatelessWidget {
       // In edit mode, initialize with the current variation and quantity
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (Get.isRegistered<VariationController>()) {
-          final variationController = VariationController.instance;
-          final panierController = PanierController.instance;
+          final variationController = Get.find<VariationController>();
+          final panierController = Get.find<PanierController>();
 
           // Find the size and price for this variation
           final sizePrice = product.sizesPrices.firstWhereOrNull(

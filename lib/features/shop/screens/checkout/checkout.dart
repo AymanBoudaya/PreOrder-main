@@ -32,7 +32,8 @@ class CheckoutScreen extends StatelessWidget {
     }
     final subTotal = panierController.totalCartPrice.value;
     // Use instance getter which handles creation if needed
-    final orderController = OrderController.instance;
+    final orderController = Get.find<OrderController>();
+    
     final totalAmount = TPricingCalculator.calculateTotalPrice(subTotal, 'tn');
     final dark = THelperFunctions.isDarkMode(context);
 
@@ -411,7 +412,7 @@ class CheckoutScreen extends StatelessWidget {
     double totalAmount,
     BuildContext context,
   ) async {
-    final panierController = PanierController.instance;
+    final panierController = Get.find<PanierController>();
     final addressController = Get.find<AddressController>();
 
     // Vérifier panier

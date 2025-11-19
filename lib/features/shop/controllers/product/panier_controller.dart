@@ -7,14 +7,7 @@ import '../../models/produit_model.dart';
 import 'variation_controller.dart';
 
 class PanierController extends GetxController {
-  static PanierController get instance {
-    try {
-      return Get.find<PanierController>();
-    } catch (e) {
-      // Si non trouvé, le créer (ne devrait pas arriver avec un binding approprié)
-      return Get.put(PanierController(), permanent: true);
-    }
-  }
+
 
   RxInt cartItemsCount = 0.obs;
   RxDouble totalCartPrice = 0.0.obs;
@@ -25,7 +18,7 @@ class PanierController extends GetxController {
   final RxString editingOrderId = ''.obs;
 
   // Obtenir VariationController depuis l'injection de dépendance GetX
-  VariationController get variationController => VariationController.instance;
+  VariationController get variationController => Get.find<VariationController>();
 
   PanierController() {
     chargerArticlesPanier();

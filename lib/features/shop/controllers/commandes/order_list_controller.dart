@@ -8,7 +8,8 @@ import '../../screens/cart/cart.dart';
 
 class OrderListController extends GetxController
     with GetTickerProviderStateMixin {
-  final orderController = OrderController.instance;
+  final orderController = Get.find<OrderController>();
+  final panierController = Get.find<PanierController>();
 
   late TabController tabController;
   final List<String> tabLabels = ['Toutes', 'Actives', 'Terminées'];
@@ -73,7 +74,6 @@ class OrderListController extends GetxController
     }
 
     // Charger les articles de la commande dans le panier
-    final panierController = PanierController.instance;
     panierController.chargerArticlesCommandeDansPanier(order.items, order.id);
 
     // Naviguer vers le panier

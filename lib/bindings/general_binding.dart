@@ -42,7 +42,7 @@ class GeneralBinding extends Bindings {
     Get.lazyPut<AddressController>(() => AddressController(), fenix: true);
     Get.lazyPut<PanierController>(() => PanierController(), fenix: true);
     Get.lazyPut<CheckoutController>(() => CheckoutController(), fenix: true);
-    Get.lazyPut(() => OrderController());
+    Get.lazyPut<OrderController>(() => OrderController(), fenix: true);
     Get.lazyPut<FavoritesController>(() => FavoritesController(), fenix: true);
     Get.lazyPut<VariationController>(() => VariationController(), fenix: true);
     Get.lazyPut<UserManagementController>(() => UserManagementController(),

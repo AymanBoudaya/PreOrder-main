@@ -1,6 +1,7 @@
 import 'package:caferesto/common/widgets/appbar/appbar.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../controllers/product/order_controller.dart';
 import 'widgets/order_list.dart';
@@ -10,7 +11,7 @@ class OrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final orderController = OrderController.instance;
+    final orderController = Get.find<OrderController>();
 
     return Scaffold(
       appBar: TAppBar(

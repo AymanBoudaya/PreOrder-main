@@ -17,7 +17,7 @@ class ProductMainActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = PanierController.instance;
+    final controller = Get.find<PanierController>();
 
     return Obx(() {
       // Safety check: ensure controller is initialized

@@ -9,7 +9,8 @@ class CartBottomSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = PanierController.instance;
+    final controller = Get.find<PanierController>();
+    
 
     return Container(
       padding: const EdgeInsets.symmetric(

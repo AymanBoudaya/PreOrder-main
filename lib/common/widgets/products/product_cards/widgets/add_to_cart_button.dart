@@ -20,7 +20,7 @@ class ProductCardAddToCartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final panierController = PanierController.instance;
+    final panierController = Get.find<PanierController>();
 
     return Obx(() {
       final productQuantityInCart =

@@ -30,7 +30,7 @@ class TCartItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get controller once outside Obx to avoid repeated lookups using safe instance getter
-    final controller = PanierController.instance;
+    final controller = Get.find<PanierController>();
     final dark = THelperFunctions.isDarkMode(context);
 
     return Obx(() {
@@ -225,7 +225,7 @@ class TCartItems extends StatelessWidget {
     }
 
     // Find the cart item index
-    final controller = PanierController.instance;
+    final controller = Get.find<PanierController>();
     final cartItemIndex = controller.cartItems.indexWhere(
       (item) =>
           item.productId == cartItem.productId &&
@@ -243,7 +243,7 @@ class TCartItems extends StatelessWidget {
     }
 
     // Pre-select the variation and initialize temp quantity BEFORE navigating
-    final variationController = VariationController.instance;
+    final variationController = Get.find<VariationController>();
     if (cartItem.variationId.isNotEmpty) {
       // Find the size and price for this variation
       final sizePrice = product.sizesPrices.firstWhereOrNull(
@@ -287,12 +287,12 @@ class TCartItems extends StatelessWidget {
     }
 
     // Reset variation selection for a fresh start
-    final variationController = VariationController.instance;
+    final variationController = Get.find<VariationController>();
     variationController.resetSelectedAttributes();
 
     // Réinitialiser la quantité temporaire pour ce produit lors de l'ajout d'une nouvelle variante
     // Cela garantit que la quantité commence à zéro pour la nouvelle variante
-    final controller = PanierController.instance;
+    final controller = Get.find<PanierController>();
     controller.reinitialiserQuantiteTemporaireProduit(product.id);
 
     // Navigate to product detail
