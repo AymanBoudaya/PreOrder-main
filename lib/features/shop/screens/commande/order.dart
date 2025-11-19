@@ -3,7 +3,7 @@ import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/product/order_controller.dart';
+import '../../controllers/commandes/order_controller.dart';
 import 'widgets/order_list.dart';
 
 class OrderScreen extends StatelessWidget {

@@ -13,7 +13,7 @@ import '../../../../utils/popups/loaders.dart';
 import '../../../personalization/controllers/user_controller.dart';
 import '../../controllers/category_controller.dart';
 import '../../controllers/etablissement_controller.dart';
-import '../../controllers/product/order_controller.dart';
+import '../../controllers/commandes/order_controller.dart';
 import '../../controllers/product/panier_controller.dart';
 import '../../controllers/product/produit_controller.dart';
 import '../../models/order_model.dart';

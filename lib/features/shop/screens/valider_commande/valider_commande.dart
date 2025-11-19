@@ -12,7 +12,7 @@ import '../../../../utils/helpers/pricing_calculator.dart';
 import '../../../personalization/controllers/address_controller.dart';
 import '../../../personalization/controllers/user_controller.dart';
 import '../../controllers/product/panier_controller.dart';
-import '../../controllers/product/order_controller.dart';
+import '../../controllers/commandes/order_controller.dart';
 import '../../models/produit_model.dart';
 import 'widgets/billing_address_section.dart';
 import 'widgets/billing_amount_section.dart';

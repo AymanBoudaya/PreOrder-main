@@ -1,3 +1,4 @@
+import 'package:caferesto/data/repositories/notifications/notifications_repository.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,13 @@ import '../../shop/screens/commande/order.dart';
 import '../models/notification_model.dart';
 
 class NotificationController extends GetxController {
-  final supabase = Supabase.instance.client;
+  final notificationRepository = Get.find<NotificationsRepository>();
+
   final notifications = <NotificationModel>[].obs;
   final isLoading = false.obs;
   RealtimeChannel? _channel;
 
-  String get currentUserId => supabase.auth.currentUser?.id ?? '';
+  int get unreadCount => notifications.where((n) => !n.read).length;
 
   @override
   void onInit() {
@@ -24,22 +26,24 @@ class NotificationController extends GetxController {
 
   @override
   void onClose() {
-    if (_channel != null) supabase.removeChannel(_channel!);
+    if (_channel != null) {
+      notificationRepository.unsubscribeFromNotifications(_channel!);
+    }
     super.onClose();
   }
 
   Future<void> _loadNotifications() async {
     isLoading.value = true;
     try {
-      final response = await supabase
-          .from('notifications')
-          .select('*')
-          .eq('user_id', currentUserId)
-          .order('created_at', ascending: false);
-      notifications.value =
-          (response as List).map((n) => NotificationModel.fromJson(n)).toList();
+      final fetchedNotifications =
+          await notificationRepository.fechUserNotifications();
+      notifications.value = fetchedNotifications;
     } catch (e) {
-      debugPrint('Error loading notifications: $e');
+      Get.snackbar(
+        'Erreur',
+        'Impossible de charger les notifications',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -51,20 +55,19 @@ class NotificationController extends GetxController {
   }
 
   void _subscribeRealtime() {
-    _channel = supabase.channel('public:notifications');
-    _channel!.onPostgresChanges(
-      event: PostgresChangeEvent.insert,
-      schema: 'public',
-      table: 'notifications',
-      filter: PostgresChangeFilter(
-        type: PostgresChangeFilterType.eq,
-        column: 'user_id',
-        value: currentUserId,
-      ),
-      callback: (payload) {
-        final newNotif = NotificationModel.fromJson(payload.newRecord);
+    final userId = notificationRepository.authRepo.authUser?.id ?? '';
+    if (userId.isEmpty) {
+      debugPrint('Cannot subscribe: user ID is empty');
+      return;
+    }
+
+    _channel = notificationRepository.subscribeToNotifications(
+      userId: userId,
+      onNewNotification: (newNotif) {
         notifications.insert(0, newNotif);
         notifications.refresh();
+
+        // Afficher une snackbar pour la nouvelle notification
         Get.snackbar(
           newNotif.title,
           newNotif.message,
@@ -74,14 +77,13 @@ class NotificationController extends GetxController {
         );
       },
     );
-    _channel!.subscribe();
   }
-
-  int get unreadCount => notifications.where((n) => n.read == false).length;
 
   Future<void> markAsRead(String id) async {
     try {
-      await supabase.from('notifications').update({'read': true}).eq('id', id);
+      await notificationRepository.markAsRead(id);
+
+      // Mettre à jour localement
       final index = notifications.indexWhere((n) => n.id == id);
       if (index != -1) {
         notifications[index] = notifications[index].copyWith(read: true);
@@ -89,43 +91,14 @@ class NotificationController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error marking notification as read: $e');
+      Get.snackbar(
+        'Erreur',
+        'Impossible de marquer la notification comme lue',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
-  /// Navigate when clicking a notification
-  void handleNotificationTap(NotificationModel n) async {
-    await markAsRead(n.id);
-
-    // Vérifier si c'est une notification de commande
-    final titleLower = n.title.toLowerCase();
-    final messageLower = n.message.toLowerCase();
-    final isOrderNotification = titleLower.contains('commande') ||
-        titleLower.contains('order') ||
-        messageLower.contains('commande') ||
-        messageLower.contains('order');
-
-    if (isOrderNotification) {
-      // Récupérer le rôle de l'utilisateur
-      final userController = Get.find<UserController>();
-      final userRole = userController.userRole;
-
-      // Rediriger selon le rôle de l'utilisateur
-      if (userRole == 'Client') {
-        // Rediriger vers "Mes commandes" pour les clients
-        Get.to(() => const OrderScreen());
-      } else {
-        // Rediriger vers la page de gestion des commandes pour les gérants et admins
-        Get.to(() => const GerantOrderManagementScreen());
-      }
-    } else if (n.etablissementId != null) {
-      // Pour les autres notifications liées à un établissement,
-      // naviguer vers MonEtablissementScreen
-      Get.to(() => MonEtablissementScreen(),
-          arguments: {'etablissementId': n.etablissementId});
-    }
-  }
-
-  /// Marquer toutes les notifications comme lues
   Future<void> markAllAsRead() async {
     try {
       final unreadIds =
@@ -133,9 +106,7 @@ class NotificationController extends GetxController {
 
       if (unreadIds.isEmpty) return;
 
-      await supabase
-          .from('notifications')
-          .update({'read': true}).inFilter('id', unreadIds);
+      await notificationRepository.markAllAsRead(unreadIds);
 
       // Mettre à jour localement
       for (var i = 0; i < notifications.length; i++) {
@@ -146,6 +117,43 @@ class NotificationController extends GetxController {
       notifications.refresh();
     } catch (e) {
       debugPrint('Error marking all notifications as read: $e');
+      Get.snackbar(
+        'Erreur',
+        'Impossible de marquer toutes les notifications comme lues',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  /// Gère le tap sur une notification (business logic)
+  void handleNotificationTap(NotificationModel notification) async {
+    // Marquer comme lue
+    await markAsRead(notification.id);
+
+    // Déterminer la navigation selon le type de notification
+    final titleLower = notification.title.toLowerCase();
+    final messageLower = notification.message.toLowerCase();
+    final isOrderNotification = titleLower.contains('commande') ||
+        titleLower.contains('order') ||
+        messageLower.contains('commande') ||
+        messageLower.contains('order');
+
+    if (isOrderNotification) {
+      // Récupérer le rôle de l'utilisateur
+      final userController = Get.find<UserController>();
+      final userRole = userController.userRole;
+
+      // Navigation selon le rôle
+      if (userRole == 'Client') {
+        Get.to(() => const OrderScreen());
+      } else {
+        Get.to(() => const GerantOrderManagementScreen());
+      }
+    } else if (notification.etablissementId != null) {
+      Get.to(
+        () => MonEtablissementScreen(),
+        arguments: {'etablissementId': notification.etablissementId},
+      );
     }
   }
 }

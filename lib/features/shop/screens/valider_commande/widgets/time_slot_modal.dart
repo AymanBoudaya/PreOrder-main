@@ -6,7 +6,7 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
 import '../../../controllers/product/panier_controller.dart';
 import '../../../controllers/product/horaire_controller.dart';
-import '../../../controllers/product/order_controller.dart';
+import '../../../controllers/commandes/order_controller.dart';
 import '../../../models/horaire_model.dart';
 import '../../../models/produit_model.dart';
 

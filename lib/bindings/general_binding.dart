@@ -1,5 +1,7 @@
+import 'package:caferesto/data/repositories/notifications/notifications_repository.dart';
+import 'package:caferesto/features/notification/controllers/notification_controller.dart';
 import 'package:caferesto/features/personalization/controllers/address_controller.dart';
-import 'package:caferesto/features/shop/controllers/product/order_controller.dart';
+import 'package:caferesto/features/shop/controllers/commandes/order_controller.dart';
 import 'package:get/get.dart';
 
 import '../data/repositories/address/address_repository.dart';
@@ -40,12 +42,20 @@ class GeneralBinding extends Bindings {
     Get.lazyPut<AddressRepository>(() => AddressRepository(), fenix: true);
     Get.lazyPut<BannerRepository>(() => BannerRepository(), fenix: true);
 
+    Get.lazyPut<NotificationsRepository>(
+      () => NotificationsRepository(),
+      fenix: true,
+    );
+
     Get.lazyPut<NetworkManager>(() => NetworkManager(), fenix: true);
 
     // Controllers d'authentification
     Get.lazyPut(() => OTPVerificationController(), fenix: true);
 
-    // Controllers qui dépendent de UserController
+    Get.lazyPut<NotificationController>(
+      () => NotificationController(),
+      fenix: true,
+    );
     Get.lazyPut<AddressController>(() => AddressController(), fenix: true);
     Get.lazyPut<PanierController>(() => PanierController(), fenix: true);
     Get.lazyPut<CheckoutController>(() => CheckoutController(), fenix: true);

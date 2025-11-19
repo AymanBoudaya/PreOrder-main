@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../models/order_model.dart';
-import '../product/order_controller.dart';
+import 'order_controller.dart';
 import '../product/panier_controller.dart';
 import '../../screens/cart/cart.dart';
 

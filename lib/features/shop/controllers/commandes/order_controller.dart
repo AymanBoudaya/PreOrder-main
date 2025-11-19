@@ -16,9 +16,9 @@ import '../../../personalization/controllers/address_controller.dart';
 import '../../models/cart_item_model.dart';
 import '../../models/order_model.dart';
 import '../../../../data/repositories/horaire/horaire_repository.dart';
-import 'panier_controller.dart';
-import 'checkout_controller.dart';
-import 'horaire_controller.dart';
+import '../product/panier_controller.dart';
+import '../product/checkout_controller.dart';
+import '../product/horaire_controller.dart';
 import '../../services/arrival_time_calculator_service.dart';
 
 class OrderController extends GetxController {

@@ -5,18 +5,13 @@ import 'package:iconsax/iconsax.dart';
 import '../controllers/notification_controller.dart';
 import 'notifications_screen.dart';
 
-class NotificationBell extends StatefulWidget {
+class NotificationBell extends StatelessWidget {
   const NotificationBell({super.key});
 
-  @override
-  State<NotificationBell> createState() => _NotificationBellState();
-}
-
-class _NotificationBellState extends State<NotificationBell> {
-  final notifController = Get.put(NotificationController());
 
   @override
   Widget build(BuildContext context) {
+  final notifController = Get.find<NotificationController>();
     return Obx(() {
       final count = notifController.unreadCount;
       return IconButton(
