@@ -5,13 +5,6 @@ import '../models/user_model.dart';
 import 'user_controller.dart';
 
 class UserManagementController extends GetxController {
-  static UserManagementController get instance {
-    try {
-      return Get.find<UserManagementController>();
-    } catch (e) {
-      return Get.put(UserManagementController(), permanent: true);
-    }
-  }
 
   final UserRepository _userRepository = Get.find<UserRepository>();
   final UserController _userController = Get.find<UserController>();
@@ -175,4 +168,3 @@ class UserManagementController extends GetxController {
   /// Vérifier si l'utilisateur actuel est Admin
   bool get isAdmin => _userController.userRole == 'Admin';
 }
-

@@ -15,11 +15,12 @@ class ProductFavoriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FavoritesController controller = Get.find<FavoritesController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Obx(() {
-          final isFav = FavoritesController.instance.isFavourite(product.id);
+          final isFav = controller.isFavourite(product.id);
           return Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -27,7 +28,7 @@ class ProductFavoriteButton extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: InkWell(
-              onTap: () => FavoritesController.instance
+              onTap: () => controller
                   .toggleFavoriteProduct(product.id),
               child: Icon(
                 isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,

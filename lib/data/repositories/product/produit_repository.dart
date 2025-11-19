@@ -13,7 +13,6 @@ import '../../../utils/exceptions/platform_exceptions.dart';
 import '../order/order_repository.dart';
 
 class ProduitRepository extends GetxController {
-  static ProduitRepository get instance => Get.find();
 
   /// Variables
   final _db = Supabase.instance.client;

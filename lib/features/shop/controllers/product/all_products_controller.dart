@@ -5,7 +5,6 @@ import '../../models/produit_model.dart';
 import '../../models/etablissement_model.dart';
 
 class AllProductsController extends GetxController {
-  static AllProductsController get instance => Get.find();
 
   final repository = Get.find<ProduitRepository>();
   final SupabaseClient _supabase = Supabase.instance.client;

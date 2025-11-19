@@ -22,15 +22,9 @@ import '../screens/address/add_new_address.dart';
 import 'user_controller.dart';
 
 class AddressController extends GetxController {
-  static AddressController get instance {
-    try {
-      return Get.find<AddressController>();
-    } catch (e) {
-      // If not found, create it (shouldn't happen with proper binding)
-      return Get.put(AddressController(), permanent: true);
-    }
-  }
+
   final userController = Get.find<UserController>();
+  final NetworkManager networkManager = Get.find<NetworkManager>();
 
   // Form controllers
   final name = TextEditingController();
@@ -149,7 +143,6 @@ class AddressController extends GetxController {
     }
   }
 
-  /// ───────────────────────────────────────────────
   /// ADD NEW ADDRESS
   Future<void> addNewAddress() async {
     try {
@@ -157,7 +150,7 @@ class AddressController extends GetxController {
           'Enregistrement en cours...', TImages.docerAnimation);
 
       // Check internet
-      final isConnected = await NetworkManager.instance.isConnected();
+      final isConnected = await networkManager.isConnected();
       if (!isConnected) {
         TFullScreenLoader.stopLoading();
         return;
@@ -282,7 +275,7 @@ class AddressController extends GetxController {
           'Suppression en cours...', TImages.docerAnimation);
 
       // Check internet
-      final isConnected = await NetworkManager.instance.isConnected();
+      final isConnected = await networkManager.isConnected();
       if (!isConnected) {
         TFullScreenLoader.stopLoading();
         return;

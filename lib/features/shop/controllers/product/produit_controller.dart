@@ -13,7 +13,6 @@ import '../etablissement_controller.dart';
 enum ProduitFilter { all, stockables, nonStockables, rupture }
 
 class ProduitController extends GetxController {
-  static ProduitController get instance => Get.find();
 
   // --- FORMULAIRES ET CONTROLLERS ---
   final formKey = GlobalKey<FormState>();

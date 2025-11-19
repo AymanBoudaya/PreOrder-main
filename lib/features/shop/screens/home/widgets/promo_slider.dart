@@ -36,6 +36,7 @@ class TPromoSlider extends StatefulWidget {
 }
 
 class _TPromoSliderState extends State<TPromoSlider> {
+  final ProduitRepository produitRepository = Get.find<ProduitRepository>();
   late PageController _pageController;
   int _currentPage = 0;
   Timer? _timer;
@@ -279,7 +280,6 @@ class _TPromoSliderState extends State<TPromoSlider> {
 
   void _navigateToProduct(String productId) async {
     try {
-      final produitRepository = ProduitRepository.instance;
       final products = await produitRepository.getAllProducts();
       final product = products.firstWhere(
         (p) => p.id == productId,

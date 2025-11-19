@@ -16,7 +16,7 @@ import '../../../../data/repositories/product/produit_repository.dart';
 
 
 class FavoritesController extends GetxController {
-  static FavoritesController get instance => Get.find<FavoritesController>();
+  final ProduitRepository produitRepository = Get.find<ProduitRepository>();
 
   final RxList<String> favoriteIds = <String>[].obs;
   final RxList<ProduitModel> favoriteProducts = <ProduitModel>[].obs;
@@ -57,7 +57,7 @@ class FavoritesController extends GetxController {
     if (favoriteIds.isEmpty) return;
 
     try {
-      final products = await ProduitRepository.instance.getProductsByIds(favoriteIds);
+      final products = await produitRepository.getProductsByIds(favoriteIds);
       // Keep order consistent with favoriteIds
       final Map<String, ProduitModel> mapById = { for (var p in products) p.id: p };
       final ordered = favoriteIds.map((id) => mapById[id]).whereType<ProduitModel>().toList();
@@ -155,7 +155,7 @@ class FavoritesController extends GetxController {
         favoriteIds.add(productId);
         TLoaders.customToast(message: 'Produit ajouté aux favoris');
         try {
-          final fetched = await ProduitRepository.instance.getProductById(productId);
+          final fetched = await produitRepository.getProductById(productId);
           if (fetched != null) {
             // Charger l'établissement si manquant
             ProduitModel productWithEtab = fetched;

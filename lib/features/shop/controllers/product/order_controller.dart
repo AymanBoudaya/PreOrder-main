@@ -27,18 +27,11 @@ class OrderController extends GetxController {
   final produitRepository = Get.find<ProduitRepository>();
   final panierController = Get.find<PanierController>();
   // UserController sera obtenu de manière sécurisée
-  UserController get userController {
-    try {
-      return Get.find<UserController>();
-    } catch (e) {
-      // Si UserController n'est pas trouvé, le créer
-      return Get.put(UserController(), permanent: true);
-    }
-  }
+  final userController = Get.find<UserController>();
+  final addressController = Get.find<AddressController>();
+  final checkoutController = Get.find<CheckoutController>();
 
   final _db = Supabase.instance.client;
-  final addressController = AddressController.instance;
-  final checkoutController = CheckoutController.instance;
 
   // Service pour calculer l'heure d'arrivée
   final _arrivalTimeCalculator = ArrivalTimeCalculatorService();

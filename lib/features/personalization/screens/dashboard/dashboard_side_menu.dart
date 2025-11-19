@@ -32,6 +32,7 @@ class DashboardSideMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
     final userController = Get.find<UserController>();
+    final etablissementController = Get.find<EtablissementController>();
 
     return Container(
       width: 250,
@@ -115,7 +116,7 @@ class DashboardSideMenu extends StatelessWidget {
                     title: 'Gérer commandes',
                     isSelected: currentRoute == 'orders',
                     onTap: () async {
-                      final etab = await EtablissementController.instance
+                      final etab = await etablissementController
                           .getEtablissementUtilisateurConnecte();
                       if (etab == null ||
                           etab.statut != StatutEtablissement.approuve) {
@@ -191,7 +192,7 @@ class DashboardSideMenu extends StatelessWidget {
                     isSelected: currentRoute == 'products',
                     onTap: () async {
                       if (!isAdmin) {
-                        final etab = await EtablissementController.instance
+                        final etab = await etablissementController
                             .getEtablissementUtilisateurConnecte();
                         if (etab == null ||
                             etab.statut != StatutEtablissement.approuve) {

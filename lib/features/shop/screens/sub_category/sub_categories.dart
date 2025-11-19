@@ -24,8 +24,8 @@ class SubCategoriesScreen extends StatefulWidget {
 }
 
 class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
-  final CategoryController categoryController = CategoryController.instance;
-  final ProduitRepository produitRepository = ProduitRepository.instance;
+  final CategoryController categoryController = Get.find<CategoryController>();
+  final ProduitRepository produitRepository = Get.find<ProduitRepository>();
   final Rx<Etablissement?> selectedEtablissement = Rx<Etablissement?>(null);
   final RxList<Etablissement> etablissements = <Etablissement>[].obs;
   final RxList<ProduitModel> allProducts = <ProduitModel>[].obs;

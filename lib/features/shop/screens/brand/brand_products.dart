@@ -110,7 +110,7 @@ class _CategoryFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsController = Get.find<AllProductsController>();
-    final categoryController = CategoryController.instance;
+    final categoryController = Get.find<CategoryController>();
 
     // Ensure categories are loaded
     if (categoryController.allCategories.isEmpty &&

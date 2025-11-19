@@ -6,7 +6,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../features/shop/models/banner_model.dart';
 
 class BannerRepository extends GetxController {
-  static BannerRepository get instance => Get.find();
 
   /// Variables
   final _db = Supabase.instance.client;

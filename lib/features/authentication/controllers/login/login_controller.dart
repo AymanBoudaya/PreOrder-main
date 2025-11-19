@@ -11,9 +11,10 @@ import '../../../../utils/popups/loaders.dart';
 import '../../../personalization/controllers/user_controller.dart';
 
 class LoginController extends GetxController {
-  static LoginController get instance => Get.find();
+
   final userController = Get.find<UserController>();
   final authRepo = Get.find<AuthenticationRepository>();
+  final NetworkManager networkManager = Get.find<NetworkManager>();
 
   /// Variables
   final email = TextEditingController();
@@ -35,7 +36,7 @@ class LoginController extends GetxController {
       );
 
       // Vérifier connexion internet
-      final isConnected = await NetworkManager.instance.isConnected();
+      final isConnected = await networkManager.isConnected();
       if (!isConnected) {
         TFullScreenLoader.stopLoading();
         return;

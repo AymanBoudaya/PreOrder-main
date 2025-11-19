@@ -23,7 +23,7 @@ class EditBannerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bannerController = Get.find<BannerController>();
     final categoryController = Get.find<CategoryController>();
-    final produitRepository = ProduitRepository.instance;
+    final produitRepository = Get.find<ProduitRepository>();
     final etablissementController = Get.find<EtablissementController>();
 
     // Charger les données pour les dropdowns

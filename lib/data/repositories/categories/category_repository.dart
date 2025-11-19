@@ -10,7 +10,6 @@ import '../../../features/shop/models/category_model.dart';
 import '../../../utils/exceptions/platform_exceptions.dart';
 
 class CategoryRepository extends GetxController {
-  static CategoryRepository get instance => Get.find();
 
   /// Variables
   final _db = Supabase.instance.client;

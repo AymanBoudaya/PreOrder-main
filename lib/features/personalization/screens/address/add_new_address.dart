@@ -9,8 +9,6 @@ import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_ti
 import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../../../utils/validators/validation.dart';
 
 import 'package:get/get.dart';
@@ -20,7 +18,7 @@ class AddNewAddressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = AddressController.instance;
+    final controller = Get.find<AddressController>();
     final userController = Get.find<UserController>();
     final dark = THelperFunctions.isDarkMode(context);
     // Prefill user info once

@@ -6,9 +6,7 @@ import '../../../../utils/constants/sizes.dart';
 import '../../models/produit_model.dart';
 
 class ImagesController extends GetxController {
-  // Singleton instance
-  static ImagesController get instance => Get.find();
-
+  
   // variables
   RxString selectedProductImage = ''.obs;
 

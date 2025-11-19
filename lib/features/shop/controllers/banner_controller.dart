@@ -10,10 +10,9 @@ import '../models/etablissement_model.dart';
 import '../models/produit_model.dart';
 
 class BannerController extends GetxController {
-  static BannerController get instance => Get.find();
 
   // Repository
-  final _bannerRepository = BannerRepository.instance;
+  final _bannerRepository = Get.find<BannerRepository>();
 
   // Observable variables
   final RxList<BannerModel> allBanners = <BannerModel>[].obs;

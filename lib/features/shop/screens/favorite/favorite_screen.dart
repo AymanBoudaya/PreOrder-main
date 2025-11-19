@@ -21,7 +21,7 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = FavoritesController.instance;
+    final controller = Get.find<FavoritesController>();
     final isDark = THelperFunctions.isDarkMode(context);
     final screenWidth = MediaQuery.of(context).size.width;
 

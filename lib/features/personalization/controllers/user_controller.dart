@@ -10,13 +10,6 @@ import '../models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserController extends GetxController {
-  static UserController get instance {
-    try {
-      return Get.find<UserController>();
-    } catch (e) {
-      return Get.put(UserController(), permanent: true);
-    }
-  }
 
   String get userRole => user.value.role;
   String? get currentEtablissementId => user.value.establishmentId;

@@ -20,7 +20,7 @@ class AllCategoriesScreen extends StatefulWidget {
 }
 
 class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
-  final categoryController = CategoryController.instance;
+  final categoryController = Get.find<CategoryController>();
 
   @override
   void initState() {

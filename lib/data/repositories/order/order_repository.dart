@@ -7,8 +7,7 @@ import '../authentication/authentication_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OrderRepository extends GetxController {
-  static OrderRepository get instance => Get.find();
-
+  
   final _db = Supabase.instance.client;
   final authRepo = Get.find<AuthenticationRepository>();
 

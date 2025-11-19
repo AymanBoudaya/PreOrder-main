@@ -17,7 +17,7 @@ class TSingleAddress extends StatelessWidget {
   
   /// Affiche une boîte de dialogue de confirmation avant de supprimer
   Future<void> _showDeleteConfirmation(BuildContext context, String addressId) async {
-    final controller = AddressController.instance;
+    final controller = Get.find<AddressController>();
     
     return Get.dialog(
       AlertDialog(
@@ -51,7 +51,7 @@ class TSingleAddress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
-    final controller = AddressController.instance;
+    final controller = Get.find<AddressController>();
     return Obx(() {
       final selectedAddressId = controller.selectedAddress.value.id;
       final selectedAddress = selectedAddressId == address.id;

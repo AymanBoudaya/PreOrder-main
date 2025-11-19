@@ -24,9 +24,10 @@ class ListProduitScreen extends StatefulWidget {
 class _ListProduitScreenState extends State<ListProduitScreen> {
   late ProduitController controller;
   late CategoryController categoryController;
-  final etsController = EtablissementController.instance;
+  final etablissementController = Get.find<EtablissementController>();
   bool _accessDenied = false;
   String _deniedReason = '';
+  final UserController userController = Get.find<UserController>();
 
   @override
   void initState() {
@@ -39,7 +40,6 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
       Get.put(ProduitController());
     }
     controller = Get.find<ProduitController>();
-    final UserController userController = Get.find<UserController>();
 
     // Initialiser le contrôleur de catégories
     if (!Get.isRegistered<CategoryController>()) {
@@ -56,9 +56,9 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
   }
 
   Future<void> _guardAccessAndLoad() async {
-    final role = UserController.instance.userRole;
+    final role = userController.userRole;
     if (role == 'Gérant') {
-      final etab = await etsController.getEtablissementUtilisateurConnecte();
+      final etab = await etablissementController.getEtablissementUtilisateurConnecte();
       if (etab == null || etab.statut != StatutEtablissement.approuve) {
         setState(() {
           _accessDenied = true;

@@ -9,7 +9,7 @@ class TBillingAddressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final addressController = AddressController.instance;
+    final addressController = Get.find<AddressController>();
 
     return Obx(() {
       final selected = addressController.selectedAddress.value;

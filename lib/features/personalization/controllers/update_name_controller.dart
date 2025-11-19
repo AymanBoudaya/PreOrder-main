@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'user_controller.dart';
 
 class UpdateNameController extends GetxController {
-  static UpdateNameController get instance => Get.find();
 
   final firstName = TextEditingController();
   final lastName = TextEditingController();
@@ -18,6 +17,7 @@ class UpdateNameController extends GetxController {
   final birthDate = TextEditingController();
   final userController = Get.find<UserController>();
   final userRepository = Get.put(UserRepository());
+  final networkManager = Get.find<NetworkManager>();
 
   GlobalKey<FormState> updateUserNameFormKey = GlobalKey<FormState>();
 
@@ -46,7 +46,7 @@ class UpdateNameController extends GetxController {
           "Nous sommes en train de mettre à jour vos informations...",
           TImages.docerAnimation);
 
-      final isConnected = await NetworkManager.instance.isConnected();
+      final isConnected = await networkManager.isConnected();
       if (!isConnected) {
         TFullScreenLoader.stopLoading();
         return false;

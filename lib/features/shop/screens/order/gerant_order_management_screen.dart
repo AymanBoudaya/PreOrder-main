@@ -28,13 +28,12 @@ class GerantOrderManagementScreen extends StatefulWidget {
 class _GerantOrderManagementScreenState
     extends State<GerantOrderManagementScreen>
     with SingleTickerProviderStateMixin {
-  final OrderController orderController = Get.find<OrderController>();
-  final PanierController panierController = Get.find<PanierController>();
-  final UserController userController = Get.find<UserController>();
-  final EtablissementController etablissementController =
-      EtablissementController.instance;
-  final CategoryController categoryController = CategoryController.instance;
-  final ProduitController produitController = ProduitController.instance;
+  final orderController = Get.find<OrderController>();
+  final panierController = Get.find<PanierController>();
+  final userController = Get.find<UserController>();
+  final etablissementController = Get.find<EtablissementController>();
+  final CategoryController categoryController = Get.find<CategoryController>();
+  final ProduitController produitController = Get.find<ProduitController>();
 
   String? _currentEtablissementId;
 

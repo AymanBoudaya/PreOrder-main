@@ -28,6 +28,7 @@ class SignupController extends GetxController {
 
   Map<String, dynamic> get userData => _userData;
   final authRepo = Get.find<AuthenticationRepository>();
+  final NetworkManager networkManager = Get.find<NetworkManager>();
 
   /// -- SIGNUP
   void signup() async {
@@ -44,7 +45,7 @@ class SignupController extends GetxController {
         TImages.docerAnimation,
       );
       // Check internet connection
-      final isConnected = await NetworkManager.instance.isConnected();
+      final isConnected = await networkManager.isConnected();
       if (!isConnected) {
         TFullScreenLoader.stopLoading();
         TLoaders.warningSnackBar(

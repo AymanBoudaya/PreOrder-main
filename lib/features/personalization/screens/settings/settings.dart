@@ -9,6 +9,7 @@ import 'package:caferesto/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../common/widgets/list_tiles/settings_menu_tile.dart';
 import '../../../../common/widgets/list_tiles/user_profile_tile.dart';
@@ -32,7 +33,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authRepo = Get.find<AuthenticationRepository>();
     final userController = Get.find<UserController>();
+    final etablissementController = Get.find<EtablissementController>();
 
     bool isAdminOnly() {
       final role = userController.user.value.role;
@@ -161,10 +164,9 @@ class SettingsScreen extends StatelessWidget {
                     TSettingsMenuTile(
                       icon: Iconsax.category,
                       title: "Gérer commandes",
-                      subTitle:
-                          "Accepter, préparer ou refuser une commande",
+                      subTitle: "Accepter, préparer ou refuser une commande",
                       onTap: () async {
-                        final etab = await EtablissementController.instance
+                        final etab = await etablissementController
                             .getEtablissementUtilisateurConnecte();
                         if (etab == null ||
                             etab.statut != StatutEtablissement.approuve) {
@@ -214,8 +216,9 @@ class SettingsScreen extends StatelessWidget {
                     TSettingsMenuTile(
                       icon: Iconsax.home,
                       title: "Gérer  établissement",
-                      subTitle:
-                          isAdminOnly() ? "Consulter, modifier ou supprimer des établissements" : "Consulter, ajouter, modifier ou supprimer mon établissement",
+                      subTitle: isAdminOnly()
+                          ? "Consulter, modifier ou supprimer des établissements"
+                          : "Consulter, ajouter, modifier ou supprimer mon établissement",
                       onTap: () => Get.to(() => MonEtablissementScreen()),
                     ),
                   SizedBox(
@@ -231,7 +234,7 @@ class SettingsScreen extends StatelessWidget {
                       onTap: () async {
                         final role = userController.user.value.role;
                         if (role == 'Gérant') {
-                          final etab = await EtablissementController.instance
+                          final etab = await etablissementController
                               .getEtablissementUtilisateurConnecte();
                           if (etab == null ||
                               etab.statut != StatutEtablissement.approuve) {
@@ -250,8 +253,7 @@ class SettingsScreen extends StatelessWidget {
                   SizedBox(
                       width: double.infinity,
                       child: OutlinedButton(
-                          onPressed: () =>
-                              AuthenticationRepository.instance.logout(),
+                          onPressed: () => authRepo.logout(),
                           child: Text("Logout")))
                 ]))
           ],

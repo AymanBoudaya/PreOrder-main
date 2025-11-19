@@ -17,14 +17,8 @@ enum CategoryFilter { all, featured }
 
 class CategoryController extends GetxController
     with GetTickerProviderStateMixin {
-  static CategoryController get instance {
-    try {
-      return Get.find<CategoryController>();
-    } catch (e) {
-      // If not found, create it (shouldn't happen with proper binding)
-      return Get.put(CategoryController(), permanent: true);
-    }
-  }
+
+  final ProduitRepository produitRepository = Get.find<ProduitRepository>();
 
   final formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
@@ -191,7 +185,7 @@ class CategoryController extends GetxController
     int limit = 4,
   }) async {
     try {
-      return await ProduitRepository.instance
+      return await produitRepository
           .getProductsForCategory(categoryId: categoryId, limit: limit);
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Erreur', message: e.toString());

@@ -7,7 +7,7 @@ import '../../../shop/controllers/category_controller.dart';
 class AddCategoryScreen extends StatelessWidget {
   AddCategoryScreen({super.key});
 
-  final CategoryController _categoryController = CategoryController.instance;
+  final CategoryController _categoryController = Get.find<CategoryController>();
 
   @override
   Widget build(BuildContext context) {

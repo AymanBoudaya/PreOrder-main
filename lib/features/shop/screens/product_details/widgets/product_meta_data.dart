@@ -3,6 +3,7 @@ import 'package:caferesto/common/widgets/texts/product_title_text.dart';
 import 'package:caferesto/utils/constants/colors.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../../common/widgets/products/product_cards/widgets/rounded_container.dart';
 import '../../../../../common/widgets/texts/product_price_text.dart';
@@ -17,7 +18,7 @@ class TProductMetaData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ProduitController.instance;
+    final controller = Get.find<ProduitController>();
     final salePercentage =
         controller.calculateSalePercentage(product.price, product.salePrice);
     return Column(

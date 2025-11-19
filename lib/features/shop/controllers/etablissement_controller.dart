@@ -10,7 +10,6 @@ import '../models/produit_model.dart';
 import '../models/statut_etablissement_model.dart';
 
 class EtablissementController extends GetxController {
-  static EtablissementController get instance => Get.find();
 
   final EtablissementRepository repo;
   final UserController userController = Get.find<UserController>();
