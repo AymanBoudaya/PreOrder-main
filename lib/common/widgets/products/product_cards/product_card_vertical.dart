@@ -93,8 +93,7 @@ class ProductCardVertical extends StatelessWidget {
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: [
-                                      Colors.white
-                                          .withAlpha((255 * 0.15).toInt()),
+                                      Colors.white.withValues(alpha: 0.15),
                                       Colors.white.withValues(alpha: 0.01),
                                     ],
                                   ),
@@ -140,7 +139,7 @@ class ProductCardVertical extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                               color: dark
-                                  ? Colors.black.withAlpha((255 * 0.3).toInt())
+                                  ? Colors.black.withValues(alpha: 0.3)
                                   : TColors.white,
                               shape: BoxShape.circle,
                             ),

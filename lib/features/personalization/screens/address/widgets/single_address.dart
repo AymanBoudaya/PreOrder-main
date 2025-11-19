@@ -83,7 +83,7 @@ class TSingleAddress extends StatelessWidget {
                         color: selectedAddress
                             ? dark
                                 ? TColors.light
-                                : TColors.dark.withAlpha((255 * 0.6).toInt())
+                                : TColors.dark.withValues(alpha: 0.6)
                             : null),
                   ),
                   // Bouton de suppression

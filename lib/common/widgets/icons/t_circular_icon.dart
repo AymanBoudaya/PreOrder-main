@@ -31,8 +31,8 @@ class TCircularIcon extends StatelessWidget {
         color: backgroundColor != null
             ? backgroundColor!
             : THelperFunctions.isDarkMode(context)
-                ? TColors.black.withAlpha((255 * 0.9).toInt())
-                : TColors.white.withAlpha((255 * 0.9).toInt()),
+                ? TColors.black.withValues(alpha: 0.9)
+                : TColors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(100),
       ),
       child: IconButton(

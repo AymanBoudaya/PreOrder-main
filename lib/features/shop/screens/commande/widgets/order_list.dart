@@ -7,6 +7,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../../navigation_menu.dart';
+import '../../../../../utils/constants/enums.dart';
 import '../../../../../utils/loaders/animation_loader.dart';
 import '../../../controllers/commandes/order_list_controller.dart';
 import '../../../models/order_model.dart';

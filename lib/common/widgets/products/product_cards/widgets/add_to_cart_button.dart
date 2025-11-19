@@ -32,7 +32,7 @@ class ProductCardAddToCartButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: productQuantityInCart > 0
               ? TColors.primary
-              : TColors.dark.withAlpha((255 * 0.8).toInt()),
+              : TColors.dark.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(12), // Slightly larger radius
         ),
         child: AnimatedSwitcher(

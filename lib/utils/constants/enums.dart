@@ -8,4 +8,4 @@ enum ProductType { single, variable }
 
 enum TexAppSizes { small, medium, large }
 
-enum OrderStatus { processing, shipped, delivered, pending }
+enum OrderStatus { pending, cancelled, delivered, preparing, ready, refused }

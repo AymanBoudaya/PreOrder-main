@@ -1,10 +1,10 @@
 import 'package:caferesto/features/shop/models/cart_item_model.dart';
 import 'package:caferesto/utils/helpers/helper_functions.dart';
 
+import '../../../utils/constants/enums.dart';
 import '../../personalization/models/address_model.dart';
 import 'etablissement_model.dart';
 
-enum OrderStatus { pending, cancelled, delivered, preparing, ready, refused }
 
 class OrderModel {
   final String id;

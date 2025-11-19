@@ -117,8 +117,7 @@ class TProductCardHorizontal extends StatelessWidget {
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                   colors: [
-                                    Colors.white
-                                        .withAlpha((255 * 0.15).toInt()),
+                                    Colors.white.withValues(alpha: 0.15),
                                     Colors.white.withValues(alpha: 0.01),
                                   ],
                                 ),
@@ -164,7 +163,7 @@ class TProductCardHorizontal extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             color: dark
-                                ? Colors.black.withAlpha((255 * 0.3).toInt())
+                                ? Colors.black.withValues(alpha: 0.3)
                                 : TColors.white,
                             shape: BoxShape.circle,
                           ),
@@ -182,8 +181,8 @@ class TProductCardHorizontal extends StatelessWidget {
                                 vertical: 4, horizontal: 8),
                             decoration: BoxDecoration(
                               color: dark
-                                  ? Colors.black.withAlpha((255 * 0.6).toInt())
-                                  : Colors.white.withAlpha((255 * 0.9).toInt()),
+                                  ? Colors.black.withValues(alpha: 0.6)
+                                  : Colors.white.withValues(alpha: 0.9),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: dark

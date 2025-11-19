@@ -31,8 +31,7 @@ class TProductMetaData extends StatelessWidget {
             salePercentage != null
                 ? TRoundedContainer(
                     radius: AppSizes.sm,
-                    backgroundColor:
-                        TColors.secondary.withAlpha((255 * 0.8).toInt()),
+                    backgroundColor: TColors.secondary.withValues(alpha: 0.8),
                     padding: const EdgeInsets.symmetric(
                         vertical: AppSizes.xs, horizontal: AppSizes.sm),
                     child: Text(
