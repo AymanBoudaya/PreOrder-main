@@ -67,10 +67,27 @@ class LoginController extends GetxController {
             isSignupFlow: false,
           ));
       TLoaders.successSnackBar(
-          title: 'OTP envoyé !', message: 'Vérifier votre boîte e-mail');  
+          title: 'OTP envoyé !', message: 'Vérifier votre boîte e-mail');
     } catch (e) {
       TFullScreenLoader.stopLoading();
-      TLoaders.errorSnackBar(title: 'Erreur Login !', message: e.toString());
+      final errorMessage = e.toString();
+      if (errorMessage.contains("you can only request this")) {
+        TLoaders.errorSnackBar(
+          title: "Trop de demandes",
+          message: "Attendez avant de demander un nouveau code OTP.",
+        );
+      } else if (errorMessage.contains("otp_disabled") ||
+          errorMessage.contains("signups not allowed")) {
+        TLoaders.errorSnackBar(
+          title: "Email inconnu",
+          message: "Aucun utilisateur n'est associé à cet email.",
+        );
+      } else {
+        TLoaders.errorSnackBar(
+          title: 'Erreur Login !',
+          message: errorMessage,
+        );
+      }
     }
   }
 }

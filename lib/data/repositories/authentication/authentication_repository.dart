@@ -158,15 +158,6 @@ class AuthenticationRepository extends GetxController {
       );
       return true;
     } catch (e) {
-      if (e.toString().contains("otp_disabled") ||
-          e.toString().contains("signups not allowed")) {
-        TLoaders.errorSnackBar(
-          title: "Email inconnu",
-          message: "Aucun utilisateur n'est associé à cet email.",
-        );
-        return false;
-      }
-      TLoaders.errorSnackBar(title: "Erreur OTP", message: e.toString());
       rethrow;
     }
   }
