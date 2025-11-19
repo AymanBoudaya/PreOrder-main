@@ -95,7 +95,7 @@ class EtablissementRepository {
         try {
           // Récupérer tous les produits en une seule requête
           final countsResponse = await _db
-              .from(_table)
+              .from('produits')
               .select('etablissement_id')
               .inFilter('etablissement_id', etablissementIds);
 
@@ -156,7 +156,7 @@ class EtablissementRepository {
         try {
           // Récupérer tous les produits en une seule requête
           final countsResponse = await _db
-              .from(_table)
+              .from('produits')
               .select('etablissement_id')
               .inFilter('etablissement_id', etablissementIds);
 
