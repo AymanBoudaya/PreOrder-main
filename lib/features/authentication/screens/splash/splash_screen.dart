@@ -10,7 +10,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
     return Scaffold(
-      backgroundColor: dark ? AppColors.eerieBlack : Colors.white,
+      backgroundColor: dark ? TColors.eerieBlack : Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -23,7 +23,7 @@ class SplashScreen extends StatelessWidget {
             const SizedBox(height: 24),
             // Indicateur de chargement
             const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor: AlwaysStoppedAnimation<Color>(TColors.primary),
             ),
           ],
         ),

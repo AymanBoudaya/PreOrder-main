@@ -42,17 +42,17 @@ class TSearchContainer extends StatelessWidget {
               decoration: BoxDecoration(
                 color: showBackground
                     ? dark
-                        ? AppColors.eerieBlack
-                        : AppColors.light
+                        ? TColors.eerieBlack
+                        : TColors.light
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-                border: showBorder ? Border.all(color: AppColors.grey) : null,
+                border: showBorder ? Border.all(color: TColors.grey) : null,
               ),
               child: Row(
                 children: [
                   Icon(
                     icon,
-                    color: dark ? AppColors.darkerGrey : AppColors.grey,
+                    color: dark ? TColors.darkerGrey : TColors.grey,
                   ),
                   const SizedBox(
                     width: AppSizes.spaceBtwItems,
@@ -82,17 +82,17 @@ class TSearchContainer extends StatelessWidget {
           decoration: BoxDecoration(
             color: showBackground
                 ? dark
-                    ? AppColors.eerieBlack
-                    : AppColors.light
+                    ? TColors.eerieBlack
+                    : TColors.light
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-            border: showBorder ? Border.all(color: AppColors.grey) : null,
+            border: showBorder ? Border.all(color: TColors.grey) : null,
           ),
           child: Row(
             children: [
               Icon(
                 icon,
-                color: dark ? AppColors.darkerGrey : AppColors.grey,
+                color: dark ? TColors.darkerGrey : TColors.grey,
               ),
               const SizedBox(width: AppSizes.spaceBtwItems),
               Expanded(

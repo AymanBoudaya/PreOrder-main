@@ -22,7 +22,7 @@ class TFullScreenLoader {
         return PopScope(
           canPop: false,
           child: Scaffold(
-            backgroundColor: isDark ? AppColors.dark : AppColors.white,
+            backgroundColor: isDark ? TColors.dark : TColors.white,
             body: SafeArea(
               child: Center(
                 child: Padding(

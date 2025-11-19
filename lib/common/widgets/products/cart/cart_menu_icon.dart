@@ -33,8 +33,7 @@ class TCartCounterIcon extends StatelessWidget {
             width: 18,
             height: 18,
             decoration: BoxDecoration(
-              color:
-                  counterBgColor ?? (dark ? AppColors.white : AppColors.black),
+              color: counterBgColor ?? (dark ? TColors.white : TColors.black),
               borderRadius: BorderRadius.circular(100),
             ),
             child: Center(
@@ -42,7 +41,7 @@ class TCartCounterIcon extends StatelessWidget {
                 () => Text(
                   controller.cartItemsCount.value.toString(),
                   style: Theme.of(context).textTheme.labelLarge!.apply(
-                        color: AppColors.white,
+                        color: TColors.white,
                         fontSizeFactor: 0.8,
                       ),
                 ),

@@ -74,12 +74,12 @@ class TProductAttributes extends StatelessWidget {
                   ),
                 ),
                 selected: isSelected,
-                selectedColor: AppColors.primary,
+                selectedColor: TColors.primary,
                 backgroundColor: isInCart && !isSelected
                     ? (dark
                         ? Colors.green.shade900.withValues(alpha: 0.3)
                         : Colors.green.shade50)
-                    : (dark ? AppColors.darkerGrey : AppColors.lightGrey),
+                    : (dark ? TColors.darkerGrey : TColors.lightGrey),
                 disabledColor: dark
                     ? Colors.grey.shade800.withValues(alpha: 0.5)
                     : Colors.grey.shade300,
@@ -116,8 +116,8 @@ class TProductAttributes extends StatelessWidget {
             TRoundedContainer(
               padding: const EdgeInsets.all(AppSizes.md),
               backgroundColor: dark
-                  ? AppColors.darkerGrey
-                  : AppColors.grey.withValues(alpha: 0.2),
+                  ? TColors.darkerGrey
+                  : TColors.grey.withValues(alpha: 0.2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

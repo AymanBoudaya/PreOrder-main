@@ -30,7 +30,7 @@ class TCartItem extends StatelessWidget {
             height: 60,
             isNetworkImage: true,
             padding: const EdgeInsets.all(AppSizes.sm),
-            backgroundColor: isDark ? AppColors.darkerGrey : AppColors.light,
+            backgroundColor: isDark ? TColors.darkerGrey : TColors.light,
           )
         else
           Container(
@@ -83,7 +83,7 @@ class TCartItem extends StatelessWidget {
                 '${cartItem.price.toStringAsFixed(2)} DT',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: TColors.primary,
                     ),
               ),
             ],

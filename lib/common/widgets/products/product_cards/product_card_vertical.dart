@@ -33,7 +33,7 @@ class ProductCardVertical extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ProduitController>();
-    
+
     final salePercentage =
         controller.calculateSalePercentage(product.price, product.salePrice);
     final dark = THelperFunctions.isDarkMode(context);
@@ -46,7 +46,7 @@ class ProductCardVertical extends StatelessWidget {
         width: 170,
         padding: const EdgeInsets.all(0),
         decoration: BoxDecoration(
-          color: dark ? AppColors.eerieBlack : AppColors.white,
+          color: dark ? TColors.eerieBlack : TColors.white,
           borderRadius: BorderRadius.circular(AppSizes.defaultSpace),
           boxShadow: [TShadowStyle.vericalCardProductShadow],
         ),
@@ -141,7 +141,7 @@ class ProductCardVertical extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: dark
                                   ? Colors.black.withAlpha((255 * 0.3).toInt())
-                                  : AppColors.white,
+                                  : TColors.white,
                               shape: BoxShape.circle,
                             ),
                             child: _buildFavoriteIcon(context),

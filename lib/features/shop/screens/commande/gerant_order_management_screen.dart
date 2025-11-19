@@ -239,7 +239,7 @@ class _GerantOrderManagementScreenState
             margin:
                 const EdgeInsets.symmetric(horizontal: AppSizes.defaultSpace),
             decoration: BoxDecoration(
-              color: dark ? AppColors.dark : AppColors.light,
+              color: dark ? TColors.dark : TColors.light,
               borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
             ),
             child: TabBar(
@@ -247,7 +247,7 @@ class _GerantOrderManagementScreenState
               tabs: _tabLabels.map((label) => Tab(text: label)).toList(),
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-                color: AppColors.primary,
+                color: TColors.primary,
               ),
               labelColor: Colors.white,
               unselectedLabelColor: dark ? Colors.white70 : Colors.black54,
@@ -305,9 +305,9 @@ class _GerantOrderManagementScreenState
         margin: const EdgeInsets.symmetric(horizontal: AppSizes.defaultSpace),
         padding: const EdgeInsets.all(AppSizes.md),
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.05),
+          color: TColors.primary.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+          border: Border.all(color: TColors.primary.withValues(alpha: 0.1)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -330,10 +330,10 @@ class _GerantOrderManagementScreenState
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
+            color: TColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, size: 20, color: AppColors.primary),
+          child: Icon(icon, size: 20, color: TColors.primary),
         ),
         const SizedBox(height: 4),
         Text(
@@ -341,7 +341,7 @@ class _GerantOrderManagementScreenState
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: AppColors.primary,
+            color: TColors.primary,
           ),
         ),
         Text(
@@ -540,7 +540,7 @@ class _GerantOrderManagementScreenState
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Iconsax.money, size: 14, color: AppColors.primary),
+                Icon(Iconsax.money, size: 14, color: TColors.primary),
                 const SizedBox(width: 4),
                 Text(
                   '${order.totalAmount.toStringAsFixed(2)} DT',
@@ -556,7 +556,7 @@ class _GerantOrderManagementScreenState
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Iconsax.shopping_bag, size: 14, color: AppColors.primary),
+                Icon(Iconsax.shopping_bag, size: 14, color: TColors.primary),
                 const SizedBox(width: 4),
                 Text(
                   '${order.items.length} art.',
@@ -573,7 +573,7 @@ class _GerantOrderManagementScreenState
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Iconsax.user, size: 14, color: AppColors.primary),
+                  Icon(Iconsax.user, size: 14, color: TColors.primary),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
@@ -693,7 +693,7 @@ class _GerantOrderManagementScreenState
                       width: 4,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: AppColors.primary,
+                        color: TColors.primary,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -759,14 +759,14 @@ class _GerantOrderManagementScreenState
       margin: const EdgeInsets.only(top: 6),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.05),
+        color: TColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+        border: Border.all(color: TColors.primary.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
           // Créneau de retrait à gauche
-          Icon(Iconsax.clock, color: AppColors.primary, size: 14),
+          Icon(Iconsax.clock, color: TColors.primary, size: 14),
           const SizedBox(width: 6),
           Expanded(
             child: Text(

@@ -173,10 +173,10 @@ class GerantDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.2),
+          color: TColors.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -184,7 +184,7 @@ class GerantDashboardScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Iconsax.calendar, size: 20, color: AppColors.primary),
+              Icon(Iconsax.calendar, size: 20, color: TColors.primary),
               const SizedBox(width: AppSizes.sm),
               Text(
                 'Filtre par période',
@@ -533,7 +533,7 @@ class GerantDashboardScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           horizontal: horizontalPadding, vertical: verticalPadding),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
         border: Border.all(color: color.withValues(alpha: 0.2)),
         boxShadow: [
@@ -606,7 +606,7 @@ class GerantDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
@@ -674,7 +674,7 @@ class GerantDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
@@ -750,7 +750,7 @@ class GerantDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
@@ -776,11 +776,11 @@ class GerantDashboardScreen extends StatelessWidget {
               final product = entry.value;
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                  backgroundColor: TColors.primary.withValues(alpha: 0.1),
                   child: Text(
                     '${index + 1}',
                     style: const TextStyle(
-                      color: AppColors.primary,
+                      color: TColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -800,7 +800,7 @@ class GerantDashboardScreen extends StatelessWidget {
                   '${product['totalQuantity']}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: TColors.primary,
                   ),
                 ),
               );
@@ -814,7 +814,7 @@ class GerantDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
@@ -854,7 +854,7 @@ class GerantDashboardScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSizes.spaceBtwItems),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppColors.primary),
+          Icon(icon, size: 20, color: TColors.primary),
           const SizedBox(width: AppSizes.spaceBtwItems),
           Expanded(
             child: Text(
@@ -866,7 +866,7 @@ class GerantDashboardScreen extends StatelessWidget {
             value,
             style: Theme.of(Get.context!).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
+                  color: TColors.primary,
                 ),
           ),
         ],
@@ -878,7 +878,7 @@ class GerantDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
@@ -893,7 +893,7 @@ class GerantDashboardScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Iconsax.profile_2user, color: AppColors.primary),
+              Icon(Iconsax.profile_2user, color: TColors.primary),
               const SizedBox(width: AppSizes.sm),
               Text(
                 'Utilisateurs les Plus Fidèles',
@@ -937,7 +937,7 @@ class GerantDashboardScreen extends StatelessWidget {
                         profileImageUrl != null && profileImageUrl.isNotEmpty
                             ? NetworkImage(profileImageUrl)
                             : null,
-                    backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                    backgroundColor: TColors.primary.withValues(alpha: 0.1),
                     child: profileImageUrl == null || profileImageUrl.isEmpty
                         ? Text(
                             fullName.isNotEmpty
@@ -963,21 +963,21 @@ class GerantDashboardScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.1),
+                              color: TColors.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Iconsax.shopping_bag,
-                                    size: 14, color: AppColors.primary),
+                                    size: 14, color: TColors.primary),
                                 const SizedBox(width: 4),
                                 Text(
                                   '$orderCount commande${orderCount > 1 ? 's' : ''}',
                                   style: const TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
-                                    color: AppColors.primary,
+                                    color: TColors.primary,
                                   ),
                                 ),
                               ],
@@ -1016,7 +1016,7 @@ class GerantDashboardScreen extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
+                      color: TColors.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -1024,7 +1024,7 @@ class GerantDashboardScreen extends StatelessWidget {
                         '${index + 1}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                          color: TColors.primary,
                           fontSize: 14,
                         ),
                       ),
@@ -1061,7 +1061,7 @@ class GerantDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
@@ -1076,7 +1076,7 @@ class GerantDashboardScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Iconsax.calendar, color: AppColors.primary, size: 24),
+              Icon(Iconsax.calendar, color: TColors.primary, size: 24),
               const SizedBox(width: 8),
               Text(
                 'Jours avec le Plus de Commandes',
@@ -1112,7 +1112,7 @@ class GerantDashboardScreen extends StatelessWidget {
                               width: 24,
                               height: 24,
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withValues(alpha: 0.1),
+                                color: TColors.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Center(
@@ -1121,7 +1121,7 @@ class GerantDashboardScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: AppColors.primary,
+                                    color: TColors.primary,
                                   ),
                                 ),
                               ),
@@ -1140,7 +1140,7 @@ class GerantDashboardScreen extends StatelessWidget {
                           '$count commande${count > 1 ? 's' : ''}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
+                            color: TColors.primary,
                             fontSize: 14,
                           ),
                         ),
@@ -1149,9 +1149,9 @@ class GerantDashboardScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     LinearProgressIndicator(
                       value: percentage / 100,
-                      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                      backgroundColor: TColors.primary.withValues(alpha: 0.1),
                       valueColor:
-                          AlwaysStoppedAnimation<Color>(AppColors.primary),
+                          AlwaysStoppedAnimation<Color>(TColors.primary),
                       minHeight: 6,
                     ),
                   ],
@@ -1167,7 +1167,7 @@ class GerantDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
         boxShadow: [
           BoxShadow(
@@ -1182,7 +1182,7 @@ class GerantDashboardScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Iconsax.clock, color: AppColors.primary, size: 24),
+              Icon(Iconsax.clock, color: TColors.primary, size: 24),
               const SizedBox(width: 8),
               Text(
                 'Heures de Pickup les Plus Fréquentes',

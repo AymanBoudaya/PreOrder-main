@@ -26,13 +26,14 @@ class TUserProfileTile extends StatelessWidget {
             Builder(
               builder: (context) {
                 final user = controller.user.value;
-                final profileImage = (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty)
+                final profileImage = (user.profileImageUrl != null &&
+                        user.profileImageUrl!.isNotEmpty)
                     ? user.profileImageUrl!
                     : user.sex == 'Homme'
                         ? TImages.userMale
                         : TImages.userFemale;
-                final isNetworkImg = profileImage.startsWith('http://') || 
-                                     profileImage.startsWith('https://');
+                final isNetworkImg = profileImage.startsWith('http://') ||
+                    profileImage.startsWith('https://');
                 return CircularImage(
                   isNetworkImage: isNetworkImg,
                   image: profileImage,
@@ -55,7 +56,7 @@ class TUserProfileTile extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall!
-                        .apply(color: AppColors.white),
+                        .apply(color: TColors.white),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -66,7 +67,7 @@ class TUserProfileTile extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
-                        .apply(color: AppColors.white),
+                        .apply(color: TColors.white),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -77,7 +78,7 @@ class TUserProfileTile extends StatelessWidget {
             // Bouton modifier
             IconButton(
               onPressed: onPressed,
-              icon: const Icon(Iconsax.edit, color: AppColors.white),
+              icon: const Icon(Iconsax.edit, color: TColors.white),
             ),
           ],
         ),

@@ -14,11 +14,12 @@ class TSingleAddress extends StatelessWidget {
 
   final AddressModel address;
   final VoidCallback onTap;
-  
+
   /// Affiche une boîte de dialogue de confirmation avant de supprimer
-  Future<void> _showDeleteConfirmation(BuildContext context, String addressId) async {
+  Future<void> _showDeleteConfirmation(
+      BuildContext context, String addressId) async {
     final controller = Get.find<AddressController>();
-    
+
     return Get.dialog(
       AlertDialog(
         title: const Text('Supprimer l\'adresse'),
@@ -62,13 +63,13 @@ class TSingleAddress extends StatelessWidget {
           padding: const EdgeInsets.all(AppSizes.md),
           showBorder: true,
           backgroundColor: selectedAddress
-              ? AppColors.primary.withAlpha(128)
+              ? TColors.primary.withAlpha(128)
               : Colors.transparent,
           borderColor: selectedAddress
               ? Colors.transparent
               : dark
-                  ? AppColors.darkerGrey
-                  : AppColors.grey,
+                  ? TColors.darkerGrey
+                  : TColors.grey,
           margin: const EdgeInsets.only(bottom: AppSizes.spaceBtwItems),
           child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -81,8 +82,8 @@ class TSingleAddress extends StatelessWidget {
                     child: Icon(selectedAddress ? Iconsax.tick_circle5 : null,
                         color: selectedAddress
                             ? dark
-                                ? AppColors.light
-                                : AppColors.dark.withAlpha((255 * 0.6).toInt())
+                                ? TColors.light
+                                : TColors.dark.withAlpha((255 * 0.6).toInt())
                             : null),
                   ),
                   // Bouton de suppression
@@ -95,7 +96,8 @@ class TSingleAddress extends StatelessWidget {
                         color: Colors.red.shade600,
                         size: 20,
                       ),
-                      onPressed: () => _showDeleteConfirmation(context, address.id),
+                      onPressed: () =>
+                          _showDeleteConfirmation(context, address.id),
                       tooltip: 'Supprimer cette adresse',
                     ),
                   ),

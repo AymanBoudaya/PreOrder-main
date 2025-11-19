@@ -31,8 +31,8 @@ class ProductCardAddToCartButton extends StatelessWidget {
         width: productQuantityInCart > 0 ? 80 : 32,
         decoration: BoxDecoration(
           color: productQuantityInCart > 0
-              ? AppColors.primary
-              : AppColors.dark.withAlpha((255 * 0.8).toInt()),
+              ? TColors.primary
+              : TColors.dark.withAlpha((255 * 0.8).toInt()),
           borderRadius: BorderRadius.circular(12), // Slightly larger radius
         ),
         child: AnimatedSwitcher(

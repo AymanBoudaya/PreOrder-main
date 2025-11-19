@@ -33,7 +33,7 @@ class CheckoutScreen extends StatelessWidget {
     final subTotal = panierController.totalCartPrice.value;
     // Use instance getter which handles creation if needed
     final orderController = Get.find<OrderController>();
-    
+
     final totalAmount = TPricingCalculator.calculateTotalPrice(subTotal, 'tn');
     final dark = THelperFunctions.isDarkMode(context);
 
@@ -56,7 +56,7 @@ class CheckoutScreen extends StatelessWidget {
               TRoundedContainer(
                 showBorder: true,
                 padding: const EdgeInsets.all(AppSizes.md),
-                backgroundColor: dark ? AppColors.black : AppColors.white,
+                backgroundColor: dark ? TColors.black : TColors.white,
                 child: Column(
                   children: [
                     TBillingAmountSection(),

@@ -31,7 +31,7 @@ class TProductImageSlider extends StatelessWidget {
     final images = controller.getAllProductImages(product);
     return TCurvedEdgeWidget(
         child: Container(
-            color: dark ? AppColors.darkGrey : AppColors.light,
+            color: dark ? TColors.darkGrey : TColors.light,
             constraints: const BoxConstraints(
               minHeight: 400,
               maxHeight: 600,
@@ -56,7 +56,7 @@ class TProductImageSlider extends StatelessWidget {
                                   (_, __, downloadProgress) => Center(
                                         child: CircularProgressIndicator(
                                           value: downloadProgress.progress,
-                                          color: AppColors.primary,
+                                          color: TColors.primary,
                                         ),
                                       ),
                               errorWidget: (_, __, ___) =>
@@ -86,15 +86,14 @@ class TProductImageSlider extends StatelessWidget {
                           isNetworkImage: true,
                           imageUrl: images[index],
                           padding: const EdgeInsets.all(AppSizes.sm),
-                          backgroundColor:
-                              dark ? AppColors.dark : AppColors.white,
+                          backgroundColor: dark ? TColors.dark : TColors.white,
                           onPressed: () {
                             controller.selectedProductImage.value =
                                 images[index];
                           },
                           border: Border.all(
                               color: imageSelected
-                                  ? AppColors.primary
+                                  ? TColors.primary
                                   : Colors.transparent),
                         );
                       }),
@@ -110,7 +109,8 @@ class TProductImageSlider extends StatelessWidget {
                   showBackArrow: false,
                   leadingIcon: Icons.home,
                   leadingOnPressed: () {
-                    final navigationController = Get.put(NavigationController());
+                    final navigationController =
+                        Get.put(NavigationController());
                     navigationController.selectedIndex.value = 0;
                     Get.offAll(() => const NavigationMenu());
                   },

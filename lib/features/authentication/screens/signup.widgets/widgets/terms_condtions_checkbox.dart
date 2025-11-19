@@ -16,7 +16,7 @@ class TermsAndConditionsCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
     final controller = Get.find<SignupController>();
-    
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -43,10 +43,9 @@ class TermsAndConditionsCheckbox extends StatelessWidget {
                 TextSpan(
                   text: '${TTexts.privacyPolicy} ',
                   style: Theme.of(context).textTheme.bodyMedium!.apply(
-                        color: dark ? AppColors.white : AppColors.primary,
+                        color: dark ? TColors.white : TColors.primary,
                         decoration: TextDecoration.underline,
-                        decorationColor:
-                            dark ? AppColors.white : AppColors.primary,
+                        decorationColor: dark ? TColors.white : TColors.primary,
                       ),
                 ),
                 TextSpan(
@@ -56,10 +55,9 @@ class TermsAndConditionsCheckbox extends StatelessWidget {
                 TextSpan(
                   text: TTexts.termsOfUse,
                   style: Theme.of(context).textTheme.bodyMedium!.apply(
-                        color: dark ? AppColors.white : AppColors.primary,
+                        color: dark ? TColors.white : TColors.primary,
                         decoration: TextDecoration.underline,
-                        decorationColor:
-                            dark ? AppColors.white : AppColors.primary,
+                        decorationColor: dark ? TColors.white : TColors.primary,
                       ),
                 ),
               ],

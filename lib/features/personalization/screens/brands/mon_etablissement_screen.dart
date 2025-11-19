@@ -323,7 +323,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: dark ? AppColors.eerieBlack : AppColors.white,
+        color: dark ? TColors.eerieBlack : TColors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -406,7 +406,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: dark ? AppColors.eerieBlack : AppColors.white,
+        color: dark ? TColors.eerieBlack : TColors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(

@@ -152,7 +152,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
         isLargeScreen ? AppSizes.defaultSpace : AppSizes.defaultSpace / 1.5,
       ),
       decoration: BoxDecoration(
-        color: Get.isDarkMode ? AppColors.dark : AppColors.light,
+        color: Get.isDarkMode ? TColors.dark : TColors.light,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -165,7 +165,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
             children: [
               Icon(
                 Icons.filter_list,
-                color: AppColors.primary,
+                color: TColors.primary,
                 size: isLargeScreen ? 24 : 20,
               ),
               const SizedBox(width: 12),
@@ -183,21 +183,21 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: AppColors.primary,
+                        color: TColors.primary,
                         width: 1.5,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: AppColors.primary.withValues(alpha: 0.3),
+                        color: TColors.primary.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: AppColors.primary,
+                        color: TColors.primary,
                         width: 2,
                       ),
                     ),
@@ -246,7 +246,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                 IconButton(
                   icon: Icon(
                     Icons.clear,
-                    color: AppColors.primary,
+                    color: TColors.primary,
                     size: isLargeScreen ? 24 : 20,
                   ),
                   onPressed: () {

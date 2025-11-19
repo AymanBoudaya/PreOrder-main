@@ -12,7 +12,7 @@ class TCircularContainer extends StatelessWidget {
     this.height = 400,
     this.radius = 400,
     this.padding = 0,
-    this.backgroundColor = AppColors.white,
+    this.backgroundColor = TColors.white,
     this.margin,
     this.blurSigma = 15,
     this.borderWidth = 1.5,

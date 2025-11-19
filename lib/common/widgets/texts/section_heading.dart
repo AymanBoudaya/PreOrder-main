@@ -40,8 +40,8 @@ class TSectionHeading extends StatelessWidget {
                     color: whiteTextColor
                         ? Colors.white
                         : dark
-                            ? AppColors.white
-                            : AppColors.eerieBlack),
+                            ? TColors.white
+                            : TColors.eerieBlack),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -80,7 +80,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: dark ? AppColors.dark : AppColors.light,
+      backgroundColor: dark ? TColors.dark : TColors.light,
       appBar: TAppBar(
         showBackArrow: true,
         title: Text(
@@ -147,10 +147,10 @@ class _SearchOverlayState extends State<SearchOverlay> {
       padding: const EdgeInsets.all(AppSizes.md),
       margin: const EdgeInsets.only(bottom: AppSizes.spaceBtwItems),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : AppColors.lightContainer,
+        color: dark ? TColors.darkContainer : TColors.lightContainer,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
         border: Border.all(
-          color: dark ? AppColors.darkerGrey : AppColors.grey,
+          color: dark ? TColors.darkerGrey : TColors.grey,
         ),
       ),
       child: Column(
@@ -159,7 +159,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
           Text(
             'Filtres actifs:',
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: dark ? AppColors.grey : AppColors.darkerGrey,
+                  color: dark ? TColors.grey : TColors.darkerGrey,
                 ),
           ),
           const SizedBox(height: AppSizes.sm),
@@ -212,11 +212,11 @@ class _SearchOverlayState extends State<SearchOverlay> {
       label: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppColors.white,
+              color: TColors.white,
             ),
       ),
-      backgroundColor: AppColors.primary,
-      deleteIcon: const Icon(Icons.close, size: 16, color: AppColors.white),
+      backgroundColor: TColors.primary,
+      deleteIcon: const Icon(Icons.close, size: 16, color: TColors.white),
       onDeleted: onRemove,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       labelPadding: const EdgeInsets.symmetric(horizontal: AppSizes.xs),
@@ -236,19 +236,19 @@ class _SearchOverlayState extends State<SearchOverlay> {
           vertical: AppSizes.xs,
         ),
         decoration: BoxDecoration(
-          color: AppColors.error.withValues(alpha: 0.1),
+          color: TColors.error.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
-          border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+          border: Border.all(color: TColors.error.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.clear_all, size: 16, color: AppColors.error),
+            Icon(Icons.clear_all, size: 16, color: TColors.error),
             const SizedBox(width: AppSizes.xs),
             Text(
               'Tout effacer',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.error,
+                    color: TColors.error,
                   ),
             ),
           ],
@@ -286,23 +286,22 @@ class _SearchOverlayState extends State<SearchOverlay> {
           decoration: InputDecoration(
             labelText: 'Catégorie',
             filled: true,
-            fillColor:
-                dark ? AppColors.darkContainer : AppColors.lightContainer,
+            fillColor: dark ? TColors.darkContainer : TColors.lightContainer,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(
-                color: dark ? AppColors.darkerGrey : AppColors.grey,
+                color: dark ? TColors.darkerGrey : TColors.grey,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(
-                color: dark ? AppColors.darkerGrey : AppColors.grey,
+                color: dark ? TColors.darkerGrey : TColors.grey,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
-              borderSide: const BorderSide(color: AppColors.primary),
+              borderSide: const BorderSide(color: TColors.primary),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSizes.md,
@@ -310,7 +309,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
             ),
           ),
           isExpanded: true,
-          dropdownColor: dark ? AppColors.dark : AppColors.white,
+          dropdownColor: dark ? TColors.dark : TColors.white,
           style: Theme.of(context).textTheme.bodyMedium,
           items: [
             DropdownMenuItem<CategoryModel>(
@@ -318,7 +317,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
               child: Text(
                 'Toutes les catégories',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: dark ? AppColors.grey : AppColors.darkerGrey,
+                      color: dark ? TColors.grey : TColors.darkerGrey,
                     ),
               ),
             ),
@@ -343,30 +342,29 @@ class _SearchOverlayState extends State<SearchOverlay> {
           decoration: InputDecoration(
             labelText: 'Établissement',
             filled: true,
-            fillColor:
-                dark ? AppColors.darkContainer : AppColors.lightContainer,
+            fillColor: dark ? TColors.darkContainer : TColors.lightContainer,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(
-                color: dark ? AppColors.darkerGrey : AppColors.grey,
+                color: dark ? TColors.darkerGrey : TColors.grey,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(
-                color: dark ? AppColors.darkerGrey : AppColors.grey,
+                color: dark ? TColors.darkerGrey : TColors.grey,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
-              borderSide: const BorderSide(color: AppColors.primary),
+              borderSide: const BorderSide(color: TColors.primary),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSizes.md,
               vertical: AppSizes.sm,
             ),
           ),
-          dropdownColor: dark ? AppColors.dark : AppColors.white,
+          dropdownColor: dark ? TColors.dark : TColors.white,
           isExpanded: true,
           style: Theme.of(context).textTheme.bodyMedium,
           items: [
@@ -375,7 +373,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
               child: Text(
                 'Tous les établissements',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: dark ? AppColors.grey : AppColors.darkerGrey,
+                      color: dark ? TColors.grey : TColors.darkerGrey,
                     ),
               ),
             ),
@@ -402,30 +400,29 @@ class _SearchOverlayState extends State<SearchOverlay> {
           decoration: InputDecoration(
             labelText: 'Trier par',
             filled: true,
-            fillColor:
-                dark ? AppColors.darkContainer : AppColors.lightContainer,
+            fillColor: dark ? TColors.darkContainer : TColors.lightContainer,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(
-                color: dark ? AppColors.darkerGrey : AppColors.grey,
+                color: dark ? TColors.darkerGrey : TColors.grey,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
               borderSide: BorderSide(
-                color: dark ? AppColors.darkerGrey : AppColors.grey,
+                color: dark ? TColors.darkerGrey : TColors.grey,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
-              borderSide: const BorderSide(color: AppColors.primary),
+              borderSide: const BorderSide(color: TColors.primary),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSizes.md,
               vertical: AppSizes.sm,
             ),
           ),
-          dropdownColor: dark ? AppColors.dark : AppColors.white,
+          dropdownColor: dark ? TColors.dark : TColors.white,
           style: Theme.of(context).textTheme.bodyMedium,
           items: [
             DropdownMenuItem<String>(
@@ -433,7 +430,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
               child: Text(
                 'Aucun tri',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: dark ? AppColors.grey : AppColors.darkerGrey,
+                      color: dark ? TColors.grey : TColors.darkerGrey,
                     ),
               ),
             ),
@@ -469,7 +466,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
           padding: const EdgeInsets.all(AppSizes.md),
           margin: const EdgeInsets.only(bottom: AppSizes.spaceBtwItems),
           decoration: BoxDecoration(
-            color: dark ? AppColors.darkContainer : AppColors.lightContainer,
+            color: dark ? TColors.darkContainer : TColors.lightContainer,
             borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
           ),
           child: Row(
@@ -478,14 +475,14 @@ class _SearchOverlayState extends State<SearchOverlay> {
               Text(
                 '${controller.searchResults.length} produit(s) trouvé(s)',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: dark ? AppColors.grey : AppColors.darkerGrey,
+                      color: dark ? TColors.grey : TColors.darkerGrey,
                     ),
               ),
               if (controller.hasActiveFilters)
                 Icon(
                   Iconsax.info_circle,
                   size: AppSizes.iconSm,
-                  color: AppColors.primary,
+                  color: TColors.primary,
                 ),
             ],
           ),
@@ -527,7 +524,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
             Icon(
               Iconsax.search_normal_1,
               size: 80,
-              color: dark ? AppColors.grey : AppColors.darkerGrey,
+              color: dark ? TColors.grey : TColors.darkerGrey,
             ),
             const SizedBox(height: AppSizes.spaceBtwSections),
             Text(
@@ -545,7 +542,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                     Text(
                       'Essayez de modifier vos filtres de recherche',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: dark ? AppColors.grey : AppColors.darkerGrey,
+                            color: dark ? TColors.grey : TColors.darkerGrey,
                           ),
                       textAlign: TextAlign.center,
                     ),
@@ -558,8 +555,8 @@ class _SearchOverlayState extends State<SearchOverlay> {
                       icon: const Icon(Iconsax.refresh),
                       label: const Text('Réinitialiser les filtres'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: AppColors.white,
+                        backgroundColor: TColors.primary,
+                        foregroundColor: TColors.white,
                       ),
                     ),
                   ],
@@ -568,7 +565,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                 return Text(
                   'Aucun produit ne correspond à votre recherche',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: dark ? AppColors.grey : AppColors.darkerGrey,
+                        color: dark ? TColors.grey : TColors.darkerGrey,
                       ),
                   textAlign: TextAlign.center,
                 );

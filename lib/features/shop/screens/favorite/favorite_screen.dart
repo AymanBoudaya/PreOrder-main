@@ -34,7 +34,7 @@ class FavoriteScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.dark : AppColors.light,
+      backgroundColor: isDark ? TColors.dark : TColors.light,
       appBar: _buildAppBar(context, isDark, controller),
       body: RefreshIndicator(
         onRefresh: controller.loadFavorites,
@@ -204,11 +204,11 @@ class FavoriteScreen extends StatelessWidget {
       required VoidCallback onPressed}) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
+        backgroundColor: TColors.primary,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         elevation: 6,
-        shadowColor: AppColors.primary.withValues(alpha: 0.35),
+        shadowColor: TColors.primary.withValues(alpha: 0.35),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),

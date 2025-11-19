@@ -26,7 +26,7 @@ class TOrderListItems extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: dark ? AppColors.darkGrey : AppColors.light,
+            color: dark ? TColors.darkGrey : TColors.light,
             borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
           ),
           child: TabBar(
@@ -34,7 +34,7 @@ class TOrderListItems extends StatelessWidget {
             tabs: listController.tabLabels.map((e) => Tab(text: e)).toList(),
             indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-              color: AppColors.primary,
+              color: TColors.primary,
             ),
             labelColor: Colors.white,
             unselectedLabelColor: dark ? Colors.white70 : Colors.black54,
@@ -206,7 +206,7 @@ class TOrderListItems extends StatelessWidget {
       Expanded(
         child: Column(
           children: [
-            Icon(icon, size: 20, color: AppColors.primary),
+            Icon(icon, size: 20, color: TColors.primary),
             const SizedBox(height: 4),
             Text(label,
                 style: Theme.of(context)
@@ -253,16 +253,16 @@ class TOrderListItems extends StatelessWidget {
         margin: const EdgeInsets.only(top: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.05),
+          color: TColors.primary.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
         ),
         child: Row(children: [
-          Icon(Iconsax.clock, color: AppColors.primary, size: 18),
+          Icon(Iconsax.clock, color: TColors.primary, size: 18),
           const SizedBox(width: 8),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text("Créneau de retrait",
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: AppColors.primary,
+                      color: TColors.primary,
                       fontWeight: FontWeight.w600,
                     )),
             const SizedBox(height: 2),

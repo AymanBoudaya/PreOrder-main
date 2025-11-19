@@ -81,7 +81,7 @@ class ProductDetailScreen extends StatelessWidget {
     final isSmallScreen = MediaQuery.of(context).size.width < 380;
 
     return Scaffold(
-      backgroundColor: dark ? AppColors.dark : AppColors.light,
+      backgroundColor: dark ? TColors.dark : TColors.light,
       bottomNavigationBar: ProductDetailBottomBarWrapper(
         product: product,
         dark: dark,

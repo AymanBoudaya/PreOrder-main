@@ -18,7 +18,7 @@ class NotificationsScreen extends StatelessWidget {
     final dark = THelperFunctions.isDarkMode(context);
 
     return Scaffold(
-      backgroundColor: dark ? AppColors.dark : AppColors.light,
+      backgroundColor: dark ? TColors.dark : TColors.light,
       appBar: TAppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +60,7 @@ class NotificationsScreen extends StatelessWidget {
         if (controller.isLoading.value) {
           return Center(
             child: CircularProgressIndicator(
-              color: AppColors.primary,
+              color: TColors.primary,
             ),
           );
         }
@@ -79,8 +79,8 @@ class NotificationsScreen extends StatelessWidget {
                     height: 120,
                     decoration: BoxDecoration(
                       color: dark
-                          ? AppColors.darkContainer
-                          : AppColors.primary.withValues(alpha: 0.1),
+                          ? TColors.darkContainer
+                          : TColors.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -88,7 +88,7 @@ class NotificationsScreen extends StatelessWidget {
                       size: 64,
                       color: dark
                           ? Colors.grey.shade600
-                          : AppColors.primary.withValues(alpha: 0.5),
+                          : TColors.primary.withValues(alpha: 0.5),
                     ),
                   ),
                   const SizedBox(height: AppSizes.spaceBtwSections),
@@ -117,7 +117,7 @@ class NotificationsScreen extends StatelessWidget {
 
         return RefreshIndicator(
           onRefresh: () => controller.refreshNotifications(),
-          color: AppColors.primary,
+          color: TColors.primary,
           child: CustomScrollView(
             slivers: [
               SliverPadding(
@@ -201,15 +201,15 @@ class _NotificationItem extends StatelessWidget {
   Color _getIconColor() {
     final title = notification.title.toLowerCase();
     if (title.contains('approuvé') || title.contains('accepté')) {
-      return AppColors.success;
+      return TColors.success;
     } else if (title.contains('rejeté') || title.contains('refusé')) {
-      return AppColors.error;
+      return TColors.error;
     } else if (title.contains('commande')) {
-      return AppColors.primary;
+      return TColors.primary;
     } else {
       return notification.read
           ? (dark ? Colors.grey.shade600 : Colors.grey.shade400)
-          : AppColors.primary;
+          : TColors.primary;
     }
   }
 
@@ -229,25 +229,25 @@ class _NotificationItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: dark
                 ? (isRead
-                    ? AppColors.darkContainer
-                    : AppColors.primary.withValues(alpha: 0.15))
+                    ? TColors.darkContainer
+                    : TColors.primary.withValues(alpha: 0.15))
                 : (isRead
-                    ? AppColors.white
-                    : AppColors.primary.withValues(alpha: 0.08)),
+                    ? TColors.white
+                    : TColors.primary.withValues(alpha: 0.08)),
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
             border: Border.all(
               color: isRead
                   ? Colors.transparent
                   : (dark
-                      ? AppColors.primary.withValues(alpha: 0.4)
-                      : AppColors.primary.withValues(alpha: 0.3)),
+                      ? TColors.primary.withValues(alpha: 0.4)
+                      : TColors.primary.withValues(alpha: 0.3)),
               width: isRead ? 0 : 1.5,
             ),
             boxShadow: isRead
                 ? []
                 : [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.1),
+                      color: TColors.primary.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -263,7 +263,7 @@ class _NotificationItem extends StatelessWidget {
                     width: 4,
                     margin: const EdgeInsets.only(right: AppSizes.md),
                     decoration: BoxDecoration(
-                      color: AppColors.primary,
+                      color: TColors.primary,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -278,15 +278,15 @@ class _NotificationItem extends StatelessWidget {
                       colors: isRead
                           ? [
                               dark
-                                  ? AppColors.darkContainer
+                                  ? TColors.darkContainer
                                   : Colors.grey.shade100,
                               dark
-                                  ? AppColors.darkContainer
+                                  ? TColors.darkContainer
                                   : Colors.grey.shade50,
                             ]
                           : [
-                              AppColors.primary.withValues(alpha: 0.2),
-                              AppColors.primary.withValues(alpha: 0.1),
+                              TColors.primary.withValues(alpha: 0.2),
+                              TColors.primary.withValues(alpha: 0.1),
                             ],
                     ),
                     borderRadius:
@@ -343,7 +343,7 @@ class _NotificationItem extends StatelessWidget {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.primary,
+                                color: TColors.primary,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(

@@ -33,7 +33,7 @@ class THorizontalProductShimmer extends StatelessWidget {
                   width: defaultCardWidth,
                   padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
-                    color: dark ? AppColors.eerieBlack : AppColors.white,
+                    color: dark ? TColors.eerieBlack : TColors.white,
                     borderRadius: BorderRadius.circular(AppSizes.defaultSpace),
                     boxShadow: [
                       BoxShadow(

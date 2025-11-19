@@ -5,18 +5,18 @@ class TChipTheme {
   TChipTheme._();
 
   static ChipThemeData lightChipTheme = ChipThemeData(
-    disabledColor: AppColors.grey.withAlpha((255 * 0.4).toInt()),
-    labelStyle: const TextStyle(color: AppColors.black),
-    selectedColor: AppColors.primary,
+    disabledColor: TColors.grey.withAlpha((255 * 0.4).toInt()),
+    labelStyle: const TextStyle(color: TColors.black),
+    selectedColor: TColors.primary,
     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-    checkmarkColor: AppColors.white,
+    checkmarkColor: TColors.white,
   );
 
   static ChipThemeData darkChipTheme = const ChipThemeData(
-    disabledColor: AppColors.darkerGrey,
-    labelStyle: TextStyle(color: AppColors.white),
-    selectedColor: AppColors.primary,
+    disabledColor: TColors.darkerGrey,
+    labelStyle: TextStyle(color: TColors.white),
+    selectedColor: TColors.primary,
     padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-    checkmarkColor: AppColors.white,
+    checkmarkColor: TColors.white,
   );
 }

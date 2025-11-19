@@ -84,7 +84,7 @@ class AdminUserManagementScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.defaultSpace),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         border: Border(
           bottom: BorderSide(
             color: dark ? Colors.grey.shade800 : Colors.grey.shade300,
@@ -225,7 +225,7 @@ class AdminUserManagementScreen extends StatelessWidget {
           radius: 28,
           backgroundColor: user.isBanned
               ? Colors.red.withValues(alpha: 0.2)
-              : AppColors.primary.withValues(alpha: 0.1),
+              : TColors.primary.withValues(alpha: 0.1),
           backgroundImage:
               user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty
                   ? NetworkImage(user.profileImageUrl!)
@@ -237,7 +237,7 @@ class AdminUserManagementScreen extends StatelessWidget {
                       : 'U',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: user.isBanned ? Colors.red : AppColors.primary,
+                    color: user.isBanned ? Colors.red : TColors.primary,
                   ),
                 )
               : null,

@@ -12,8 +12,8 @@ class TRoundedContainer extends StatelessWidget {
     this.margin,
     this.padding,
     this.radius = AppSizes.cardRadiusLg,
-    this.backgroundColor = AppColors.white,
-    this.borderColor = AppColors.borderPrimary,
+    this.backgroundColor = TColors.white,
+    this.borderColor = TColors.borderPrimary,
     this.showBorder = false,
   });
 

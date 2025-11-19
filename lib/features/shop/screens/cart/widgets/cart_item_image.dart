@@ -50,7 +50,7 @@ class CartItemImage extends StatelessWidget {
       height: height,
       isNetworkImage: true,
       padding: const EdgeInsets.all(AppSizes.sm),
-      backgroundColor: dark ? AppColors.darkerGrey : AppColors.light,
+      backgroundColor: dark ? TColors.darkerGrey : TColors.light,
     );
   }
 }

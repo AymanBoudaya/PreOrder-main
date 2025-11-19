@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppColors {
+class TColors {
   // App theme colors
   static const Color primary = Color(0xFF003787);
   static const Color secondary = Color(0xFFFFE24B);
@@ -18,7 +18,7 @@ class AppColors {
 
   // Background Container colors
   static const Color lightContainer = Color(0xFFF6F6F6);
-  static Color darkContainer = AppColors.white.withAlpha((255 * 0.1).toInt());
+  static Color darkContainer = TColors.white.withAlpha((255 * 0.1).toInt());
 
   // Button colors
   static const Color buttonPrimary = Color(0xFF003787);
@@ -45,4 +45,9 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
 
   static const Color eerieBlack = Color(0xFF1A1A1A);
+
+  // Google Play Store colors
+  static const Color playStoreUnselected = Color(0xFF5F6368); // Google gray
+  static const Color playStoreBackground = Color(0xFFFFFFFF); // Pure white
+  static const Color darkModeBackground = Color(0xFF202124); // Google dark gray
 }

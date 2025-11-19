@@ -15,7 +15,6 @@ class TimeSlotModal {
       BuildContext context, bool dark, ProduitModel product) async {
     // Use instance getter which handles creation if needed
     final orderController = Get.find<OrderController>();
-    
 
     final panierController = Get.find<PanierController>();
 
@@ -74,7 +73,7 @@ class TimeSlotModal {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: dark ? AppColors.eerieBlack : Colors.white,
+      backgroundColor: dark ? TColors.eerieBlack : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),

@@ -348,7 +348,7 @@ class CategoryFormCard extends StatelessWidget {
     final dark = THelperFunctions.isDarkMode(context);
     return Container(
       decoration: BoxDecoration(
-        color: dark ? AppColors.eerieBlack : AppColors.white,
+        color: dark ? TColors.eerieBlack : TColors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(

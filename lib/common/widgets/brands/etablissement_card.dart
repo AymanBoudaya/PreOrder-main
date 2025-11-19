@@ -38,9 +38,6 @@ class EtablissementCard extends StatelessWidget {
               width: 50,
               height: 50,
               padding: 2,
-              // overlayColor: THelperFunctions.isDarkMode(context)
-              //     ? AppColors.white
-              //     : AppColors.black,
             ),
             const SizedBox(width: AppSizes.spaceBtwItems / 2),
 

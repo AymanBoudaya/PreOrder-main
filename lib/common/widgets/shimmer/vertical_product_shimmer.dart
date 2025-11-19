@@ -17,7 +17,7 @@ class TVerticalProductShimmer extends StatelessWidget {
             width: 170,
             padding: const EdgeInsets.all(0),
             decoration: BoxDecoration(
-              color: dark ? AppColors.eerieBlack : AppColors.white,
+              color: dark ? TColors.eerieBlack : TColors.white,
               borderRadius: BorderRadius.circular(AppSizes.defaultSpace),
               boxShadow: [
                 BoxShadow(

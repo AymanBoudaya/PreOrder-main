@@ -29,8 +29,8 @@ class StoreScreen extends StatelessWidget {
         ),
         actions: const [
           TCartCounterIcon(
-            iconColor: AppColors.primary,
-            counterBgColor: AppColors.primary,
+            iconColor: TColors.primary,
+            counterBgColor: TColors.primary,
           )
         ],
       ),

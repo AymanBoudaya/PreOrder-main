@@ -12,14 +12,14 @@ class TCheckboxTheme {
         borderRadius: BorderRadius.circular(AppSizes.xs)),
     checkColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return AppColors.white;
+        return TColors.white;
       } else {
-        return AppColors.black;
+        return TColors.black;
       }
     }),
     fillColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return AppColors.primary;
+        return TColors.primary;
       } else {
         return Colors.transparent;
       }
@@ -32,14 +32,14 @@ class TCheckboxTheme {
         borderRadius: BorderRadius.circular(AppSizes.xs)),
     checkColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return AppColors.white;
+        return TColors.white;
       } else {
-        return AppColors.black;
+        return TColors.black;
       }
     }),
     fillColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return AppColors.primary;
+        return TColors.primary;
       } else {
         return Colors.transparent;
       }

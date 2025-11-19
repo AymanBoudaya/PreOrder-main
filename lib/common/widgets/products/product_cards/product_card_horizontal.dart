@@ -29,7 +29,7 @@ class TProductCardHorizontal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ProduitController>();
-    
+
     final salePercentage =
         controller.calculateSalePercentage(product.price, product.salePrice);
     final dark = THelperFunctions.isDarkMode(context);
@@ -50,7 +50,7 @@ class TProductCardHorizontal extends StatelessWidget {
         width: defaultCardWidth,
         padding: const EdgeInsets.all(0),
         decoration: BoxDecoration(
-          color: dark ? AppColors.eerieBlack : AppColors.white,
+          color: dark ? TColors.eerieBlack : TColors.white,
           borderRadius: BorderRadius.circular(AppSizes.defaultSpace),
           boxShadow: [TShadowStyle.vericalCardProductShadow],
         ),
@@ -72,7 +72,7 @@ class TProductCardHorizontal extends StatelessWidget {
   Widget _buildThumbnailSection(
       BuildContext context, bool dark, String? salePercentage) {
     final categoryController = Get.find<CategoryController>();
-    
+
     String categoryName = '';
     try {
       categoryName = categoryController.allCategories
@@ -87,7 +87,7 @@ class TProductCardHorizontal extends StatelessWidget {
           height: 120,
           width: 120,
           padding: const EdgeInsets.all(AppSizes.sm),
-          backgroundColor: dark ? AppColors.dark : AppColors.light,
+          backgroundColor: dark ? TColors.dark : TColors.light,
           child: Stack(
             children: [
               /// Product Image
@@ -165,7 +165,7 @@ class TProductCardHorizontal extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: dark
                                 ? Colors.black.withAlpha((255 * 0.3).toInt())
-                                : AppColors.white,
+                                : TColors.white,
                             shape: BoxShape.circle,
                           ),
                           child: FavoriteIcon(productId: product.id),

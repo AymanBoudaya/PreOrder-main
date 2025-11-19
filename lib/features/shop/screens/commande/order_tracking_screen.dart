@@ -16,7 +16,7 @@ class OrderTrackingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
-    final backgroundColor = dark ? AppColors.dark : AppColors.light;
+    final backgroundColor = dark ? TColors.dark : TColors.light;
     final cardColor = dark ? Colors.grey[850]! : Colors.white;
     final textColor = dark ? Colors.white : Colors.black87;
 
@@ -42,7 +42,7 @@ class OrderTrackingScreen extends StatelessWidget {
                   Text(
                     "Statut de la commande",
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: AppColors.primary,
+                          color: TColors.primary,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
@@ -51,7 +51,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     order.orderStatusText,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                          color: TColors.primary,
                         ),
                   ),
                   const SizedBox(height: 12),
@@ -78,7 +78,7 @@ class OrderTrackingScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSizes.md),
                 child: Row(
                   children: [
-                    Icon(Icons.access_time, color: AppColors.primary),
+                    Icon(Icons.access_time, color: TColors.primary),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Column(
@@ -90,7 +90,7 @@ class OrderTrackingScreen extends StatelessWidget {
                                 .textTheme
                                 .labelMedium
                                 ?.copyWith(
-                                  color: AppColors.primary,
+                                  color: TColors.primary,
                                   fontWeight: FontWeight.w600,
                                 ),
                           ),
@@ -122,7 +122,7 @@ class OrderTrackingScreen extends StatelessWidget {
                   Text(
                     "Produits commandés",
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: AppColors.primary,
+                          color: TColors.primary,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
@@ -225,7 +225,7 @@ class OrderTrackingScreen extends StatelessWidget {
                 icon: const Icon(Icons.map_outlined),
                 label: const Text("Afficher l’itinéraire"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: TColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
@@ -248,7 +248,7 @@ class OrderTrackingScreen extends StatelessWidget {
         Text(label,
             style: TextStyle(
                 fontSize: 12,
-                color: AppColors.primary,
+                color: TColors.primary,
                 fontWeight: FontWeight.w500)),
         const SizedBox(height: 4),
         Text(value,

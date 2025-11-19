@@ -166,7 +166,7 @@ class CategoryManagementPage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: dark ? AppColors.eerieBlack : AppColors.white,
+        color: dark ? TColors.eerieBlack : TColors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -277,7 +277,7 @@ class CategoryManagementPage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: dark ? AppColors.eerieBlack : AppColors.white,
+        color: dark ? TColors.eerieBlack : TColors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -437,7 +437,7 @@ class CategoryManagementPage extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: dark ? AppColors.eerieBlack : Colors.grey.shade200,
+          color: dark ? TColors.eerieBlack : Colors.grey.shade200,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Row(
@@ -492,7 +492,7 @@ class CategoryManagementPage extends StatelessWidget {
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 filled: true,
-                fillColor: dark ? AppColors.eerieBlack : Colors.white,
+                fillColor: dark ? TColors.eerieBlack : Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,

@@ -58,7 +58,8 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
   Future<void> _guardAccessAndLoad() async {
     final role = userController.userRole;
     if (role == 'Gérant') {
-      final etab = await etablissementController.getEtablissementUtilisateurConnecte();
+      final etab =
+          await etablissementController.getEtablissementUtilisateurConnecte();
       if (etab == null || etab.statut != StatutEtablissement.approuve) {
         setState(() {
           _accessDenied = true;
@@ -203,7 +204,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                 borderSide: BorderSide.none,
               ),
               filled: true,
-              fillColor: dark ? AppColors.eerieBlack : Colors.white,
+              fillColor: dark ? TColors.eerieBlack : Colors.white,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
@@ -331,7 +332,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: dark ? AppColors.eerieBlack : Colors.white,
+        color: dark ? TColors.eerieBlack : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -636,7 +637,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: dark ? AppColors.eerieBlack : Colors.white,
+        color: dark ? TColors.eerieBlack : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(

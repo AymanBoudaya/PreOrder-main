@@ -211,7 +211,7 @@ class _TPromoSliderState extends State<TPromoSlider> {
                   ),
                   errorWidget: (context, url, error) {
                     return Container(
-                      color: AppColors.primary,
+                      color: TColors.primary,
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -398,12 +398,11 @@ class _TPromoSliderState extends State<TPromoSlider> {
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color:
-                  _currentPage == i ? AppColors.primary : Colors.grey.shade400,
+              color: _currentPage == i ? TColors.primary : Colors.grey.shade400,
               boxShadow: _currentPage == i
                   ? [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.5),
+                        color: TColors.primary.withValues(alpha: 0.5),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),

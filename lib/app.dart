@@ -24,7 +24,7 @@ class App extends StatelessWidget {
         return GetPageRoute(
           settings: settings,
           page: () => const Scaffold(
-            backgroundColor: AppColors.primary,
+            backgroundColor: TColors.primary,
             body: Center(child: CircularProgressIndicator(color: Colors.white)),
           ),
         );

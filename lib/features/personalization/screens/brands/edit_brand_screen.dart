@@ -579,7 +579,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: dark ? AppColors.eerieBlack : Colors.grey[50],
+        color: dark ? TColors.eerieBlack : Colors.grey[50],
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey[200]!),
       ),
@@ -712,7 +712,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
                                         style: ElevatedButton.styleFrom(
                                           minimumSize:
                                               const Size.fromHeight(55),
-                                          backgroundColor: AppColors.primary,
+                                          backgroundColor: TColors.primary,
                                         ),
                                       ),
                                     ),
@@ -763,7 +763,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
                             label: const Text('Enregistrer les modifications'),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size.fromHeight(55),
-                              backgroundColor: AppColors.primary,
+                              backgroundColor: TColors.primary,
                             ),
                           ),
                           const SizedBox(height: 12),

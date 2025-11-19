@@ -35,7 +35,7 @@ class ProductBottomBar extends StatelessWidget {
         vertical: 16,
       ),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkerGrey : Colors.white,
+        color: dark ? TColors.darkerGrey : Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),

@@ -9,8 +9,6 @@ import 'package:caferesto/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../../../common/widgets/list_tiles/settings_menu_tile.dart';
 import '../../../../common/widgets/list_tiles/user_profile_tile.dart';
 import '../../../../data/repositories/authentication/authentication_repository.dart';
@@ -83,7 +81,7 @@ class SettingsScreen extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineMedium!
-                                  .apply(color: AppColors.white)),
+                                  .apply(color: TColors.white)),
                           Text(
                             userController.user.value.role,
                             style: Theme.of(
@@ -91,7 +89,7 @@ class SettingsScreen extends StatelessWidget {
                             )
                                 .textTheme
                                 .headlineSmall!
-                                .apply(color: AppColors.white),
+                                .apply(color: TColors.white),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

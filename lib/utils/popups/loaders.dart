@@ -21,8 +21,8 @@ class TLoaders {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
             color: THelperFunctions.isDarkMode(Get.context!)
-                ? AppColors.darkerGrey.withAlpha((255 * 0.9).toInt())
-                : AppColors.grey.withAlpha((255 * 0.9).toInt()),
+                ? TColors.darkerGrey.withAlpha((255 * 0.9).toInt())
+                : TColors.grey.withAlpha((255 * 0.9).toInt()),
           ),
           child: Center(
               child: Text(message,
@@ -39,15 +39,15 @@ class TLoaders {
       isDismissible: true,
       shouldIconPulse: true,
       colorText: Colors.white,
-      backgroundColor: AppColors.primary,
+      backgroundColor: TColors.primary,
       snackPosition: SnackPosition.BOTTOM,
       duration: Duration(seconds: duration),
       margin: const EdgeInsets.all(10),
-      icon: const Icon(Iconsax.check, color: AppColors.white),
+      icon: const Icon(Iconsax.check, color: TColors.white),
     );
   }
 
-    static infoSnackBar({title = 'Info', message = '', duration = 2}) {
+  static infoSnackBar({title = 'Info', message = '', duration = 2}) {
     Get.snackbar(
       title,
       message,
@@ -58,7 +58,7 @@ class TLoaders {
       snackPosition: SnackPosition.BOTTOM,
       duration: Duration(seconds: duration),
       margin: const EdgeInsets.all(10),
-      icon: const Icon(Iconsax.info_circle, color: AppColors.white),
+      icon: const Icon(Iconsax.info_circle, color: TColors.white),
     );
   }
 
@@ -68,12 +68,12 @@ class TLoaders {
       message,
       isDismissible: true,
       shouldIconPulse: true,
-      colorText: AppColors.white,
+      colorText: TColors.white,
       backgroundColor: Colors.orange,
       snackPosition: SnackPosition.BOTTOM,
       duration: const Duration(seconds: 3),
       margin: const EdgeInsets.all(20),
-      icon: const Icon(Iconsax.warning_2, color: AppColors.white),
+      icon: const Icon(Iconsax.warning_2, color: TColors.white),
     );
   }
 
@@ -83,12 +83,12 @@ class TLoaders {
       message,
       isDismissible: true,
       shouldIconPulse: true,
-      colorText: AppColors.white,
+      colorText: TColors.white,
       backgroundColor: Colors.red.shade600,
       snackPosition: SnackPosition.TOP,
       duration: const Duration(seconds: 3),
       margin: const EdgeInsets.all(20),
-      icon: const Icon(Iconsax.warning_2, color: AppColors.white),
+      icon: const Icon(Iconsax.warning_2, color: TColors.white),
     );
   }
 }

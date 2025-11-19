@@ -32,7 +32,7 @@ class TProductMetaData extends StatelessWidget {
                 ? TRoundedContainer(
                     radius: AppSizes.sm,
                     backgroundColor:
-                        AppColors.secondary.withAlpha((255 * 0.8).toInt()),
+                        TColors.secondary.withAlpha((255 * 0.8).toInt()),
                     padding: const EdgeInsets.symmetric(
                         vertical: AppSizes.xs, horizontal: AppSizes.sm),
                     child: Text(
@@ -40,7 +40,7 @@ class TProductMetaData extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .labelLarge!
-                          .apply(color: AppColors.black),
+                          .apply(color: TColors.black),
                     ))
                 : SizedBox(),
             const SizedBox(width: AppSizes.spaceBtwItems),

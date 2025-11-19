@@ -322,7 +322,7 @@ class _AddEtablissementScreenState extends State<AddEtablissementScreen>
       // Information sur les horaires
       Card(
         color: THelperFunctions.isDarkMode(context)
-            ? AppColors.eerieBlack
+            ? TColors.eerieBlack
             : Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -407,7 +407,7 @@ class _AddEtablissementScreenState extends State<AddEtablissementScreen>
       // Selected address display
       if (_selectedAddressFromMap.isNotEmpty) ...[
         Card(
-          color: dark ? AppColors.eerieBlack : Colors.blue[50],
+          color: dark ? TColors.eerieBlack : Colors.blue[50],
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -576,7 +576,7 @@ class _AddEtablissementScreenState extends State<AddEtablissementScreen>
                                         style: ElevatedButton.styleFrom(
                                           minimumSize:
                                               const Size.fromHeight(55),
-                                          backgroundColor: AppColors.primary,
+                                          backgroundColor: TColors.primary,
                                         ),
                                       ),
                                     ),
@@ -611,7 +611,7 @@ class _AddEtablissementScreenState extends State<AddEtablissementScreen>
                             label: const Text('Créer l\'établissement'),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size.fromHeight(55),
-                              backgroundColor: AppColors.primary,
+                              backgroundColor: TColors.primary,
                             ),
                           ),
                           const SizedBox(height: 30),

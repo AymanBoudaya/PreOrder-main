@@ -31,14 +31,14 @@ class THomeAppBar extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .labelMedium!
-                      .apply(color: AppColors.grey))),
+                      .apply(color: TColors.grey))),
           Obx(() => userController.profileLoading.value
               ? const TShimmerEffect(width: 80, height: 15)
               : Text(userController.user.value.fullName,
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!
-                      .apply(color: AppColors.grey))),
+                      .apply(color: TColors.grey))),
         ],
       ),
       actions: [
@@ -52,9 +52,9 @@ class THomeAppBar extends StatelessWidget {
           },
         ),
         TCartCounterIcon(
-          counterBgColor: AppColors.black,
-          counterTextColor: AppColors.white,
-          iconColor: AppColors.white,
+          counterBgColor: TColors.black,
+          counterTextColor: TColors.white,
+          iconColor: TColors.white,
         ),
       ],
     );

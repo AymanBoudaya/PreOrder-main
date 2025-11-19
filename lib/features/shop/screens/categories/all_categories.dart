@@ -45,8 +45,8 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
         ),
         actions: [
           TCartCounterIcon(
-            iconColor: AppColors.primary,
-            counterBgColor: AppColors.primary,
+            iconColor: TColors.primary,
+            counterBgColor: TColors.primary,
           )
         ],
       ),

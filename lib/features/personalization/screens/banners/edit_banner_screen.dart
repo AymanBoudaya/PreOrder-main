@@ -36,7 +36,8 @@ class EditBannerScreen extends StatelessWidget {
         debugPrint('Erreur chargement produits: $e');
       }
       try {
-        final establishments = await etablissementController.getTousEtablissements();
+        final establishments =
+            await etablissementController.getTousEtablissements();
         bannerController.establishments.assignAll(establishments);
       } catch (e) {
         debugPrint('Erreur chargement établissements: $e');
@@ -101,7 +102,8 @@ class EditBannerScreen extends StatelessWidget {
                   items: const [
                     DropdownMenuItem(value: null, child: Text('Aucun lien')),
                     DropdownMenuItem(value: 'product', child: Text('Produit')),
-                    DropdownMenuItem(value: 'category', child: Text('Catégorie')),
+                    DropdownMenuItem(
+                        value: 'category', child: Text('Catégorie')),
                     DropdownMenuItem(
                       value: 'establishment',
                       child: Text('Établissement'),
@@ -125,16 +127,16 @@ class EditBannerScreen extends StatelessWidget {
               // Bannière mise en avant
               SwitchListTile(
                 title: const Text('Bannière mise en avant'),
-                subtitle: const Text('Afficher cette bannière sur la page d\'accueil'),
+                subtitle: const Text(
+                    'Afficher cette bannière sur la page d\'accueil'),
                 value: controller.isFeatured.value,
                 onChanged: (value) {
                   controller.isFeatured.value = value;
                 },
                 secondary: Icon(
                   Iconsax.star,
-                  color: controller.isFeatured.value
-                      ? Colors.amber
-                      : Colors.grey,
+                  color:
+                      controller.isFeatured.value ? Colors.amber : Colors.grey,
                 ),
               ),
               const SizedBox(height: AppSizes.spaceBtwSections),
@@ -172,7 +174,7 @@ class EditBannerScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.grey[100],
+        color: dark ? TColors.darkContainer : Colors.grey[100],
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
       ),
       child: Column(
@@ -188,7 +190,8 @@ class EditBannerScreen extends StatelessWidget {
             if (pickedImage != null) {
               return _buildLocalImagePreview(context, pickedImage);
             } else if (controller.imageUrl.value.isNotEmpty) {
-              return _buildNetworkImagePreview(context, controller.imageUrl.value);
+              return _buildNetworkImagePreview(
+                  context, controller.imageUrl.value);
             } else {
               return _buildImagePlaceholder(context, controller, isMobile);
             }
@@ -197,7 +200,9 @@ class EditBannerScreen extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: () => controller.pickImage(isMobile: isMobile),
             icon: const Icon(Iconsax.image),
-            label: Text(isMobile ? 'Changer l\'image (Mobile)' : 'Changer l\'image (PC)'),
+            label: Text(isMobile
+                ? 'Changer l\'image (Mobile)'
+                : 'Changer l\'image (PC)'),
           ),
         ],
       ),
@@ -271,7 +276,7 @@ class EditBannerScreen extends StatelessWidget {
       width: double.infinity,
       height: 200,
       decoration: BoxDecoration(
-        color: dark ? AppColors.dark : Colors.grey[200],
+        color: dark ? TColors.dark : Colors.grey[200],
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
         border: Border.all(
           color: dark ? Colors.grey[700]! : Colors.grey[300]!,
@@ -314,14 +319,15 @@ class EditBannerScreen extends StatelessWidget {
         if (products.isEmpty) {
           return const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Aucun produit disponible', style: TextStyle(color: Colors.grey)),
+            child: Text('Aucun produit disponible',
+                style: TextStyle(color: Colors.grey)),
           );
         }
-        
+
         final selectedValue = controller.selectedLinkId.value;
-        final isValidValue = selectedValue.isNotEmpty && 
+        final isValidValue = selectedValue.isNotEmpty &&
             products.any((p) => p.id == selectedValue);
-        
+
         return DropdownButtonFormField<String>(
           initialValue: isValidValue ? selectedValue : null,
           decoration: const InputDecoration(
@@ -343,14 +349,15 @@ class EditBannerScreen extends StatelessWidget {
         if (categories.isEmpty) {
           return const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Aucune catégorie disponible', style: TextStyle(color: Colors.grey)),
+            child: Text('Aucune catégorie disponible',
+                style: TextStyle(color: Colors.grey)),
           );
         }
-        
+
         final selectedValue = controller.selectedLinkId.value;
-        final isValidValue = selectedValue.isNotEmpty && 
+        final isValidValue = selectedValue.isNotEmpty &&
             categories.any((c) => c.id == selectedValue);
-        
+
         return DropdownButtonFormField<String>(
           initialValue: isValidValue ? selectedValue : null,
           decoration: const InputDecoration(
@@ -368,18 +375,20 @@ class EditBannerScreen extends StatelessWidget {
           },
         );
       } else if (linkType == 'establishment') {
-        final establishments = controller.establishments.where((e) => e.id != null).toList();
+        final establishments =
+            controller.establishments.where((e) => e.id != null).toList();
         if (establishments.isEmpty) {
           return const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Aucun établissement disponible', style: TextStyle(color: Colors.grey)),
+            child: Text('Aucun établissement disponible',
+                style: TextStyle(color: Colors.grey)),
           );
         }
-        
+
         final selectedValue = controller.selectedLinkId.value;
-        final isValidValue = selectedValue.isNotEmpty && 
+        final isValidValue = selectedValue.isNotEmpty &&
             establishments.any((e) => e.id == selectedValue);
-        
+
         return DropdownButtonFormField<String>(
           initialValue: isValidValue ? selectedValue : null,
           decoration: const InputDecoration(
@@ -402,4 +411,3 @@ class EditBannerScreen extends StatelessWidget {
     });
   }
 }
-

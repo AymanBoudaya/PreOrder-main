@@ -76,7 +76,7 @@ class TAnimationLoaderWidget extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: onActionPressed,
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: AppColors.dark,
+                    backgroundColor: TColors.dark,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -87,7 +87,7 @@ class TAnimationLoaderWidget extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
-                        .apply(color: AppColors.light),
+                        .apply(color: TColors.light),
                     textAlign: TextAlign.center,
                   ),
                 ),

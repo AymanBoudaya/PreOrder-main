@@ -696,7 +696,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
                                         style: ElevatedButton.styleFrom(
                                           minimumSize:
                                               const Size.fromHeight(55),
-                                          backgroundColor: AppColors.primary,
+                                          backgroundColor: TColors.primary,
                                         ),
                                       ),
                                     ),
@@ -737,7 +737,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
                             label: Text(_isEditing ? 'Enregistrer' : 'Ajouter'),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size.fromHeight(55),
-                              backgroundColor: AppColors.primary,
+                              backgroundColor: TColors.primary,
                             ),
                           ),
                           const SizedBox(height: 30),

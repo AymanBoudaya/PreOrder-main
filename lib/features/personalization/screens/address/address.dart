@@ -18,11 +18,11 @@ class UserAddressScreen extends StatelessWidget {
     final controller = Get.put(AddressController());
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primary,
+        backgroundColor: TColors.primary,
         onPressed: () => Get.to(() => const AddNewAddressScreen()),
         child: const Icon(
           Iconsax.add,
-          color: AppColors.white,
+          color: TColors.white,
         ),
       ),
       appBar: TAppBar(

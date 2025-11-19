@@ -37,7 +37,7 @@ class DashboardSideMenu extends StatelessWidget {
     return Container(
       width: 250,
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
+        color: dark ? TColors.darkContainer : Colors.white,
         border: Border(
           right: BorderSide(
             color: dark ? Colors.grey.shade800 : Colors.grey.shade300,
@@ -58,7 +58,7 @@ class DashboardSideMenu extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSizes.md),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: TColors.primary.withValues(alpha: 0.1),
               border: Border(
                 bottom: BorderSide(
                   color: dark ? Colors.grey.shade800 : Colors.grey.shade300,
@@ -70,7 +70,7 @@ class DashboardSideMenu extends StatelessWidget {
               children: [
                 Icon(
                   Iconsax.menu_board,
-                  color: AppColors.primary,
+                  color: TColors.primary,
                   size: 24,
                 ),
                 const SizedBox(width: AppSizes.sm),
@@ -79,7 +79,7 @@ class DashboardSideMenu extends StatelessWidget {
                     isAdmin ? 'Menu Admin' : 'Menu Gérant',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                          color: TColors.primary,
                         ),
                   ),
                 ),
@@ -250,12 +250,12 @@ class DashboardSideMenu extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withValues(alpha: 0.1)
+              ? TColors.primary.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
           border: isSelected
               ? Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.3),
+                  color: TColors.primary.withValues(alpha: 0.3),
                   width: 1,
                 )
               : null,
@@ -264,7 +264,7 @@ class DashboardSideMenu extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.primary : Colors.grey,
+              color: isSelected ? TColors.primary : Colors.grey,
               size: 20,
             ),
             const SizedBox(width: AppSizes.sm),
@@ -272,7 +272,7 @@ class DashboardSideMenu extends StatelessWidget {
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isSelected ? AppColors.primary : Colors.grey,
+                      color: isSelected ? TColors.primary : Colors.grey,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),
@@ -281,7 +281,7 @@ class DashboardSideMenu extends StatelessWidget {
             if (isSelected)
               Icon(
                 Iconsax.arrow_right_3,
-                color: AppColors.primary,
+                color: TColors.primary,
                 size: 16,
               ),
           ],

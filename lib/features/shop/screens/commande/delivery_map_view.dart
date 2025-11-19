@@ -698,7 +698,7 @@ class _DeliveryMapViewState extends State<DeliveryMapView> {
                     Polyline(
                       points: routePoints,
                       strokeWidth: isMobile ? 4 : 5,
-                      color: AppColors.primary,
+                      color: TColors.primary,
                     ),
                   ],
                 ),
@@ -815,7 +815,7 @@ class _DeliveryMapViewState extends State<DeliveryMapView> {
                       children: [
                         CircularProgressIndicator(
                           valueColor:
-                              AlwaysStoppedAnimation<Color>(AppColors.primary),
+                              AlwaysStoppedAnimation<Color>(TColors.primary),
                         ),
                         const SizedBox(height: 16),
                         Text(
