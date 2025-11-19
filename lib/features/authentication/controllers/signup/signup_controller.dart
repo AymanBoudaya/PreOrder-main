@@ -10,7 +10,6 @@ import '../../screens/signup.widgets/otp_verification_screen.dart';
 import '../../screens/signup.widgets/widgets/signup_form.dart';
 
 class SignupController extends GetxController {
-  static SignupController get instance => Get.find();
 
   final privacyPolicy = true.obs;
   final email = TextEditingController();

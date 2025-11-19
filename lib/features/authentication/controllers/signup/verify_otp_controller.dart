@@ -6,7 +6,6 @@ import '../../../../data/repositories/authentication/authentication_repository.d
 import '../../../../utils/popups/loaders.dart';
 
 class OTPVerificationController extends GetxController {
-  static OTPVerificationController get instance => Get.find();
 
   final AuthenticationRepository _authRepo = AuthenticationRepository.instance;
 

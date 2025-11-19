@@ -15,7 +15,8 @@ class TermsAndConditionsCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
-    final controller = SignupController.instance;
+    final controller = Get.find<SignupController>();
+    
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

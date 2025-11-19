@@ -21,7 +21,7 @@ class OTPVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(OTPVerificationController());
+    final controller = Get.find<OTPVerificationController>();
     controller.emailController.text = email;
     controller.initializeFlow(isSignupFlow, userData);
     controller.startTimer();
