@@ -18,8 +18,8 @@ import 'widgets/billing_address_section.dart';
 import 'widgets/billing_amount_section.dart';
 import 'widgets/time_slot_modal.dart';
 
-class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key});
+class ValiderCommandeScreen extends StatelessWidget {
+  const ValiderCommandeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:caferesto/utils/device/device_utility.dart';
 
-import '../../controllers/signup/verify_otp_controller.dart';
+import '../../controllers/otp_verification/verify_otp_controller.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/sizes.dart';
 

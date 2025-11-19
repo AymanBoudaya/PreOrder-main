@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 import '../../../../../common/widgets/image_text_widgets/vertical_image_text.dart';
 import '../../../../../common/widgets/shimmer/category_shimmer.dart';
-import '../../../../shop/controllers/category_controller.dart';
-import '../../../../shop/models/category_model.dart';
+import '../../../controllers/category_controller.dart';
+import '../../../models/category_model.dart';
 
 class THomeCategories extends StatelessWidget {
   const THomeCategories({

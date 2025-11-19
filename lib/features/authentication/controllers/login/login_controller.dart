@@ -1,4 +1,4 @@
-import 'package:caferesto/features/authentication/screens/signup.widgets/otp_verification_screen.dart';
+import 'package:caferesto/features/authentication/screens/signup/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';

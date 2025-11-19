@@ -1,4 +1,4 @@
-import 'package:caferesto/features/authentication/screens/signup.widgets/widgets/terms_condtions_checkbox.dart';
+import 'package:caferesto/features/authentication/screens/signup/widgets/terms_condtions_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

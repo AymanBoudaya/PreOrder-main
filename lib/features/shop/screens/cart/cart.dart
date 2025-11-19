@@ -1,5 +1,5 @@
 import 'package:caferesto/features/shop/controllers/product/panier_controller.dart';
-import 'package:caferesto/features/shop/screens/checkout/checkout.dart';
+import 'package:caferesto/features/shop/screens/valider_commande/valider_commande.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +18,6 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<PanierController>();
-    
 
     return Scaffold(
       appBar: CartAppBar(onDeletePressed: () {
@@ -58,7 +57,7 @@ class CartScreen extends StatelessWidget {
         }
         if (controller.cartItems.isEmpty) return const SizedBox.shrink();
         return CartBottomSection(onCheckoutPressed: () {
-          Get.to(() => const CheckoutScreen());
+          Get.to(() => const ValiderCommandeScreen());
         });
       }),
     );

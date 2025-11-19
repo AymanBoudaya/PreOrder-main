@@ -1,5 +1,5 @@
 import 'package:caferesto/features/authentication/controllers/login/login_controller.dart';
-import 'package:caferesto/features/authentication/screens/signup.widgets/signup.dart';
+import 'package:caferesto/features/authentication/screens/signup/signup.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:caferesto/utils/constants/text_strings.dart';
 import 'package:caferesto/utils/validators/validation.dart';

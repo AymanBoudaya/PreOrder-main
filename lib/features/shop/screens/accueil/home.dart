@@ -9,7 +9,7 @@ import '../../../../common/widgets/shimmer/vertical_product_shimmer.dart';
 import '../../../../common/widgets/texts/section_heading.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../common/widgets/custom_shapes/containers/primary_header_container.dart';
-import '../../../authentication/screens/home/widgets/home_categories.dart';
+import 'widgets/home_categories.dart';
 import '../../controllers/product/produit_controller.dart';
 import '../../controllers/banner_controller.dart';
 import '../all_products/all_products.dart';

@@ -8,7 +8,7 @@ import '../data/repositories/etablissement/etablissement_repository.dart';
 import '../data/repositories/order/order_repository.dart';
 import '../data/repositories/product/produit_repository.dart';
 import '../data/repositories/user/user_repository.dart';
-import '../features/authentication/controllers/signup/verify_otp_controller.dart';
+import '../features/authentication/controllers/otp_verification/verify_otp_controller.dart';
 import '../features/personalization/controllers/user_controller.dart';
 import '../features/personalization/controllers/user_management_controller.dart';
 import '../features/shop/controllers/etablissement_controller.dart';

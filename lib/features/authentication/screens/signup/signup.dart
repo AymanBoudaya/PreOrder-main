@@ -1,5 +1,5 @@
 import 'package:caferesto/common/widgets/appbar/appbar.dart';
-import 'package:caferesto/features/authentication/screens/signup.widgets/widgets/signup_form.dart';
+import 'package:caferesto/features/authentication/screens/signup/widgets/signup_form.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../utils/constants/sizes.dart';
@@ -29,12 +29,6 @@ class SignupScreen extends StatelessWidget {
               TSignupform(),
               const SizedBox(height: AppSizes.spaceBtwSections),
 
-              /// Divider
-              // TFormDivider(dividerText: TTexts.orSignUpWith.capitalize!),
-              // const SizedBox(height: AppSizes.spaceBtwSections),
-
-              // /// Social Buttons
-              // const TSocialButtons(),
             ],
           ),
         ),
