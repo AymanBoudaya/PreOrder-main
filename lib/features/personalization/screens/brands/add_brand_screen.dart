@@ -36,7 +36,7 @@ class _AddEtablissementScreenState extends State<AddEtablissementScreen>
   double? longitude;
 
   final EtablissementController _controller =
-      EtablissementController(EtablissementRepository());
+      Get.find<EtablissementController>();
   final UserController userController = Get.find<UserController>();
 // Add these variables
   String _selectedAddressFromMap = '';

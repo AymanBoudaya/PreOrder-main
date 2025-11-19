@@ -27,9 +27,7 @@ class EtablissementController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _subscribeToRealtimeEtablissements();
-    getTousEtablissements();
-    _loadEtablissementsAccordingToRole();
+    _subscribeToRealtimeEtablissements();    _loadEtablissementsAccordingToRole();
   }
 
   Future<void> _loadEtablissementsAccordingToRole() async {

@@ -42,9 +42,6 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
     userController = Get.find<UserController>();
 
     // Initialiser EtablissementController
-    if (!Get.isRegistered<EtablissementController>()) {
-      Get.put(EtablissementController(EtablissementRepository()));
-    }
     _controller = Get.find<EtablissementController>();
 
     _userRole = userController.userRole;

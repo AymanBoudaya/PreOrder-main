@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../data/repositories/etablissement/etablissement_repository.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../../utils/popups/loaders.dart';
@@ -19,8 +18,8 @@ class AdminGestionEtablissementsScreen extends StatefulWidget {
 
 class _AdminGestionEtablissementsScreenState
     extends State<AdminGestionEtablissementsScreen> {
-  final EtablissementController _etablissementController =
-      Get.put(EtablissementController(EtablissementRepository()));
+final EtablissementController _etablissementController =
+    Get.find<EtablissementController>();
   final UserController _userController = Get.find<UserController>();
 
   bool _isLoading = false;
