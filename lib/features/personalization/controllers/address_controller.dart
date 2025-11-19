@@ -30,6 +30,7 @@ class AddressController extends GetxController {
       return Get.put(AddressController(), permanent: true);
     }
   }
+  final userController = Get.find<UserController>();
 
   // Form controllers
   final name = TextEditingController();
@@ -57,7 +58,7 @@ class AddressController extends GetxController {
   void onInit() {
     super.onInit();
     // Prefill name & phone from UserController
-    final user = UserController.instance.user.value;
+    final user = userController.user.value;
     name.text = user.fullName;
     phoneNumber.text = user.phone;
     getAllUserAddresses(); // ⚡️ charge la sélection existante

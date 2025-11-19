@@ -31,6 +31,7 @@ class AddProduitScreen extends StatefulWidget {
 class _AddProduitScreenState extends State<AddProduitScreen>
     with SingleTickerProviderStateMixin {
   final ProduitController _produitController = Get.find<ProduitController>();
+  final UserController _userController = Get.find<UserController>();
   final CategoryRepository _categoryRepository = Get.find<CategoryRepository>();
   final EtablissementController _etablissementController =
       Get.find<EtablissementController>();
@@ -501,7 +502,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
 
   Future<String?> _getEtablissementIdUtilisateur() async {
     try {
-      final userRole = UserController.instance.userRole;
+      final userRole = _userController.userRole;
       final e =
           await _etablissementController.getEtablissementUtilisateurConnecte();
 
@@ -526,7 +527,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
   }
 
   Future<void> _guardAccess() async {
-    final role = UserController.instance.userRole;
+    final role = _userController.userRole;
     if (role != 'Gérant') return;
     final etab =
         await _etablissementController.getEtablissementUtilisateurConnecte();
@@ -542,7 +543,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
 
-    final userRole = UserController.instance.userRole;
+    final userRole = _userController.userRole;
     String? etabId;
 
     // Si on modifie un produit et que l'utilisateur est Admin,

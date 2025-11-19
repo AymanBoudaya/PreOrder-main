@@ -39,6 +39,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
       Get.put(ProduitController());
     }
     controller = Get.find<ProduitController>();
+    final UserController userController = Get.find<UserController>();
 
     // Initialiser le contrôleur de catégories
     if (!Get.isRegistered<CategoryController>()) {

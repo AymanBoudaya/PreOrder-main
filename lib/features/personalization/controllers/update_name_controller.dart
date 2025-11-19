@@ -16,7 +16,7 @@ class UpdateNameController extends GetxController {
   final username = TextEditingController();
   final phone = TextEditingController();
   final birthDate = TextEditingController();
-  final userController = UserController.instance;
+  final userController = Get.find<UserController>();
   final userRepository = Get.put(UserRepository());
 
   GlobalKey<FormState> updateUserNameFormKey = GlobalKey<FormState>();

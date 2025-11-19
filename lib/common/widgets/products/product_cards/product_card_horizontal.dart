@@ -28,7 +28,8 @@ class TProductCardHorizontal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ProduitController.instance;
+    final controller = Get.find<ProduitController>();
+    
     final salePercentage =
         controller.calculateSalePercentage(product.price, product.salePrice);
     final dark = THelperFunctions.isDarkMode(context);
@@ -70,7 +71,8 @@ class TProductCardHorizontal extends StatelessWidget {
 
   Widget _buildThumbnailSection(
       BuildContext context, bool dark, String? salePercentage) {
-    final categoryController = CategoryController.instance;
+    final categoryController = Get.find<CategoryController>();
+    
     String categoryName = '';
     try {
       categoryName = categoryController.allCategories
@@ -215,7 +217,7 @@ class TProductCardHorizontal extends StatelessWidget {
 
   Widget _buildDetailsSection(
       BuildContext context, bool dark, String? salePercentage) {
-    final controller = ProduitController.instance;
+    final controller = Get.find<ProduitController>();
 
     return Padding(
       padding: const EdgeInsets.all(12),

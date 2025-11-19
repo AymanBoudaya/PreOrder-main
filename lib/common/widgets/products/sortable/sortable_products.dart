@@ -21,7 +21,8 @@ class TSortableProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = AllProductsController.instance;
+    final controller = Get.find<AllProductsController>();
+    
     final screenWidth = MediaQuery.of(context).size.width;
     return Column(
       children: [

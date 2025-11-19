@@ -1,13 +1,14 @@
 import 'package:caferesto/features/personalization/controllers/user_controller.dart';
 import 'package:caferesto/features/shop/models/etablissement_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class EtablissementSubtitle extends StatelessWidget {
   const EtablissementSubtitle({super.key, required this.etablissement});
   final Etablissement etablissement;
   @override
   Widget build(BuildContext context) {
-    final controller = UserController.instance;
+    final controller = Get.find<UserController>();
     final userRole = controller.userRole;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

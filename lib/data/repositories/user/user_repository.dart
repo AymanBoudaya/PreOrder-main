@@ -9,10 +9,10 @@ import '../../../utils/exceptions/platform_exceptions.dart';
 import '../../repositories/authentication/authentication_repository.dart';
 
 class UserRepository extends GetxController {
-  static UserRepository get instance => Get.find();
 
   final SupabaseClient _client = Supabase.instance.client;
   final _table = 'users';
+  final authRepo = Get.find<AuthenticationRepository>();
 
   /// Sauvegarder ou mettre à jour un utilisateur
   Future<void> saveUserRecord(UserModel user) async {
@@ -31,7 +31,7 @@ class UserRepository extends GetxController {
   }
 
   /// Récupérer les infos utilisateur (par défaut l’utilisateur connecté)
-  Future<UserModel?> fetchUserDetails([String? userId]) async {
+  Future<UserModel?> getUserDetails([String? userId]) async {
     try {
       final authUser = Supabase.instance.client.auth.currentUser;
       final targetId = userId ?? authUser?.id;
@@ -91,7 +91,7 @@ class UserRepository extends GetxController {
   /// Mettre à jour un champ spécifique
   Future<void> updateSingleField(Map<String, dynamic> json) async {
     try {
-      final userId = AuthenticationRepository.instance.authUser?.id;
+      final userId = authRepo.authUser?.id;
       if (userId == null) throw 'Aucun utilisateur authentifié.';
 
       final response =

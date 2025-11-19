@@ -10,8 +10,13 @@ import '../models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserController extends GetxController {
-  static UserController get instance => Get.find<UserController>();
-
+  static UserController get instance {
+    try {
+      return Get.find<UserController>();
+    } catch (e) {
+      return Get.put(UserController(), permanent: true);
+    }
+  }
 
   String get userRole => user.value.role;
   String? get currentEtablissementId => user.value.establishmentId;
@@ -21,6 +26,7 @@ class UserController extends GetxController {
 
   final profileLoading = false.obs;
   Rx<UserModel> user = UserModel.empty().obs;
+  final authRepo = Get.find<AuthenticationRepository>();
 
   // Lazy access to UserRepository to avoid initialization issues
   UserRepository get userRepository {
@@ -83,7 +89,7 @@ class UserController extends GetxController {
   Future<void> fetchUserRecord() async {
     try {
       profileLoading.value = true;
-      final userData = await userRepository.fetchUserDetails();
+      final userData = await userRepository.getUserDetails();
 
       if (userData != null) {
         // Vérifier si l'utilisateur est banni avant de mettre à jour
@@ -153,7 +159,7 @@ class UserController extends GetxController {
                 // Mettre à jour les données utilisateur si d'autres champs ont changé
                 try {
                   final userData =
-                      await userRepository.fetchUserDetails(currentUserId);
+                      await userRepository.getUserDetails(currentUserId);
                   if (userData != null && !userData.isBanned) {
                     user(userData);
                   }
@@ -205,7 +211,7 @@ class UserController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 1500));
 
       // Déconnecter l'utilisateur
-      await AuthenticationRepository.instance.logout();
+      await authRepo.logout();
     } catch (e) {
       debugPrint("Erreur lors de la gestion du bannissement: $e");
       // Forcer la déconnexion même en cas d'erreur
@@ -295,7 +301,7 @@ class UserController extends GetxController {
     try {
       if (userId.isEmpty) return null;
 
-      final userData = await userRepository.fetchUserDetails(userId);
+      final userData = await userRepository.getUserDetails(userId);
       if (userData != null) {
         return userData.fullName;
       }

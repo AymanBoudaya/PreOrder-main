@@ -106,7 +106,7 @@ class NotificationController extends GetxController {
 
     if (isOrderNotification) {
       // Récupérer le rôle de l'utilisateur
-      final userController = UserController.instance;
+      final userController = Get.find<UserController>();
       final userRole = userController.userRole;
 
       // Rediriger selon le rôle de l'utilisateur

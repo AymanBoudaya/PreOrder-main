@@ -374,7 +374,7 @@ class ProduitRepository extends GetxController {
     int limit = 10,
   }) async {
     try {
-      final orderRepository = OrderRepository.instance;
+      final orderRepository = Get.find<OrderRepository>();
 
       // Récupérer les IDs et quantités des produits les plus commandés
       final mostOrdered = await orderRepository.getMostOrderedProducts(

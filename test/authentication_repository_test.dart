@@ -25,7 +25,7 @@ void main() {
     Get.put<AuthenticationRepository>(AuthenticationRepository());
 
     // Act
-    final instance = AuthenticationRepository.instance;
+    final instance = Get.find<AuthenticationRepository>();
 
     // Assert
     expect(instance, isNotNull);

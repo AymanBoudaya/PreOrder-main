@@ -22,10 +22,9 @@ import 'horaire_controller.dart';
 import '../../services/arrival_time_calculator_service.dart';
 
 class OrderController extends GetxController {
-
-
+  final authRepo = Get.find<AuthenticationRepository>();
   final orderRepository = Get.put(OrderRepository());
-  final produitRepository = ProduitRepository.instance;
+  final produitRepository = Get.find<ProduitRepository>();
   final panierController = Get.find<PanierController>();
   // UserController sera obtenu de manière sécurisée
   UserController get userController {
@@ -544,7 +543,7 @@ class OrderController extends GetxController {
       TFullScreenLoader.openLoadingDialog(
           'En cours d\'enrgistrer votre commande...', TImages.pencilAnimation);
 
-      final user = AuthenticationRepository.instance.authUser;
+      final user = authRepo.authUser;
       if (user == null || user.id.isEmpty) {
         TFullScreenLoader.stopLoading();
         TLoaders.errorSnackBar(

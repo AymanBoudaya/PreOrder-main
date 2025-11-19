@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:caferesto/features/authentication/screens/signup.widgets/otp_verification_screen.dart';
 import 'package:caferesto/utils/local_storage/storage_utility.dart';
 import 'package:get/get.dart';
@@ -19,8 +21,8 @@ class _BannedUserException implements Exception {
 }
 
 class AuthenticationRepository extends GetxController {
-  static AuthenticationRepository get instance => Get.find();
-
+final userRepository = Get.find<UserRepository>();
+final userController = Get.find<UserController>();
   final GetStorage deviceStorage = GetStorage();
   GoTrueClient get _auth => Supabase.instance.client.auth;
 
@@ -40,7 +42,7 @@ class AuthenticationRepository extends GetxController {
           if (pending != null) return;
 
           // Connexion classique
-          final userDetails = await UserRepository.instance.fetchUserDetails();
+          final userDetails = await userRepository.getUserDetails();
 
           // Vérifier si l'utilisateur est banni (sans afficher de snackbar ici,
           // car c'est déjà géré dans verifyOTP qui est le point d'entrée principal)
@@ -99,7 +101,7 @@ class AuthenticationRepository extends GetxController {
         // Vérifier si l'utilisateur est banni (sans afficher de snackbar ici,
         // car c'est déjà géré dans verifyOTP qui est le point d'entrée principal)
         final userDetails =
-            await UserRepository.instance.fetchUserDetails(user.id);
+            await userRepository.getUserDetails(user.id);
         if (userDetails != null && userDetails.isBanned) {
           // Déconnecter l'utilisateur banni silencieusement
           await _auth.signOut();
@@ -217,16 +219,16 @@ class AuthenticationRepository extends GetxController {
           profileImageUrl: get(savedUserData, 'profile_image_url'),
         );
 
-        await UserRepository.instance.saveUserRecord(userModel);
+        await userRepository.saveUserRecord(userModel);
         await deviceStorage.remove('pending_user_data');
         await TLocalStorage.init(supabaseUser.id);
-        await UserController.instance.fetchUserRecord();
+        await userController.fetchUserRecord();
 
         Get.offAll(() => const NavigationMenu());
       } else {
         // --- CAS CONNEXION
         final existingUser =
-            await UserRepository.instance.fetchUserDetails(supabaseUser.id);
+            await userRepository.getUserDetails(supabaseUser.id);
 
         if (existingUser == null) {
           throw Exception(
@@ -249,7 +251,7 @@ class AuthenticationRepository extends GetxController {
         }
 
         await TLocalStorage.init(supabaseUser.id);
-        await UserController.instance.fetchUserRecord();
+        await userController.fetchUserRecord();
 
         Get.offAll(() => const NavigationMenu());
       }

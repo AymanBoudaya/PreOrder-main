@@ -13,7 +13,7 @@ class UserManagementController extends GetxController {
     }
   }
 
-  final UserRepository _userRepository = UserRepository.instance;
+  final UserRepository _userRepository = Get.find<UserRepository>();
   final UserController _userController = Get.find<UserController>();
 
   // États réactifs

@@ -13,6 +13,7 @@ import '../../../personalization/controllers/user_controller.dart';
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
   final userController = Get.find<UserController>();
+  final authRepo = Get.find<AuthenticationRepository>();
 
   /// Variables
   final email = TextEditingController();
@@ -53,7 +54,7 @@ class LoginController extends GetxController {
 
       // Envoi OTP via AuthenticationRepository
       final otpSent =
-          await AuthenticationRepository.instance.sendOtp(email.text.trim());
+          await authRepo.sendOtp(email.text.trim());
 
       TFullScreenLoader.stopLoading();
 

@@ -54,8 +54,8 @@ class DashboardStats {
 
 class DashboardController extends GetxController {
   final _db = Supabase.instance.client;
-  final userController = UserController.instance;
-  final etablissementController = EtablissementController.instance;
+  final userController = Get.find<UserController>();
+  final etablissementController = Get.find<EtablissementController>();
   
   // Getter pour OrderRepository pour éviter l'erreur de lazyPut
   OrderRepository get orderRepository {

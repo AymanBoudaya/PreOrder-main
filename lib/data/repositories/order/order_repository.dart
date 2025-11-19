@@ -10,11 +10,12 @@ class OrderRepository extends GetxController {
   static OrderRepository get instance => Get.find();
 
   final _db = Supabase.instance.client;
+  final authRepo = Get.find<AuthenticationRepository>();
 
   /// Fetch all orders belonging to the current user
   Future<List<OrderModel>> fetchUserOrders() async {
     try {
-      final user = AuthenticationRepository.instance.authUser;
+      final user = authRepo.authUser;
       if (user == null || user.id.isEmpty) {
         throw 'Unable to find user information, try again later';
       }

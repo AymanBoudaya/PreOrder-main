@@ -5,14 +5,15 @@ import '../../../features/personalization/models/address_model.dart';
 import '../authentication/authentication_repository.dart';
 
 class AddressRepository extends GetxController {
-  static AddressRepository get instance => Get.find();
+
   final _db = Supabase.instance.client;
   final String _table = 'addresses';
+  final controller = Get.find<AuthenticationRepository>();
 
   /// Extraire les addresses utilisateur; Ajouter addresse; Mettre à jour adresse; Supprimer adresse
   Future<List<AddressModel>> fetchUserAddresses() async {
     try {
-      final userId = AuthenticationRepository.instance.authUser!.id;
+      final userId = controller.authUser!.id;
       if (userId.isEmpty) {
         throw ('Unable to find user information. Try again in few minutes');
       }
@@ -31,7 +32,7 @@ class AddressRepository extends GetxController {
 
   Future<String> addAddress(AddressModel address) async {
     try {
-      final userId = AuthenticationRepository.instance.authUser!.id;
+      final userId = controller.authUser!.id;
 
       final response = await _db
           .from(_table)
@@ -51,7 +52,7 @@ class AddressRepository extends GetxController {
 
   Future<void> selectOtherAddress(String addressId, bool selected) async {
     try {
-      final userId = AuthenticationRepository.instance.authUser!.id;
+      final userId = controller.authUser!.id;
 
       await _db
           .from(_table)
@@ -65,7 +66,7 @@ class AddressRepository extends GetxController {
 
   Future<void> deleteAddress(String addressId) async {
     try {
-      final userId = AuthenticationRepository.instance.authUser!.id;
+      final userId = controller.authUser!.id;
       if (userId.isEmpty) {
         throw ('Unable to find user information. Try again in few minutes');
       }

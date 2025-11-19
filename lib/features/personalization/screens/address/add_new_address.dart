@@ -21,7 +21,7 @@ class AddNewAddressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = AddressController.instance;
-    final userController = UserController.instance;
+    final userController = Get.find<UserController>();
     final dark = THelperFunctions.isDarkMode(context);
     // Prefill user info once
     controller.name.text = userController.user.value.fullName ?? '';

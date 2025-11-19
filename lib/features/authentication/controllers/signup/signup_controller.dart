@@ -27,6 +27,7 @@ class SignupController extends GetxController {
   final RxMap<String, dynamic> _userData = <String, dynamic>{}.obs;
 
   Map<String, dynamic> get userData => _userData;
+  final authRepo = Get.find<AuthenticationRepository>();
 
   /// -- SIGNUP
   void signup() async {
@@ -81,7 +82,7 @@ class SignupController extends GetxController {
       };
 
       // Send OTP to email
-      await AuthenticationRepository.instance.signUpWithEmailOTP(
+      await authRepo.signUpWithEmailOTP(
         email.text.trim(),
         userData,
       );

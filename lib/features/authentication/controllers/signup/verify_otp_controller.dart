@@ -7,7 +7,7 @@ import '../../../../utils/popups/loaders.dart';
 
 class OTPVerificationController extends GetxController {
 
-  final AuthenticationRepository _authRepo = AuthenticationRepository.instance;
+  final AuthenticationRepository _authRepo = Get.find<AuthenticationRepository>();
 
   /// Champs liés à l’OTP
   final emailController = TextEditingController();

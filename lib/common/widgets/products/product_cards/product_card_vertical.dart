@@ -32,7 +32,8 @@ class ProductCardVertical extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ProduitController.instance;
+    final controller = Get.find<ProduitController>();
+    
     final salePercentage =
         controller.calculateSalePercentage(product.price, product.salePrice);
     final dark = THelperFunctions.isDarkMode(context);
@@ -221,14 +222,15 @@ class ProductCardVertical extends StatelessWidget {
   /// Build favorite icon with custom onTap callback
   Widget _buildFavoriteIcon(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
+    final controller = Get.find<FavoritesController>();
 
     return Obx(() {
-      final isFavorite = FavoritesController.instance.isFavourite(product.id);
+      final isFavorite = controller.isFavourite(product.id);
 
       return GestureDetector(
         onTap: onFavoriteTap ??
             () {
-              FavoritesController.instance.toggleFavoriteProduct(product.id);
+              controller.toggleFavoriteProduct(product.id);
             },
         child: Container(
           padding: const EdgeInsets.all(6),
@@ -330,7 +332,7 @@ class _CategoryBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryController = CategoryController.instance;
+    final categoryController = Get.find<CategoryController>();
     String categoryName = '';
     try {
       categoryName = categoryController.allCategories
