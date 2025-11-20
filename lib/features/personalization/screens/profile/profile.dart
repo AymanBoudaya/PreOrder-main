@@ -9,7 +9,7 @@ import '../../../../common/widgets/texts/section_heading.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../controllers/user_controller.dart';
-import 'widgets/change_name.dart';
+import 'widgets/change_user_info.dart';
 import 'widgets/profile_menu.dart';
 
 class ProfileScreen extends GetView<UserController> {
@@ -252,7 +252,7 @@ class ProfileScreen extends GetView<UserController> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => Get.to(() => const ChangeName()),
+                    onPressed: () => Get.to(() => const ChangeUserInfo()),
                     child: const Text('Modifier mes informations'),
                   ),
                 ),

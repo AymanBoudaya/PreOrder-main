@@ -1,5 +1,5 @@
 import 'package:caferesto/common/widgets/products/product_cards/product_card_vertical.dart';
-import 'package:caferesto/features/shop/screens/home/widgets/build_empty_state.dart';
+import 'package:caferesto/features/shop/screens/accueil/widgets/build_empty_state.dart';
 import 'package:caferesto/utils/device/device_utility.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';

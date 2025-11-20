@@ -4,22 +4,22 @@ import 'package:get/get.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/sizes.dart';
-import '../../../controllers/update_name_controller.dart';
+import '../../../controllers/update_user_info_controller.dart';
 
-class ChangeName extends StatefulWidget {
-  const ChangeName({super.key});
+class ChangeUserInfo extends StatefulWidget {
+  const ChangeUserInfo({super.key});
 
   @override
-  State<ChangeName> createState() => _ChangeNameState();
+  State<ChangeUserInfo> createState() => _ChangeUserInfoState();
 }
 
-class _ChangeNameState extends State<ChangeName> {
-  late final UpdateNameController controller;
+class _ChangeUserInfoState extends State<ChangeUserInfo> {
+  late final UpdateUserInfoController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(UpdateNameController());
+    controller = Get.put(UpdateUserInfoController());
   }
 
   Future<void> _handleUpdate() async {

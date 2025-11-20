@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../features/shop/models/jour_semaine.dart';
+import '../../features/shop/models/statut_etablissement_model.dart';
 
 class THelperFunctions {
   static Color? getColor(String value) {
@@ -119,6 +120,37 @@ class THelperFunctions {
         return JourSemaine.dimanche;
       default:
         throw Exception('Invalid day string: $jour');
+    }
+  }
+
+    static String getJourAbrege(JourSemaine jour) {
+    switch (jour) {
+      case JourSemaine.lundi:
+        return 'LUN';
+      case JourSemaine.mardi:
+        return 'MAR';
+      case JourSemaine.mercredi:
+        return 'MER';
+      case JourSemaine.jeudi:
+        return 'JEU';
+      case JourSemaine.vendredi:
+        return 'VEN';
+      case JourSemaine.samedi:
+        return 'SAM';
+      case JourSemaine.dimanche:
+        return 'DIM';
+    }
+  }
+
+  // Méthodes helper pour le statut
+  static String getStatutText(StatutEtablissement statut) {
+    switch (statut) {
+      case StatutEtablissement.approuve:
+        return 'Approuvé ✓';
+      case StatutEtablissement.rejete:
+        return 'Rejeté ✗';
+      case StatutEtablissement.en_attente:
+        return 'En attente de validation';
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:caferesto/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
+import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/models/horaire_model.dart';
 import '../../../shop/models/jour_semaine.dart';
 import 'heure_button.dart';
@@ -106,25 +107,6 @@ class _HoraireTileAmelioreState extends State<HoraireTileAmeliore> {
     return int.parse(parts[0]) * 60 + int.parse(parts[1]);
   }
 
-  String _getJourAbrege(JourSemaine jour) {
-    switch (jour) {
-      case JourSemaine.lundi:
-        return 'LUN';
-      case JourSemaine.mardi:
-        return 'MAR';
-      case JourSemaine.mercredi:
-        return 'MER';
-      case JourSemaine.jeudi:
-        return 'JEU';
-      case JourSemaine.vendredi:
-        return 'VEN';
-      case JourSemaine.samedi:
-        return 'SAM';
-      case JourSemaine.dimanche:
-        return 'DIM';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     const couleurJour = Colors.blueAccent;
@@ -151,7 +133,7 @@ class _HoraireTileAmelioreState extends State<HoraireTileAmeliore> {
                   ),
                   child: Center(
                     child: Text(
-                      _getJourAbrege(_currentHoraire.jour),
+                      THelperFunctions.getJourAbrege(_currentHoraire.jour),
                       style: TextStyle(
                         color: _currentHoraire.estOuvert
                             ? Colors.white

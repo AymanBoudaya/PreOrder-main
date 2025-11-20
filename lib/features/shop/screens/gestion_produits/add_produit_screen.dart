@@ -18,7 +18,7 @@ import '../../../../data/repositories/categories/category_repository.dart';
 import '../../controllers/etablissement_controller.dart';
 import '../../../personalization/screens/categories/widgets/category_form_widgets.dart';
 import '../../../personalization/controllers/user_controller.dart';
-import '../../../shop/models/statut_etablissement_model.dart';
+import '../../models/statut_etablissement_model.dart';
 
 class AddProduitScreen extends StatefulWidget {
   final ProduitModel? produit;

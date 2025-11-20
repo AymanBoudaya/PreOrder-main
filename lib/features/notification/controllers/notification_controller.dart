@@ -3,8 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 import '../../personalization/screens/brands/mon_etablissement_screen.dart';
 import '../../personalization/controllers/user_controller.dart';
-import '../../shop/screens/order/gerant_order_management_screen.dart';
-import '../../shop/screens/order/order.dart';
+import '../../shop/screens/commande/gerant_order_management_screen.dart';
+import '../../shop/screens/commande/order.dart';
 import '../models/notification_model.dart';
 
 class NotificationController extends GetxController {

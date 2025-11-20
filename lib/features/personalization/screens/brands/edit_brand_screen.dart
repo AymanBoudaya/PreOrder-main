@@ -20,7 +20,7 @@ import '../../../shop/models/jour_semaine.dart';
 import '../../../shop/models/statut_etablissement_model.dart';
 import '../../controllers/user_controller.dart';
 import '../categories/widgets/category_form_widgets.dart';
-import '../etablisment/gestion_horaires_screen.dart';
+import '../etablissment/gestion_horaires_screen.dart';
 
 class EditEtablissementScreen extends StatefulWidget {
   final Etablissement etablissement;
@@ -427,7 +427,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
                       const SizedBox(width: 12),
                       Flexible(
                           child: Text(
-                        _getStatutText(statut),
+                        THelperFunctions.getStatutText(statut),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       )),
@@ -596,7 +596,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
             ),
             child: Center(
               child: Text(
-                _getJourAbrege(horaire.jour),
+                THelperFunctions.getJourAbrege(horaire.jour),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -631,17 +631,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
     );
   }
 
-  // Méthodes helper pour le statut
-  String _getStatutText(StatutEtablissement statut) {
-    switch (statut) {
-      case StatutEtablissement.approuve:
-        return 'Approuvé ✓';
-      case StatutEtablissement.rejete:
-        return 'Rejeté ✗';
-      case StatutEtablissement.en_attente:
-        return 'En attente de validation';
-    }
-  }
+
 
   Color _getStatutColor(StatutEtablissement statut) {
     switch (statut) {
@@ -651,25 +641,6 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
         return Colors.red;
       case StatutEtablissement.en_attente:
         return Colors.orange;
-    }
-  }
-
-  String _getJourAbrege(JourSemaine jour) {
-    switch (jour) {
-      case JourSemaine.lundi:
-        return 'LUN';
-      case JourSemaine.mardi:
-        return 'MAR';
-      case JourSemaine.mercredi:
-        return 'MER';
-      case JourSemaine.jeudi:
-        return 'JEU';
-      case JourSemaine.vendredi:
-        return 'VEN';
-      case JourSemaine.samedi:
-        return 'SAM';
-      case JourSemaine.dimanche:
-        return 'DIM';
     }
   }
 

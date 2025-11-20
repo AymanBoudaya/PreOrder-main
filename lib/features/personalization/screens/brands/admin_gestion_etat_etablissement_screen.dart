@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../data/repositories/etablissement/etablissement_repository.dart';
+import '../../../../utils/helpers/helper_functions.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../controllers/user_controller.dart';
 import '../../../shop/controllers/etablissement_controller.dart';
@@ -80,7 +81,7 @@ class _AdminGestionEtablissementsScreenState
             mainAxisSize: MainAxisSize.min,
             children: StatutEtablissement.values.map((statut) {
               return RadioListTile<StatutEtablissement>(
-                title: Text(_getStatutText(statut)),
+                title: Text(THelperFunctions.getStatutText(statut)),
                 value: statut,
                 groupValue: etab.statut,
                 activeColor: _getStatutColor(statut),
@@ -102,17 +103,6 @@ class _AdminGestionEtablissementsScreenState
         _loadEtablissements(); // Rafraîchir la liste
       }
       setState(() => _isLoading = false);
-    }
-  }
-
-  String _getStatutText(StatutEtablissement statut) {
-    switch (statut) {
-      case StatutEtablissement.approuve:
-        return "Approuvé ✓";
-      case StatutEtablissement.rejete:
-        return "Rejeté ✗";
-      case StatutEtablissement.en_attente:
-        return "En attente 🕓";
     }
   }
 
@@ -175,7 +165,7 @@ class _AdminGestionEtablissementsScreenState
                             Text(etab.address),
                             const SizedBox(height: 4),
                             Text(
-                              _getStatutText(etab.statut),
+                              THelperFunctions.getStatutText(etab.statut),
                               style: TextStyle(
                                 color: _getStatutColor(etab.statut),
                                 fontWeight: FontWeight.bold,

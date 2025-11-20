@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 import 'user_controller.dart';
 
-class UpdateNameController extends GetxController {
+class UpdateUserInfoController extends GetxController {
 
   final firstName = TextEditingController();
   final lastName = TextEditingController();
