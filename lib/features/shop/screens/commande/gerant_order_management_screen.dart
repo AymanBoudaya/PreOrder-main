@@ -1,3 +1,4 @@
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -12,7 +13,6 @@ import '../../../../utils/helpers/helper_functions.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../../personalization/controllers/user_controller.dart';
 import '../../controllers/category_controller.dart';
-import '../../controllers/etablissement_controller.dart';
 import '../../controllers/commandes/order_controller.dart';
 import '../../controllers/product/panier_controller.dart';
 import '../../controllers/product/produit_controller.dart';
@@ -32,7 +32,7 @@ class _GerantOrderManagementScreenState
   final orderController = Get.find<OrderController>();
   final panierController = Get.find<PanierController>();
   final userController = Get.find<UserController>();
-  final etablissementController = Get.find<EtablissementController>();
+  final etablissementController = Get.find<ListeEtablissementController>();
   final CategoryController categoryController = Get.find<CategoryController>();
   final ProduitController produitController = Get.find<ProduitController>();
 

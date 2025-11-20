@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +16,6 @@ import '../../product_details/product_detail.dart';
 import '../../sub_category/sub_categories.dart';
 import '../../../controllers/category_controller.dart';
 import '../../../../../data/repositories/product/produit_repository.dart';
-import '../../../controllers/etablissement_controller.dart';
 
 class TPromoSlider extends StatefulWidget {
   const TPromoSlider({
@@ -333,7 +333,7 @@ class _TPromoSliderState extends State<TPromoSlider> {
 
   void _navigateToEstablishment(String establishmentId) async {
     try {
-      final etablissementController = Get.find<EtablissementController>();
+      final etablissementController = Get.find<ListeEtablissementController>();
       final establishments =
           await etablissementController.getTousEtablissements();
       final establishmentIndex = establishments.indexWhere(

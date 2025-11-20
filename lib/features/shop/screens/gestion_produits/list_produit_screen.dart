@@ -1,4 +1,4 @@
-import 'package:caferesto/features/shop/controllers/etablissement_controller.dart';
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/utils/constants/colors.dart';
 import 'package:caferesto/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class ListProduitScreen extends StatefulWidget {
 class _ListProduitScreenState extends State<ListProduitScreen> {
   late ProduitController controller;
   late CategoryController categoryController;
-  final etablissementController = Get.find<EtablissementController>();
+  final etablissementController = Get.find<ListeEtablissementController>();
   bool _accessDenied = false;
   String _deniedReason = '';
   final UserController userController = Get.find<UserController>();

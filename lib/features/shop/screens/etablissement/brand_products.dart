@@ -4,7 +4,6 @@ import 'package:caferesto/common/widgets/products/sortable/sortable_products.dar
 import 'package:caferesto/features/shop/controllers/product/all_products_controller.dart';
 import 'package:caferesto/features/shop/models/etablissement_model.dart';
 import 'package:caferesto/features/shop/controllers/category_controller.dart';
-import 'package:caferesto/features/shop/models/statut_etablissement_model.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

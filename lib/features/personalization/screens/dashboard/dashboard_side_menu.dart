@@ -5,9 +5,9 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
-import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../shop/screens/commande/gerant_order_management_screen.dart';
 import '../../../shop/screens/gestion_produits/list_produit_screen.dart';
+import '../../controllers/liste_etablissement_controller.dart';
 import '../../controllers/user_controller.dart';
 import '../categories/category_manager_screen.dart';
 import '../brands/mon_etablissement_screen.dart';
@@ -32,7 +32,7 @@ class DashboardSideMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
     final userController = Get.find<UserController>();
-    final etablissementController = Get.find<EtablissementController>();
+    final etablissementController = Get.find<ListeEtablissementController>();
 
     return Container(
       width: 250,

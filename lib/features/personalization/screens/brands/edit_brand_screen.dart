@@ -13,10 +13,10 @@ import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../data/repositories/horaire/horaire_repository.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../shop/controllers/product/horaire_controller.dart';
 import '../../../shop/models/etablissement_model.dart';
 import '../../../shop/models/horaire_model.dart';
+import '../../controllers/liste_etablissement_controller.dart';
 import '../../controllers/user_controller.dart';
 import '../categories/widgets/category_form_widgets.dart';
 import '../etablissment/gestion_horaires_screen.dart';
@@ -39,8 +39,8 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
   final _latitudeController = TextEditingController();
   final _longitudeController = TextEditingController();
 
-  final EtablissementController _etablissementController =
-      Get.find<EtablissementController>();
+  final ListeEtablissementController _etablissementController =
+      Get.find<ListeEtablissementController>();
   final UserController _userController = Get.find<UserController>();
   late final HoraireController _horaireController;
 

@@ -10,8 +10,8 @@ import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/controllers/banner_controller.dart';
 import '../../../shop/controllers/category_controller.dart';
-import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../../data/repositories/product/produit_repository.dart';
+import '../../controllers/liste_etablissement_controller.dart';
 
 class AddBannerScreen extends StatelessWidget {
   const AddBannerScreen({super.key});
@@ -21,7 +21,7 @@ class AddBannerScreen extends StatelessWidget {
     final bannerController = Get.put(BannerController());
     final categoryController = Get.find<CategoryController>();
     final produitRepository = Get.find<ProduitRepository>();
-    final etablissementController = Get.find<EtablissementController>();
+    final etablissementController = Get.find<ListeEtablissementController>();
 
     // Charger les données pour les dropdowns
     WidgetsBinding.instance.addPostFrameCallback((_) async {

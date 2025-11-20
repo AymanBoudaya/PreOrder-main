@@ -1,6 +1,7 @@
 import 'package:caferesto/data/repositories/notifications/notifications_repository.dart';
 import 'package:caferesto/features/notification/controllers/notification_controller.dart';
 import 'package:caferesto/features/personalization/controllers/address_controller.dart';
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/features/shop/controllers/commandes/order_controller.dart';
 import 'package:get/get.dart';
 
@@ -63,6 +64,9 @@ class GeneralBinding extends Bindings {
     Get.lazyPut<FavoritesController>(() => FavoritesController(), fenix: true);
     Get.lazyPut<VariationController>(() => VariationController(), fenix: true);
     Get.lazyPut<UserManagementController>(() => UserManagementController(),
+        fenix: true);
+    Get.lazyPut<ListeEtablissementController>(
+        () => ListeEtablissementController(EtablissementRepository()),
         fenix: true);
     Get.lazyPut<EtablissementController>(
         () => EtablissementController(Get.find<EtablissementRepository>()),

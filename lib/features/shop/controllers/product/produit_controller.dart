@@ -1,4 +1,5 @@
 import 'package:caferesto/data/repositories/product/produit_repository.dart';
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/features/personalization/controllers/user_controller.dart';
 import 'package:caferesto/features/shop/models/produit_model.dart';
 import 'package:caferesto/features/shop/models/etablissement_model.dart';
@@ -233,7 +234,7 @@ class ProduitController extends GetxController {
   // --- ÉTABLISSEMENT ---
   Future<String?> getEtablissementIdUtilisateur() async {
     try {
-      final etablissementController = Get.find<EtablissementController>();
+      final etablissementController = Get.find<ListeEtablissementController>();
       final etablissement =
           await etablissementController.getEtablissementUtilisateurConnecte();
 

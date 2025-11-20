@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/utils/constants/colors.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:caferesto/utils/helpers/helper_functions.dart';
@@ -15,10 +16,8 @@ import '../../../../utils/popups/loaders.dart';
 import '../../controllers/product/produit_controller.dart';
 import '../../models/produit_model.dart';
 import '../../../../data/repositories/categories/category_repository.dart';
-import '../../controllers/etablissement_controller.dart';
 import '../../../personalization/screens/categories/widgets/category_form_widgets.dart';
 import '../../../personalization/controllers/user_controller.dart';
-import '../../models/statut_etablissement_model.dart';
 
 class AddProduitScreen extends StatefulWidget {
   final ProduitModel? produit;
@@ -33,8 +32,8 @@ class _AddProduitScreenState extends State<AddProduitScreen>
   final ProduitController _produitController = Get.find<ProduitController>();
   final UserController _userController = Get.find<UserController>();
   final CategoryRepository _categoryRepository = Get.find<CategoryRepository>();
-  final EtablissementController _etablissementController =
-      Get.find<EtablissementController>();
+  final ListeEtablissementController _listeEtablissementController =
+      Get.find<ListeEtablissementController>();
 
   final _formKey = GlobalKey<FormState>();
   final _nomController = TextEditingController();
@@ -504,7 +503,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     try {
       final userRole = _userController.userRole;
       final e =
-          await _etablissementController.getEtablissementUtilisateurConnecte();
+          await _listeEtablissementController.getEtablissementUtilisateurConnecte();
 
       if (userRole == 'Gérant') {
         if (e == null) {
@@ -530,7 +529,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     final role = _userController.userRole;
     if (role != 'Gérant') return;
     final etab =
-        await _etablissementController.getEtablissementUtilisateurConnecte();
+        await _listeEtablissementController.getEtablissementUtilisateurConnecte();
     if (etab == null || etab.statut != StatutEtablissement.approuve) {
       TLoaders.errorSnackBar(
           message:

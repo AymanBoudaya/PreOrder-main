@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/enums.dart';
 
 class StoreScreen extends StatelessWidget {
   const StoreScreen({super.key});
@@ -40,9 +39,8 @@ class StoreScreen extends StatelessWidget {
           return const StoreShimmer();
         }
 
-        final approved = etablissementController.etablissements
-            .where((e) => e.statut == StatutEtablissement.approuve)
-            .toList();
+        final approved = etablissementController.etablissements;
+        
 
         if (approved.isEmpty) {
           return Center(

@@ -1,6 +1,4 @@
-import 'package:caferesto/data/repositories/address/address_repository.dart';
 import 'package:caferesto/data/repositories/authentication/authentication_repository.dart';
-import 'package:caferesto/data/repositories/user/user_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 

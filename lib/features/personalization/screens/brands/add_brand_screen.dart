@@ -12,10 +12,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../data/repositories/etablissement/etablissement_repository.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../shop/models/etablissement_model.dart';
+import '../../controllers/liste_etablissement_controller.dart';
 import '../../controllers/user_controller.dart';
 import '../categories/widgets/category_form_widgets.dart';
 import 'map_picker_screen.dart';
@@ -35,8 +34,8 @@ class _AddEtablissementScreenState extends State<AddEtablissementScreen>
   double? latitude;
   double? longitude;
 
-  final EtablissementController _controller =
-      Get.find<EtablissementController>();
+  final ListeEtablissementController _controller =
+      Get.find<ListeEtablissementController>();
   final UserController userController = Get.find<UserController>();
 // Add these variables
   String _selectedAddressFromMap = '';
@@ -356,7 +355,6 @@ class _AddEtablissementScreenState extends State<AddEtablissementScreen>
   }
 
   Widget _buildCoordinatesSection(double width) {
-    final isWide = width >= 900;
     final dark = THelperFunctions.isDarkMode(context);
     return CategoryFormCard(children: [
       const Text('Coordonnées GPS',

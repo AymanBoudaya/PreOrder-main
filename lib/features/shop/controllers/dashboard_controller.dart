@@ -1,9 +1,9 @@
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/repositories/order/order_repository.dart';
 import '../../personalization/controllers/user_controller.dart';
-import '../controllers/etablissement_controller.dart';
 import '../../../utils/popups/loaders.dart';
 
 class DashboardStats {
@@ -55,7 +55,7 @@ class DashboardStats {
 class DashboardController extends GetxController {
   final _db = Supabase.instance.client;
   final userController = Get.find<UserController>();
-  final etablissementController = Get.find<EtablissementController>();
+  final etablissementController = Get.find<ListeEtablissementController>();
   
   // Getter pour OrderRepository pour éviter l'erreur de lazyPut
   OrderRepository get orderRepository {

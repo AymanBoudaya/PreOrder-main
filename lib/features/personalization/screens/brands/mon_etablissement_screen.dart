@@ -1,17 +1,15 @@
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/features/personalization/screens/brands/widgets/etablissement_subtitle.dart';
 import 'package:caferesto/features/personalization/screens/brands/widgets/no_results_state.dart';
 import 'package:caferesto/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../data/repositories/etablissement/etablissement_repository.dart';
 import '../../../../features/personalization/controllers/user_controller.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/helpers/helper_functions.dart';
-import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../shop/models/etablissement_model.dart';
-import '../../../shop/models/statut_etablissement_model.dart';
 import 'add_brand_screen.dart';
 import 'edit_brand_screen.dart';
 import 'widgets/etablissement_image.dart';
@@ -24,7 +22,7 @@ class MonEtablissementScreen extends StatefulWidget {
 }
 
 class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
-  late final EtablissementController _controller;
+  late final ListeEtablissementController _controller;
   late final UserController userController;
   String _userRole = '';
 
@@ -42,7 +40,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
     userController = Get.find<UserController>();
 
     // Initialiser EtablissementController
-    _controller = Get.find<EtablissementController>();
+    _controller = Get.find<ListeEtablissementController>();
 
     _userRole = userController.userRole;
 

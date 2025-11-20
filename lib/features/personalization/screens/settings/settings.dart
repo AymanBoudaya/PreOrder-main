@@ -1,6 +1,7 @@
 import 'package:caferesto/common/widgets/appbar/appbar.dart';
 import 'package:caferesto/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
+import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/features/personalization/screens/profile/profile.dart';
 import 'package:caferesto/features/shop/screens/cart/cart.dart';
 import 'package:caferesto/features/shop/screens/commande/gerant_order_management_screen.dart';
@@ -23,7 +24,6 @@ import '../categories/category_manager_screen.dart';
 import '../dashboard/admin_dashboard_screen.dart';
 import '../dashboard/gerant_dashboard_screen.dart';
 import '../banners/banner_management_screen.dart';
-import '../../../shop/controllers/etablissement_controller.dart';
 import '../../../../utils/popups/loaders.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -33,7 +33,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authRepo = Get.find<AuthenticationRepository>();
     final userController = Get.find<UserController>();
-    final etablissementController = Get.find<EtablissementController>();
+    final etablissementController = Get.find<ListeEtablissementController>();
 
     bool isAdminOnly() {
       final role = userController.user.value.role;
