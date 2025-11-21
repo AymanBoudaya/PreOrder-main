@@ -8,10 +8,10 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../../../utils/constants/colors.dart';
-import '../../../../utils/device/device_utility.dart';
-import '../../models/order_model.dart';
-import '../../models/etablissement_model.dart';
+import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/device/device_utility.dart';
+import '../../../models/order_model.dart';
+import '../../../models/etablissement_model.dart';
 import 'dart:async';
 import 'package:async/async.dart';
 

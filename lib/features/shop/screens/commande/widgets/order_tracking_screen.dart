@@ -1,13 +1,13 @@
-import 'package:caferesto/features/shop/screens/commande/delivery_map_view.dart';
+import 'package:caferesto/features/shop/screens/commande/widgets/delivery_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../common/widgets/products/product_cards/widgets/rounded_container.dart';
-import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/sizes.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/products/product_cards/widgets/rounded_container.dart';
+import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/constants/sizes.dart';
 
-import '../../../../utils/helpers/helper_functions.dart';
-import '../../models/order_model.dart';
+import '../../../../../utils/helpers/helper_functions.dart';
+import '../../../models/order_model.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
   final OrderModel order;

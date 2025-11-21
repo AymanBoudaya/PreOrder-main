@@ -7,7 +7,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../shop/controllers/banner_controller.dart';
-import '../widgets/loading_screen.dart';
+import '../../../../common/widgets/loading/loading_screen.dart';
 import 'add_banner_screen.dart';
 import 'edit_banner_screen.dart';
 

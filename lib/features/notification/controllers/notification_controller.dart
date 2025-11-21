@@ -2,9 +2,9 @@ import 'package:caferesto/data/repositories/notifications/notifications_reposito
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
-import '../../personalization/screens/brands/mon_etablissement_screen.dart';
+import '../../personalization/screens/mon_etablissement/mon_etablissement_screen.dart';
 import '../../personalization/controllers/user_controller.dart';
-import '../../shop/screens/commande/gerant_order_management_screen.dart';
+import '../../personalization/screens/gestion_commandes/gerant_order_management_screen.dart';
 import '../../shop/screens/commande/order.dart';
 import '../models/notification_model.dart';
 

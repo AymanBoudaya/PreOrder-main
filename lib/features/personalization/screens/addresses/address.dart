@@ -1,6 +1,6 @@
 import 'package:caferesto/common/widgets/appbar/appbar.dart';
 import 'package:caferesto/features/personalization/controllers/address_controller.dart';
-import 'package:caferesto/features/personalization/screens/address/widgets/single_address.dart';
+import 'package:caferesto/features/personalization/screens/addresses/widgets/single_address.dart';
 import 'package:caferesto/utils/constants/colors.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';

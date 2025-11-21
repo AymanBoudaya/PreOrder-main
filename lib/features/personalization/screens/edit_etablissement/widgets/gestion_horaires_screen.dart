@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../data/repositories/horaire/horaire_repository.dart';
-import '../../../../utils/popups/loaders.dart';
-import '../../../shop/controllers/product/horaire_controller.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../data/repositories/horaire/horaire_repository.dart';
+import '../../../../../utils/popups/loaders.dart';
+import '../../../../shop/controllers/product/horaire_controller.dart';
 import 'horaire_tile.dart';
 
 class GestionHorairesEtablissement extends StatefulWidget {

@@ -8,10 +8,10 @@ import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/produit_helper.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../../../personalization/controllers/user_controller.dart';
-import '../../controllers/product/produit_controller.dart';
-import '../../controllers/category_controller.dart';
-import '../../models/produit_model.dart';
+import '../../controllers/user_controller.dart';
+import '../../../shop/controllers/product/produit_controller.dart';
+import '../../../shop/controllers/category_controller.dart';
+import '../../../shop/models/produit_model.dart';
 import 'add_produit_screen.dart';
 
 class ListProduitScreen extends StatefulWidget {

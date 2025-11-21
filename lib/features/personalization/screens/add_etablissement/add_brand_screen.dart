@@ -17,7 +17,7 @@ import '../../../shop/models/etablissement_model.dart';
 import '../../controllers/liste_etablissement_controller.dart';
 import '../../controllers/user_controller.dart';
 import '../categories/widgets/category_form_widgets.dart';
-import 'map_picker_screen.dart';
+import 'widgets/map_picker_screen.dart';
 
 class AddEtablissementScreen extends StatefulWidget {
   const AddEtablissementScreen({super.key});

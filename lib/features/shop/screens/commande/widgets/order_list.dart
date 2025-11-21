@@ -12,7 +12,7 @@ import '../../../../../utils/constants/enums.dart';
 import '../../../../../utils/loaders/animation_loader.dart';
 import '../../../controllers/commandes/order_list_controller.dart';
 import '../../../models/order_model.dart';
-import '../order_tracking_screen.dart';
+import 'order_tracking_screen.dart';
 
 class TOrderListItems extends StatelessWidget {
   const TOrderListItems({super.key});

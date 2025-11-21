@@ -11,12 +11,12 @@ import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../../../personalization/controllers/user_controller.dart';
-import '../../controllers/category_controller.dart';
-import '../../controllers/commandes/order_controller.dart';
-import '../../controllers/product/panier_controller.dart';
-import '../../controllers/product/produit_controller.dart';
-import '../../models/order_model.dart';
+import '../../controllers/user_controller.dart';
+import '../../../shop/controllers/category_controller.dart';
+import '../../../shop/controllers/commandes/order_controller.dart';
+import '../../../shop/controllers/product/panier_controller.dart';
+import '../../../shop/controllers/product/produit_controller.dart';
+import '../../../shop/models/order_model.dart';
 
 class GerantOrderManagementScreen extends StatefulWidget {
   const GerantOrderManagementScreen({super.key});
