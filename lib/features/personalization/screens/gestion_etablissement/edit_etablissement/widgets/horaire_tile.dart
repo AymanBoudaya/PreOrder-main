@@ -4,21 +4,21 @@ import '../../../../../../utils/helpers/helper_functions.dart';
 import '../../../../../shop/models/horaire_model.dart';
 import 'heure_button.dart';
 
-class HoraireTileAmeliore extends StatefulWidget {
+class HoraireTile extends StatefulWidget {
   final Horaire horaire;
   final Function(Horaire) onChanged;
 
-  const HoraireTileAmeliore({
+  const HoraireTile({
     super.key,
     required this.horaire,
     required this.onChanged,
   });
 
   @override
-  State<HoraireTileAmeliore> createState() => _HoraireTileAmelioreState();
+  State<HoraireTile> createState() => _HoraireTileState();
 }
 
-class _HoraireTileAmelioreState extends State<HoraireTileAmeliore> {
+class _HoraireTileState extends State<HoraireTile> {
   late Horaire _currentHoraire;
 
   @override

@@ -44,7 +44,7 @@ class _GestionHorairesEtablissementState
         await _horaireController.fetchHoraires(widget.etablissementId);
       }
     } catch (e) {
-        TLoaders.errorSnackBar(message: 'Impossible de charger les horaires');
+      TLoaders.errorSnackBar(message: 'Impossible de charger les horaires');
     } finally {
       setState(() => _loading = false);
     }
@@ -197,7 +197,7 @@ class _GestionHorairesEtablissementState
 
       return ListView.builder(
         itemCount: horairesTries.length,
-        itemBuilder: (context, index) => HoraireTileAmeliore(
+        itemBuilder: (context, index) => HoraireTile(
           horaire: horairesTries[index],
           onChanged: _horaireController.updateHoraire,
         ),

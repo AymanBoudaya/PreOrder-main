@@ -6,6 +6,7 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../controllers/dashboard_controller.dart';
+import '../../models/dashboard_stats_model.dart';
 import 'dashboard_side_menu.dart';
 
 class GerantDashboardScreen extends StatelessWidget {
