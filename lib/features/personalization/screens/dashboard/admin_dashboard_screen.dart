@@ -5,7 +5,7 @@ import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
-import '../../../shop/controllers/dashboard_controller.dart';
+import '../../controllers/dashboard_controller.dart';
 import 'dashboard_side_menu.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
