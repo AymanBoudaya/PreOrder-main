@@ -2,10 +2,10 @@ import 'package:caferesto/common/widgets/appbar/appbar.dart';
 import 'package:caferesto/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
 import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
-import 'package:caferesto/features/personalization/screens/profile/profile.dart';
+import 'package:caferesto/features/personalization/screens/profil/profile.dart';
 import 'package:caferesto/features/shop/screens/cart/cart.dart';
 import 'package:caferesto/features/personalization/screens/gestion_commandes/gerant_order_management_screen.dart';
-import 'package:caferesto/features/shop/screens/commande/order.dart';
+import 'package:caferesto/features/personalization/screens/commande/order.dart';
 import 'package:caferesto/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,11 +19,11 @@ import '../../../notification/screens/notifications_screen.dart';
 import '../gestion_produits/list_produit_screen.dart';
 import '../../controllers/user_controller.dart';
 import '../addresses/address.dart';
-import '../mon_etablissement/mon_etablissement_screen.dart';
-import '../categories/category_manager_screen.dart';
+import '../gestion_etablissement/liste_etablissement/mon_etablissement_screen.dart';
+import '../gestion_categories/category_manager_screen.dart';
 import '../dashboard/admin_dashboard_screen.dart';
 import '../dashboard/gerant_dashboard_screen.dart';
-import '../bannieres/banner_management_screen.dart';
+import '../gestion_bannieres/banner_management_screen.dart';
 import '../../../../utils/popups/loaders.dart';
 
 class SettingsScreen extends StatelessWidget {

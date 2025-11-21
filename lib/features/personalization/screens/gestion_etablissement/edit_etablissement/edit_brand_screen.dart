@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../utils/constants/enums.dart';
-import '../../../shop/models/etablissement_model.dart';
-import '../../../shop/models/horaire_model.dart';
-import '../../controllers/edit_etablissement_controller.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../utils/constants/enums.dart';
+import '../../../../shop/models/etablissement_model.dart';
+import '../../../../shop/models/horaire_model.dart';
+import '../../../controllers/edit_etablissement_controller.dart';
 
-import '../categories/widgets/category_form_widgets.dart';
+import '../../gestion_categories/widgets/category_form_widgets.dart';
 
 // Widget Stateless
 class EditEtablissementScreen extends StatelessWidget {

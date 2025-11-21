@@ -3,7 +3,7 @@ import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/commandes/order_controller.dart';
+import '../../../shop/controllers/commandes/order_controller.dart';
 import 'widgets/order_list.dart';
 
 class OrderScreen extends StatelessWidget {
@@ -18,7 +18,7 @@ class OrderScreen extends StatelessWidget {
         title: Row(
           children: [
             Text(
-              ' Mes commandes',
+              'Mes commandes',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],

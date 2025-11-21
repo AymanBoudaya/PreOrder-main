@@ -16,7 +16,7 @@ import '../../../../utils/popups/loaders.dart';
 import '../../../shop/controllers/product/produit_controller.dart';
 import '../../../shop/models/produit_model.dart';
 import '../../../../data/repositories/categories/category_repository.dart';
-import '../categories/widgets/category_form_widgets.dart';
+import '../gestion_categories/widgets/category_form_widgets.dart';
 import '../../controllers/user_controller.dart';
 
 class AddProduitScreen extends StatefulWidget {

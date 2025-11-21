@@ -11,12 +11,12 @@ import 'package:http/http.dart' as http;
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../utils/popups/loaders.dart';
-import '../../../shop/models/etablissement_model.dart';
-import '../../controllers/liste_etablissement_controller.dart';
-import '../../controllers/user_controller.dart';
-import '../categories/widgets/category_form_widgets.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../utils/popups/loaders.dart';
+import '../../../../shop/models/etablissement_model.dart';
+import '../../../controllers/liste_etablissement_controller.dart';
+import '../../../controllers/user_controller.dart';
+import '../../gestion_categories/widgets/category_form_widgets.dart';
 import 'widgets/map_picker_screen.dart';
 
 class AddEtablissementScreen extends StatefulWidget {

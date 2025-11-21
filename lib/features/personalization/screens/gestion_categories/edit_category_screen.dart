@@ -1,4 +1,4 @@
-import 'package:caferesto/features/personalization/screens/categories/widgets/category_form_widgets.dart';
+import 'package:caferesto/features/personalization/screens/gestion_categories/widgets/category_form_widgets.dart';
 import 'package:caferesto/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

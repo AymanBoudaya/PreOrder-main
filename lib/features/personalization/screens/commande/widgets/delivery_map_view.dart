@@ -10,8 +10,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/device/device_utility.dart';
-import '../../../models/order_model.dart';
-import '../../../models/etablissement_model.dart';
+import '../../../../shop/models/order_model.dart';
+import '../../../../shop/models/etablissement_model.dart';
 import 'dart:async';
 import 'package:async/async.dart';
 

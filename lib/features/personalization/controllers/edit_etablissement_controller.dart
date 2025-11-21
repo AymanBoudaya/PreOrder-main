@@ -7,7 +7,7 @@ import '../../../utils/constants/enums.dart';
 import '../../../utils/popups/loaders.dart';
 import '../../shop/controllers/product/horaire_controller.dart';
 import '../../shop/models/etablissement_model.dart';
-import '../screens/edit_etablissement/widgets/gestion_horaires_screen.dart';
+import '../screens/gestion_etablissement/edit_etablissement/widgets/gestion_horaires_screen.dart';
 import 'liste_etablissement_controller.dart';
 import 'user_controller.dart';
 class EditEtablissementController extends GetxController with GetSingleTickerProviderStateMixin {

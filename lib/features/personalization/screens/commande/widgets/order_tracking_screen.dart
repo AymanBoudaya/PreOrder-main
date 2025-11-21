@@ -1,4 +1,4 @@
-import 'package:caferesto/features/shop/screens/commande/widgets/delivery_map_view.dart';
+import 'package:caferesto/features/personalization/screens/commande/widgets/delivery_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
@@ -7,7 +7,7 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 
 import '../../../../../utils/helpers/helper_functions.dart';
-import '../../../models/order_model.dart';
+import '../../../../shop/models/order_model.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
   final OrderModel order;

@@ -12,7 +12,7 @@ import '../../../../common/widgets/custom_shapes/containers/primary_header_conta
 import 'widgets/home_categories.dart';
 import '../../controllers/product/produit_controller.dart';
 import '../../controllers/banner_controller.dart';
-import '../all_products/all_products.dart';
+import '../voir_tout_produits/all_products.dart';
 import '../categories/all_categories.dart';
 import 'widgets/home_appbar.dart';
 import 'widgets/promo_slider.dart';
