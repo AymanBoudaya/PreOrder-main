@@ -4,7 +4,7 @@ import '../../../../utils/popups/loaders.dart';
 import '../../models/order_model.dart';
 import 'order_controller.dart';
 import '../product/panier_controller.dart';
-import '../../screens/cart/cart.dart';
+import '../../screens/panier/cart.dart';
 
 class OrderListController extends GetxController
     with GetTickerProviderStateMixin {

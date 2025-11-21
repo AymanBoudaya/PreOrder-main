@@ -197,7 +197,7 @@ class AdminDashboardScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.md),
           // Options de période rapide
-          Row(
+          Wrap(
             children: [
               const Text('Période rapide: '),
               const SizedBox(width: AppSizes.sm),
@@ -896,9 +896,12 @@ class AdminDashboardScreen extends StatelessWidget {
             children: [
               Icon(Iconsax.profile_2user, color: TColors.primary),
               const SizedBox(width: AppSizes.sm),
-              Text(
-                'Utilisateurs les Plus Fidèles',
-                style: Theme.of(Get.context!).textTheme.titleLarge,
+              Expanded(
+                child: Text(
+                  'Clients les Plus Fidèles',
+                  style: Theme.of(Get.context!).textTheme.titleLarge,
+                  softWrap: true,
+                ),
               ),
             ],
           ),
@@ -958,7 +961,7 @@ class AdminDashboardScreen extends StatelessWidget {
                       Text(email,
                           style: TextStyle(fontSize: 12, color: Colors.grey)),
                       const SizedBox(height: 4),
-                      Row(
+                      Wrap(
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -1079,9 +1082,12 @@ class AdminDashboardScreen extends StatelessWidget {
             children: [
               Icon(Iconsax.calendar, color: TColors.primary, size: 24),
               const SizedBox(width: 8),
-              Text(
-                'Jours avec le Plus de Commandes',
-                style: Theme.of(Get.context!).textTheme.titleLarge,
+              Expanded(
+                child: Text(
+                  'Jours avec le Plus de Commandes',
+                  style: Theme.of(Get.context!).textTheme.titleLarge,
+                  softWrap: true,
+                ),
               ),
             ],
           ),
@@ -1185,9 +1191,12 @@ class AdminDashboardScreen extends StatelessWidget {
             children: [
               Icon(Iconsax.clock, color: TColors.primary, size: 24),
               const SizedBox(width: 8),
-              Text(
-                'Heures de Pickup les Plus Fréquentes',
-                style: Theme.of(Get.context!).textTheme.titleLarge,
+              Expanded(
+                child: Text(
+                  'Heures de Pickup les Plus Fréquentes',
+                  style: Theme.of(Get.context!).textTheme.titleLarge,
+                  softWrap: true,
+                ),
               ),
             ],
           ),

@@ -3,7 +3,7 @@ import 'package:caferesto/common/widgets/custom_shapes/containers/primary_header
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
 import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/features/personalization/screens/profil/profile.dart';
-import 'package:caferesto/features/shop/screens/cart/cart.dart';
+import 'package:caferesto/features/shop/screens/panier/cart.dart';
 import 'package:caferesto/features/personalization/screens/gestion_commandes/gerant_order_management_screen.dart';
 import 'package:caferesto/features/personalization/screens/commande/order.dart';
 import 'package:caferesto/utils/constants/colors.dart';

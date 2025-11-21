@@ -897,7 +897,7 @@ class GerantDashboardScreen extends StatelessWidget {
               Icon(Iconsax.profile_2user, color: TColors.primary),
               const SizedBox(width: AppSizes.sm),
               Text(
-                'Utilisateurs les Plus Fidèles',
+                'Clients les Plus Fidèles',
                 style: Theme.of(Get.context!).textTheme.titleLarge,
               ),
             ],

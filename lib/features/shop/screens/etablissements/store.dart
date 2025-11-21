@@ -4,7 +4,7 @@ import 'package:caferesto/common/widgets/brands/etablissement_card.dart';
 import 'package:caferesto/common/widgets/shimmer/store_shimmer.dart';
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
 import 'package:caferesto/features/shop/controllers/etablissement_controller.dart';
-import 'package:caferesto/features/shop/screens/etablissement/brand_products.dart';
+import 'package:caferesto/features/shop/screens/etablissements/brand_products.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +23,7 @@ class StoreScreen extends StatelessWidget {
       appBar: TAppBar(
         showBackArrow: false,
         title: Text(
-          'Store',
+          'Établissements',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         actions: const [
@@ -40,7 +40,6 @@ class StoreScreen extends StatelessWidget {
         }
 
         final approved = etablissementController.etablissements;
-        
 
         if (approved.isEmpty) {
           return Center(

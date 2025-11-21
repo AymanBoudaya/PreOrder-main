@@ -47,7 +47,6 @@ class _AddProduitScreenState extends State<AddProduitScreen>
 
   String? _selectedCategorieId;
   final List<ProductSizePrice> _taillesPrix = [];
-  final List<String> _supplements = [];
   final List<String> _images = [];
   bool _estStockable = false;
   bool _isFeatured = false;
@@ -103,7 +102,6 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     _tempsPreparationController.text = produit.preparationTime.toString();
     _selectedCategorieId = produit.categoryId;
     _taillesPrix.addAll(produit.sizesPrices);
-    _supplements.addAll(produit.supplements ?? []);
     _estStockable = produit.isStockable;
     _quantiteStockController.text = produit.stockQuantity.toString();
     _isFeatured = produit.isFeatured ?? false;
@@ -580,7 +578,6 @@ class _AddProduitScreenState extends State<AddProduitScreen>
       images: _images,
       categoryId: _selectedCategorieId!,
       sizesPrices: _productType == ProductType.variable ? _taillesPrix : [],
-      supplements: _supplements,
       description: _descriptionController.text.trim(),
       preparationTime: int.tryParse(_tempsPreparationController.text) ?? 0,
       etablissementId: etabId ?? '',

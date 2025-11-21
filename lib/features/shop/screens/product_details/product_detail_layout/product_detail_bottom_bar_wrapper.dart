@@ -1,6 +1,6 @@
 import 'package:caferesto/features/shop/controllers/product/panier_controller.dart';
 import 'package:caferesto/features/shop/models/produit_model.dart';
-import 'package:caferesto/features/shop/screens/cart/cart.dart';
+import 'package:caferesto/features/shop/screens/panier/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/product_bottom_bar.dart';

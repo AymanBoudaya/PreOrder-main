@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../personalization/screens/settings/settings.dart';
 import '../screens/accueil/home.dart';
-import '../screens/store/store.dart';
+import '../screens/etablissements/store.dart';
 import '../screens/favorite/favorite_screen.dart';
 
 class NavigationController extends GetxController {

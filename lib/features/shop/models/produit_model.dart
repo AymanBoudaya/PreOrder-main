@@ -11,7 +11,6 @@ class ProduitModel {
   final List<String>? images;
   final String categoryId;
   final List<ProductSizePrice> sizesPrices;
-  final List<String> supplements;
   final String? description;
   final int preparationTime;
   final String etablissementId;
@@ -31,7 +30,6 @@ class ProduitModel {
       this.images,
       required this.categoryId,
       required this.sizesPrices,
-      required this.supplements,
       this.description,
       required this.preparationTime,
       required this.etablissementId,
@@ -52,7 +50,6 @@ class ProduitModel {
       name: '',
       categoryId: '',
       sizesPrices: [],
-      supplements: [],
       preparationTime: 0,
       etablissementId: '',
       isStockable: false,
@@ -127,21 +124,6 @@ class ProduitModel {
       }
     }
 
-    // --- Gestion des supplements (text[] ou string JSON) ---
-    List<String> supplements = [];
-    if (map['supplements'] != null) {
-      final supp = map['supplements'];
-      if (supp is List) {
-        supplements = List<String>.from(supp);
-      } else if (supp is String) {
-        try {
-          supplements = List<String>.from(json.decode(supp));
-        } catch (_) {
-          supplements = supp.split(',');
-        }
-      }
-    }
-
     // --- Gestion des images (text[] ou jsonb ou string) ---
     List<String>? images;
     if (map['images'] != null) {
@@ -179,7 +161,6 @@ class ProduitModel {
         images: images,
         categoryId: map['categorie_id']?.toString() ?? '',
         sizesPrices: sizesPrices,
-        supplements: supplements,
         description: map['description']?.toString(),
         preparationTime: (map['temps_preparation'] ?? 0) is int
             ? map['temps_preparation']
@@ -224,7 +205,6 @@ class ProduitModel {
       'images': images,
       'categorie_id': categoryId,
       'tailles_prix': json.encode(sizesPrices.map((e) => e.toMap()).toList()),
-      'supplements': supplements,
       'description': description,
       'temps_preparation': preparationTime,
       'etablissement_id': etablissementId,
@@ -255,7 +235,6 @@ class ProduitModel {
     List<String>? images,
     String? categoryId,
     List<ProductSizePrice>? sizesPrices,
-    List<String>? supplements,
     String? description,
     int? preparationTime,
     String? etablissementId,
@@ -276,7 +255,6 @@ class ProduitModel {
       images: images ?? this.images,
       categoryId: categoryId ?? this.categoryId,
       sizesPrices: sizesPrices ?? this.sizesPrices,
-      supplements: supplements ?? this.supplements,
       description: description ?? this.description,
       preparationTime: preparationTime ?? this.preparationTime,
       etablissementId: etablissementId ?? this.etablissementId,
@@ -319,7 +297,6 @@ class ProduitModel {
         listEquals(other.images, images) &&
         other.categoryId == categoryId &&
         listEquals(other.sizesPrices, sizesPrices) &&
-        listEquals(other.supplements, supplements) &&
         other.description == description &&
         other.preparationTime == preparationTime &&
         other.etablissementId == etablissementId &&
@@ -340,7 +317,6 @@ class ProduitModel {
         Object.hashAll(images ?? []),
         categoryId,
         Object.hashAll(sizesPrices),
-        Object.hashAll(supplements),
         description,
         preparationTime,
         etablissementId,

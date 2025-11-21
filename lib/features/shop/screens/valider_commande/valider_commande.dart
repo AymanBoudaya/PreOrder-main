@@ -1,4 +1,4 @@
-import 'package:caferesto/features/shop/screens/cart/widgets/cart_items.dart';
+import 'package:caferesto/features/shop/screens/panier/widgets/cart_items.dart';
 import 'package:caferesto/utils/constants/colors.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:caferesto/utils/helpers/helper_functions.dart';
