@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
+import 'package:caferesto/features/profil/controllers/liste_etablissement_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

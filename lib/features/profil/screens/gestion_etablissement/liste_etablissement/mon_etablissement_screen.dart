@@ -1,6 +1,6 @@
-import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
-import 'package:caferesto/features/personalization/screens/gestion_etablissement/liste_etablissement/widgets/etablissement_subtitle.dart';
-import 'package:caferesto/features/personalization/screens/gestion_etablissement/liste_etablissement/widgets/no_results_state.dart';
+import 'package:caferesto/features/profil/controllers/liste_etablissement_controller.dart';
+import 'package:caferesto/features/profil/screens/gestion_etablissement/liste_etablissement/widgets/etablissement_subtitle.dart';
+import 'package:caferesto/features/profil/screens/gestion_etablissement/liste_etablissement/widgets/no_results_state.dart';
 import 'package:caferesto/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

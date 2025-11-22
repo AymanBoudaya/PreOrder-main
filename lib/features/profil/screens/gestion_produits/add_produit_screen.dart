@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
+import 'package:caferesto/features/profil/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/utils/constants/colors.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:caferesto/utils/helpers/helper_functions.dart';

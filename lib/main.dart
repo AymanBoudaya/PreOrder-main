@@ -9,7 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app.dart';
 import 'data/repositories/authentication/authentication_repository.dart';
 import 'data/repositories/user/user_repository.dart';
-import 'features/personalization/controllers/user_controller.dart';
+import 'features/profil/controllers/user_controller.dart';
 
 Future<void> main() async {
   // Assurer l'initialisation du binding des widgets Flutter

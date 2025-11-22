@@ -1,4 +1,4 @@
-import 'package:caferesto/features/personalization/screens/commande/widgets/delivery_map_view.dart';
+import 'package:caferesto/features/profil/screens/mes_commandes/widgets/delivery_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';

@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../data/repositories/authentication/authentication_repository.dart';
 import '../../../data/repositories/user/user_repository.dart';
-import '../../../features/authentication/screens/login/login.dart';
+import '../../authentication/screens/login/login.dart';
 import '../../../utils/popups/loaders.dart';
 import '../models/user_model.dart';
 import 'package:image_picker/image_picker.dart';

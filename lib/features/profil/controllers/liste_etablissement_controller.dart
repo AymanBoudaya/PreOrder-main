@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/repositories/etablissement/etablissement_repository.dart';
 import '../../../utils/constants/enums.dart';
 import '../../../utils/popups/loaders.dart';
-import '../../personalization/controllers/user_controller.dart';
+import 'user_controller.dart';
 import '../../shop/models/etablissement_model.dart';
 import '../../shop/models/produit_model.dart';
 import '../../shop/models/statut_etablissement_model.dart';

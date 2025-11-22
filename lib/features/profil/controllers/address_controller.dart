@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
-import 'package:caferesto/features/personalization/screens/addresses/widgets/single_address.dart';
+import 'package:caferesto/features/profil/screens/mes_addresses/widgets/single_address.dart';
 import 'package:caferesto/utils/helpers/cloud_helper_functions.dart';
 import 'package:caferesto/utils/loaders/circular_loader.dart';
 import 'package:caferesto/utils/popups/loaders.dart';
@@ -17,7 +17,7 @@ import '../../../utils/constants/sizes.dart';
 import '../../../utils/helpers/network_manager.dart';
 import '../../../utils/popups/full_screen_loader.dart';
 import '../models/address_model.dart';
-import '../screens/addresses/add_new_address.dart';
+import '../screens/mes_addresses/add_new_address.dart';
 
 import 'user_controller.dart';
 

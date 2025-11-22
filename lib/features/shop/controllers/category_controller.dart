@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart'; // pour kIsWeb et debugPrint
 
-import 'package:caferesto/features/personalization/controllers/user_controller.dart';
+import 'package:caferesto/features/profil/controllers/user_controller.dart';
 import 'package:caferesto/data/repositories/categories/category_repository.dart';
 import 'package:caferesto/features/shop/models/category_model.dart';
 import 'package:caferesto/utils/constants/image_strings.dart';

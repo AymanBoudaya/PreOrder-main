@@ -8,7 +8,7 @@ import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/helpers/network_manager.dart';
 import '../../../../utils/popups/full_screen_loader.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../../../personalization/controllers/user_controller.dart';
+import '../../../profil/controllers/user_controller.dart';
 
 class LoginController extends GetxController {
 

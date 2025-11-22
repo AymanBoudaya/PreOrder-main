@@ -1,4 +1,4 @@
-import 'package:caferesto/features/personalization/controllers/user_controller.dart';
+import 'package:caferesto/features/profil/controllers/user_controller.dart';
 import 'package:caferesto/features/shop/models/etablissement_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

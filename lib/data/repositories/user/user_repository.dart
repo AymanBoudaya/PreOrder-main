@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../features/personalization/models/user_model.dart';
+import '../../../features/profil/models/user_model.dart';
 import '../../../utils/exceptions/supabase_auth_exceptions.dart';
 import '../../../utils/exceptions/format_exceptions.dart';
 import '../../../utils/exceptions/platform_exceptions.dart';

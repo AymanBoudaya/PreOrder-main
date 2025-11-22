@@ -1,5 +1,5 @@
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
-import 'package:caferesto/features/personalization/controllers/address_controller.dart';
+import 'package:caferesto/features/profil/controllers/address_controller.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

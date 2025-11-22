@@ -7,8 +7,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../features/authentication/screens/login/login.dart';
-import '../../../features/personalization/controllers/user_controller.dart';
-import '../../../features/personalization/models/user_model.dart';
+import '../../../features/profil/controllers/user_controller.dart';
+import '../../../features/profil/models/user_model.dart';
 import '../../../navigation_menu.dart';
 import '../../../utils/popups/loaders.dart';
 import '../user/user_repository.dart';

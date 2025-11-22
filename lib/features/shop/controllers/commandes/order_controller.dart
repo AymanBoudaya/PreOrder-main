@@ -1,4 +1,4 @@
-import 'package:caferesto/features/personalization/controllers/user_controller.dart';
+import 'package:caferesto/features/profil/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,7 +12,7 @@ import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/popups/full_screen_loader.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../../../personalization/controllers/address_controller.dart';
+import '../../../profil/controllers/address_controller.dart';
 import '../../models/cart_item_model.dart';
 import '../../models/order_model.dart';
 import '../../../../data/repositories/horaire/horaire_repository.dart';

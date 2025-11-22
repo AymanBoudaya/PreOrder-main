@@ -2,10 +2,10 @@ import 'package:caferesto/data/repositories/notifications/notifications_reposito
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
-import '../../personalization/screens/gestion_etablissement/liste_etablissement/mon_etablissement_screen.dart';
-import '../../personalization/controllers/user_controller.dart';
-import '../../personalization/screens/gestion_commandes/gerant_order_management_screen.dart';
-import '../../personalization/screens/commande/order.dart';
+import '../../profil/screens/gestion_etablissement/liste_etablissement/mon_etablissement_screen.dart';
+import '../../profil/controllers/user_controller.dart';
+import '../../profil/screens/gestion_commandes/gerant_order_management_screen.dart';
+import '../../profil/screens/mes_commandes/order.dart';
 import '../models/notification_model.dart';
 
 class NotificationController extends GetxController {

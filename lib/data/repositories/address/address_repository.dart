@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../features/personalization/models/address_model.dart';
+import '../../../features/profil/models/address_model.dart';
 import '../authentication/authentication_repository.dart';
 
 class AddressRepository extends GetxController {

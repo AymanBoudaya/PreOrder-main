@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/repositories/etablissement/etablissement_repository.dart';
 import '../../../utils/constants/enums.dart';
-import '../../personalization/controllers/user_controller.dart';
+import '../../profil/controllers/user_controller.dart';
 import '../models/etablissement_model.dart';
 
 class EtablissementController extends GetxController {

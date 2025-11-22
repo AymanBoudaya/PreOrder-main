@@ -1,6 +1,6 @@
 import 'package:caferesto/data/repositories/product/produit_repository.dart';
-import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
-import 'package:caferesto/features/personalization/controllers/user_controller.dart';
+import 'package:caferesto/features/profil/controllers/liste_etablissement_controller.dart';
+import 'package:caferesto/features/profil/controllers/user_controller.dart';
 import 'package:caferesto/features/shop/models/produit_model.dart';
 import 'package:caferesto/features/shop/models/etablissement_model.dart';
 import 'package:flutter/material.dart';
