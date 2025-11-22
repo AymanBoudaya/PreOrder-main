@@ -46,39 +46,38 @@ class TOrderListItems extends StatelessWidget {
 
         // Liste des commandes
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: listController.loadOrders,
-            child: Obx(() {
-              if (orderController.isLoading.value) {
-                return _buildShimmer();
-              }
+          child: Obx(() {
+            if (orderController.isLoading.value) {
+              return _buildShimmer();
+            }
 
-              if (orderController.orders.isEmpty) {
-                return _buildEmpty(context);
-              }
+            if (orderController.orders.isEmpty) {
+              return _buildEmpty(context);
+            }
 
-              return TabBarView(
-                controller: listController.tabController,
-                children:
-                    List.generate(listController.tabLabels.length, (index) {
-                  final orders = listController.getFilteredOrders(index);
-                  if (orders.isEmpty) {
-                    return _buildEmptyTab(
-                        context, listController.tabLabels[index]);
-                  }
+            return TabBarView(
+              controller: listController.tabController,
+              children: List.generate(listController.tabLabels.length, (index) {
+                final orders = listController.getFilteredOrders(index);
+                if (orders.isEmpty) {
+                  return _buildEmptyTab(
+                      context, listController.tabLabels[index]);
+                }
 
-                  return ListView.separated(
+                return RefreshIndicator(
+                  onRefresh: listController.loadOrders,
+                  child: ListView.separated(
                     padding: const EdgeInsets.all(AppSizes.sm),
                     itemCount: orders.length,
                     separatorBuilder: (_, __) =>
                         const SizedBox(height: AppSizes.spaceBtwItems),
                     itemBuilder: (_, i) => _buildOrderCard(
                         context, orders[i], dark, listController),
-                  );
-                }),
-              );
-            }),
-          ),
+                  ),
+                );
+              }),
+            );
+          }),
         ),
       ],
     );

@@ -121,7 +121,7 @@ class SettingsScreen extends StatelessWidget {
                       onTap: () => Get.to(() => const UserAddressScreen())),
                   TSettingsMenuTile(
                       title: "Mon Panier",
-                      subTitle: "Ajouter, modifier ou supprimer des articles",
+                      subTitle: "Consulter les articles dans votre panier",
                       icon: Iconsax.shopping_cart,
                       onTap: () => Get.to(() => const CartScreen())),
                   TSettingsMenuTile(
