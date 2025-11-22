@@ -8,6 +8,7 @@ import '../../../../utils/helpers/helper_functions.dart';
 import '../../controllers/dashboard_controller.dart';
 import '../../models/dashboard_stats_model.dart';
 import 'dashboard_side_menu.dart';
+import 'widgets/top_product_widget.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
@@ -119,7 +120,10 @@ class AdminDashboardScreen extends StatelessWidget {
                         const SizedBox(height: AppSizes.spaceBtwSections),
                         _buildOrdersByStatusChart(stats, dark),
                         const SizedBox(height: AppSizes.spaceBtwSections),
-                        _buildTopProducts(stats, dark),
+                        TopProductsWidget(
+                          stats: stats,
+                          dark: dark,
+                        ),
                         const SizedBox(height: AppSizes.spaceBtwSections),
                         _buildSystemStats(stats, dark),
                       ],
@@ -728,7 +732,7 @@ class AdminDashboardScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(_getStatusLabel(status)),
+                      Text(THelperFunctions.getStatusLabel(status)),
                       Text('$count (${percentage.toStringAsFixed(1)}%)'),
                     ],
                   ),
@@ -742,70 +746,6 @@ class AdminDashboardScreen extends StatelessWidget {
               ),
             );
           }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTopProducts(DashboardStats stats, bool dark) {
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        color: dark ? TColors.darkContainer : Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Produits les Plus Vendus',
-            style: Theme.of(Get.context!).textTheme.titleLarge,
-          ),
-          const SizedBox(height: AppSizes.spaceBtwItems),
-          if (stats.topProducts.isEmpty)
-            const Text('Aucun produit pour le moment')
-          else
-            ...stats.topProducts.asMap().entries.map((entry) {
-              final index = entry.key;
-              final product = entry.value;
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: TColors.primary.withValues(alpha: 0.1),
-                  child: Text(
-                    '${index + 1}',
-                    style: const TextStyle(
-                      color: TColors.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                title: Text(
-                  product['productName'] as String? ?? 'Produit inconnu',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                subtitle: Text(
-                  product['categoryName'] as String? ?? 'Sans catégorie',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                trailing: Text(
-                  '${product['totalQuantity']}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: TColors.primary,
-                  ),
-                ),
-              );
-            }),
         ],
       ),
     );
@@ -1040,25 +980,6 @@ class AdminDashboardScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _getStatusLabel(String status) {
-    switch (status) {
-      case 'pending':
-        return 'En attente';
-      case 'preparing':
-        return 'En préparation';
-      case 'ready':
-        return 'Prête';
-      case 'delivered':
-        return 'Livrée';
-      case 'cancelled':
-        return 'Annulée';
-      case 'refused':
-        return 'Refusée';
-      default:
-        return status;
-    }
   }
 
   Widget _buildOrdersByDay(DashboardStats stats, bool dark) {

@@ -171,12 +171,9 @@ class OrderController extends GetxController {
           oldStatus == OrderStatus.pending) {
         try {
           debugPrint(
-              '🔄 Début de la restauration du stock pour le changement de statut (${oldStatus.name} -> ${newStatus.name})');
+              ' Début de la restauration du stock pour le changement de statut (${oldStatus.name} -> ${newStatus.name})');
           await _augmenterStockCommande(order.items);
-          debugPrint('✅ Stock restauré avec succès');
-        } catch (e, stackTrace) {
-          debugPrint('❌ Erreur lors de la restauration du stock: $e');
-          debugPrint('Stack trace: $stackTrace');
+        } catch (e) {
           // Continuer même si la restauration du stock échoue
         }
       }
@@ -185,15 +182,16 @@ class OrderController extends GetxController {
       final updates = {
         'status': newStatus.name,
         'updated_at': DateTime.now().toIso8601String(),
+        'delivery_date': DateTime.now().toIso8601String(),
       };
       if (refusalReason != null) {
         updates['refusal_reason'] = refusalReason;
       }
-
       await orderRepository.updateOrder(orderId, updates);
 
       // Envoyer une notification au client
       await _envoyerNotificationStatut(order, newStatus, refusalReason);
+print(updates);
 
       TLoaders.successSnackBar(
         title: "Succès",

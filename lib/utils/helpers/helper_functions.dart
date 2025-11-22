@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import '../constants/enums.dart';
 
 class THelperFunctions {
-
   static bool isDarkMode(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
   }
@@ -89,7 +88,7 @@ class THelperFunctions {
     }
   }
 
-    static String getJourAbrege(JourSemaine jour) {
+  static String getJourAbrege(JourSemaine jour) {
     switch (jour) {
       case JourSemaine.lundi:
         return 'LUN';
@@ -107,7 +106,6 @@ class THelperFunctions {
         return 'DIM';
     }
   }
-
 
   // Fonctions utilitaires privées
   static JourSemaine getJourSemaineFromDateTime(DateTime date) {
@@ -130,6 +128,7 @@ class THelperFunctions {
         return JourSemaine.lundi;
     }
   }
+
   // Méthode pour le statut
   static String getStatutText(StatutEtablissement statut) {
     switch (statut) {
@@ -142,9 +141,7 @@ class THelperFunctions {
     }
   }
 
-
-
-    static Color getStatutColor(StatutEtablissement statut) {
+  static Color getStatutColor(StatutEtablissement statut) {
     switch (statut) {
       case StatutEtablissement.approuve:
         return Colors.green;
@@ -155,7 +152,7 @@ class THelperFunctions {
     }
   }
 
-    static (Color, String) getStatutInfo(StatutEtablissement statut) {
+  static (Color, String) getStatutInfo(StatutEtablissement statut) {
     switch (statut) {
       case StatutEtablissement.en_attente:
         return (Colors.orange, "En attente");
@@ -163,6 +160,25 @@ class THelperFunctions {
         return (Colors.green, "Approuvé");
       case StatutEtablissement.rejete:
         return (Colors.red, "Rejeté");
+    }
+  }
+
+  static String getStatusLabel(String status) {
+    switch (status) {
+      case 'pending':
+        return 'En attente';
+      case 'preparing':
+        return 'En préparation';
+      case 'ready':
+        return 'Prête';
+      case 'delivered':
+        return 'Livrée';
+      case 'cancelled':
+        return 'Annulée';
+      case 'refused':
+        return 'Refusée';
+      default:
+        return status;
     }
   }
 }

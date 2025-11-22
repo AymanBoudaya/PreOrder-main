@@ -11,7 +11,7 @@ class DashboardController extends GetxController {
   final _db = Supabase.instance.client;
   final userController = Get.find<UserController>();
   final etablissementController = Get.find<ListeEtablissementController>();
-  
+
   // Getter pour OrderRepository pour éviter l'erreur de lazyPut
   OrderRepository get orderRepository {
     try {
@@ -25,7 +25,8 @@ class DashboardController extends GetxController {
   final isLoading = false.obs;
   final stats = Rxn<DashboardStats>();
   final selectedPeriod = '30'.obs; // 7, 30, 90 jours
-  final useCustomDateRange = false.obs; // Utiliser une plage de dates personnalisée
+  final useCustomDateRange =
+      false.obs; // Utiliser une plage de dates personnalisée
   final startDate = Rxn<DateTime>();
   final endDate = Rxn<DateTime>();
 
@@ -40,14 +41,15 @@ class DashboardController extends GetxController {
       isLoading.value = true;
       final userRole = userController.userRole;
       final userId = userController.user.value.id;
-      
+
       if (userRole == 'Admin') {
         await _loadAdminStats();
       } else if (userRole == 'Gérant') {
         await _loadGerantStats(userId);
       }
     } catch (e) {
-      TLoaders.errorSnackBar(message: 'Erreur lors du chargement des statistiques: $e');
+      TLoaders.errorSnackBar(
+          message: 'Erreur lors du chargement des statistiques: $e');
     } finally {
       isLoading.value = false;
     }
@@ -62,7 +64,9 @@ class DashboardController extends GetxController {
 
       // Déterminer la plage de dates pour le filtre
       List allOrders;
-      if (useCustomDateRange.value && startDate.value != null && endDate.value != null) {
+      if (useCustomDateRange.value &&
+          startDate.value != null &&
+          endDate.value != null) {
         final filterStartDate = DateTime(
           startDate.value!.year,
           startDate.value!.month,
@@ -76,7 +80,7 @@ class DashboardController extends GetxController {
           59,
           59,
         );
-        
+
         // Toutes les commandes avec filtre de dates
         final allOrdersResponse = await _db
             .from('orders')
@@ -84,7 +88,7 @@ class DashboardController extends GetxController {
             .gte('created_at', filterStartDate.toIso8601String())
             .lte('created_at', filterEndDate.toIso8601String())
             .order('created_at', ascending: false);
-        
+
         allOrders = allOrdersResponse as List;
       } else {
         // Toutes les commandes sans filtre de dates personnalisé
@@ -96,50 +100,76 @@ class DashboardController extends GetxController {
         allOrders = allOrdersResponse as List;
       }
 
-      // Commandes du jour
+      // Commandes du jour (basées sur created_at pour le comptage)
       final todayOrdersResponse = await _db
           .from('orders')
           .select('*')
           .gte('created_at', todayStart.toIso8601String());
 
-      // Commandes du mois
+      // Commandes du mois (basées sur created_at pour le comptage)
       final monthOrdersResponse = await _db
           .from('orders')
           .select('*')
           .gte('created_at', monthStart.toIso8601String());
 
+      // Commandes livrées aujourd'hui (basées sur delivery_date pour le revenu)
+      final todayDeliveredOrdersResponse = await _db
+          .from('orders')
+          .select('*')
+          .eq('status', 'delivered')
+          .not('delivery_date', 'is', null)
+          .gte('delivery_date', todayStart.toIso8601String())
+          .lt(
+              'delivery_date',
+              DateTime(now.year, now.month, now.day, 23, 59, 59)
+                  .toIso8601String());
+
       final todayOrders = todayOrdersResponse as List;
       final monthOrders = monthOrdersResponse as List;
+      final todayDeliveredOrders = todayDeliveredOrdersResponse as List;
 
       // Calculs des statistiques
       final totalOrders = allOrders.length;
       final ordersToday = todayOrders.length;
       final ordersThisMonth = monthOrders.length;
 
-      final pendingOrders = allOrders.where((o) => o['status'] == 'pending').length;
-      final activeOrders = allOrders.where((o) => ['preparing', 'ready'].contains(o['status'])).length;
-      final completedOrders = allOrders.where((o) => o['status'] == 'delivered').length;
+      final pendingOrders =
+          allOrders.where((o) => o['status'] == 'pending').length;
+      final activeOrders = allOrders
+          .where((o) => ['preparing', 'ready'].contains(o['status']))
+          .length;
+      final completedOrders =
+          allOrders.where((o) => o['status'] == 'delivered').length;
 
       final totalRevenue = allOrders
           .where((o) => ['delivered', 'ready'].contains(o['status']))
-          .fold<double>(0.0, (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
+          .fold<double>(
+              0.0,
+              (sum, o) =>
+                  sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
 
-      final todayRevenue = todayOrders
-          .where((o) => ['delivered', 'ready'].contains(o['status']))
-          .fold<double>(0.0, (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
-
+      // Revenu d'aujourd'hui basé sur delivery_date (seulement les commandes livrées aujourd'hui)
+      final todayRevenue = todayDeliveredOrders.fold<double>(0.0,
+          (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
       final monthlyRevenue = monthOrders
           .where((o) => ['delivered', 'ready'].contains(o['status']))
-          .fold<double>(0.0, (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
+          .fold<double>(
+              0.0,
+              (sum, o) =>
+                  sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
 
-      final averageOrderValue = completedOrders > 0 ? totalRevenue / completedOrders : 0.0;
+      final averageOrderValue =
+          completedOrders > 0 ? totalRevenue / completedOrders : 0.0;
 
       // Statistiques des établissements
-      final etablissementsResponse = await _db.from('etablissements').select('id');
+      final etablissementsResponse =
+          await _db.from('etablissements').select('id');
       final totalEtablissements = (etablissementsResponse as List).length;
 
       // Statistiques des produits
-      final productsResponse = await _db.from('produits').select('id, quantite_stock, est_stockable');
+      final productsResponse = await _db
+          .from('produits')
+          .select('id, quantite_stock, est_stockable');
       final products = productsResponse as List;
       final totalProducts = products.length;
       final lowStockProducts = products.where((p) {
@@ -153,19 +183,24 @@ class DashboardController extends GetxController {
       final totalUsers = (usersResponse as List).length;
 
       // Produits les plus commandés
-      final topProductsRaw = await orderRepository.getMostOrderedProducts(days: int.parse(selectedPeriod.value), limit: 5);
-      
+      final topProductsRaw = await orderRepository.getMostOrderedProducts(
+          days: int.parse(selectedPeriod.value), limit: 5);
+
       // Enrichir avec les informations des produits (nom et catégorie)
       final topProducts = await _enrichTopProducts(topProductsRaw);
 
       // Commandes récentes
-      final recentOrders = allOrders.take(5).map((o) => {
-        'id': o['id'],
-        'total_amount': o['total_amount'],
-        'status': o['status'],
-        'created_at': o['created_at'],
-        'etablissement_name': (o['etablissement'] as Map?)?['name'] ?? 'N/A',
-      }).toList();
+      final recentOrders = allOrders
+          .take(5)
+          .map((o) => {
+                'id': o['id'],
+                'total_amount': o['total_amount'],
+                'status': o['status'],
+                'created_at': o['created_at'],
+                'etablissement_name':
+                    (o['etablissement'] as Map?)?['name'] ?? 'N/A',
+              })
+          .toList();
 
       // Commandes par statut
       final ordersByStatus = <String, int>{};
@@ -214,7 +249,8 @@ class DashboardController extends GetxController {
   Future<void> _loadGerantStats(String userId) async {
     try {
       // Récupérer l'établissement du gérant
-      final etab = await etablissementController.getEtablissementUtilisateurConnecte();
+      final etab =
+          await etablissementController.getEtablissementUtilisateurConnecte();
       if (etab == null) {
         throw 'Aucun établissement trouvé pour ce gérant';
       }
@@ -223,17 +259,20 @@ class DashboardController extends GetxController {
       final now = DateTime.now();
       final todayStart = DateTime(now.year, now.month, now.day);
       final monthStart = DateTime(now.year, now.month, 1);
-      
+
       // Déterminer la plage de dates pour le filtre
       DateTime periodStart;
-      if (useCustomDateRange.value && startDate.value != null && endDate.value != null) {
+      if (useCustomDateRange.value &&
+          startDate.value != null &&
+          endDate.value != null) {
         periodStart = DateTime(
           startDate.value!.year,
           startDate.value!.month,
           startDate.value!.day,
         );
       } else {
-        periodStart = now.subtract(Duration(days: int.parse(selectedPeriod.value)));
+        periodStart =
+            now.subtract(Duration(days: int.parse(selectedPeriod.value)));
       }
 
       // Commandes de l'établissement
@@ -241,8 +280,10 @@ class DashboardController extends GetxController {
           .from('orders')
           .select('*')
           .eq('etablissement_id', etablissementId.toString());
-      
-      if (useCustomDateRange.value && startDate.value != null && endDate.value != null) {
+
+      if (useCustomDateRange.value &&
+          startDate.value != null &&
+          endDate.value != null) {
         final filterStartDate = DateTime(
           startDate.value!.year,
           startDate.value!.month,
@@ -260,56 +301,81 @@ class DashboardController extends GetxController {
             .gte('created_at', filterStartDate.toIso8601String())
             .lte('created_at', filterEndDate.toIso8601String());
       }
-      
-      final allOrdersResponse = await query.order('created_at', ascending: false);
+
+      final allOrdersResponse =
+          await query.order('created_at', ascending: false);
       final allOrders = allOrdersResponse as List;
 
-      // Commandes du jour
+      // Commandes du jour (basées sur created_at pour le comptage)
       final todayOrdersResponse = await _db
           .from('orders')
           .select('*')
           .eq('etablissement_id', etablissementId.toString())
           .gte('created_at', todayStart.toIso8601String());
 
-      // Commandes du mois
+      // Commandes du mois (basées sur created_at pour le comptage)
       final monthOrdersResponse = await _db
           .from('orders')
           .select('*')
           .eq('etablissement_id', etablissementId.toString())
           .gte('created_at', monthStart.toIso8601String());
 
+      // Commandes livrées aujourd'hui (basées sur delivery_date pour le revenu)
+      final todayDeliveredOrdersResponse = await _db
+          .from('orders')
+          .select('*')
+          .eq('etablissement_id', etablissementId.toString())
+          .eq('status', 'delivered')
+          .not('delivery_date', 'is', null)
+          .gte('delivery_date', todayStart.toIso8601String())
+          .lt(
+              'delivery_date',
+              DateTime(now.year, now.month, now.day, 23, 59, 59)
+                  .toIso8601String());
+
       final todayOrders = todayOrdersResponse as List;
       final monthOrders = monthOrdersResponse as List;
+      final todayDeliveredOrders = todayDeliveredOrdersResponse as List;
 
       // Calculs
       final totalOrders = allOrders.length;
       final ordersToday = todayOrders.length;
       final ordersThisMonth = monthOrders.length;
 
-      final pendingOrders = allOrders.where((o) => o['status'] == 'pending').length;
-      final activeOrders = allOrders.where((o) => ['preparing', 'ready'].contains(o['status'])).length;
-      final completedOrders = allOrders.where((o) => o['status'] == 'delivered').length;
+      final pendingOrders =
+          allOrders.where((o) => o['status'] == 'pending').length;
+      final activeOrders = allOrders
+          .where((o) => ['preparing', 'ready'].contains(o['status']))
+          .length;
+      final completedOrders =
+          allOrders.where((o) => o['status'] == 'delivered').length;
 
       final totalRevenue = allOrders
           .where((o) => ['delivered', 'ready'].contains(o['status']))
-          .fold<double>(0.0, (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
+          .fold<double>(
+              0.0,
+              (sum, o) =>
+                  sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
 
-      final todayRevenue = todayOrders
-          .where((o) => ['delivered', 'ready'].contains(o['status']))
-          .fold<double>(0.0, (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
-
+      // Revenu d'aujourd'hui basé sur delivery_date (seulement les commandes livrées aujourd'hui)
+      final todayRevenue = todayDeliveredOrders.fold<double>(0.0,
+          (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
       final monthlyRevenue = monthOrders
           .where((o) => ['delivered', 'ready'].contains(o['status']))
-          .fold<double>(0.0, (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
+          .fold<double>(
+              0.0,
+              (sum, o) =>
+                  sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
 
-      final averageOrderValue = completedOrders > 0 ? totalRevenue / completedOrders : 0.0;
+      final averageOrderValue =
+          completedOrders > 0 ? totalRevenue / completedOrders : 0.0;
 
       // Produits de l'établissement
       final productsResponse = await _db
           .from('produits')
           .select('id, quantite_stock, est_stockable')
           .eq('etablissement_id', etablissementId.toString());
-      
+
       final products = productsResponse as List;
       final totalProducts = products.length;
       final lowStockProducts = products.where((p) {
@@ -330,32 +396,38 @@ class DashboardController extends GetxController {
       for (var orderData in periodOrders as List) {
         final items = orderData['items'] as List?;
         if (items == null || items.isEmpty) continue;
-        
+
         for (var item in items) {
           final itemMap = Map<String, dynamic>.from(item);
           final productId = itemMap['productId']?.toString() ?? '';
           final quantity = (itemMap['quantity'] as num?)?.toInt() ?? 0;
-          
+
           if (productId.isEmpty || quantity <= 0) continue;
-          productQuantities[productId] = (productQuantities[productId] ?? 0) + quantity;
+          productQuantities[productId] =
+              (productQuantities[productId] ?? 0) + quantity;
         }
       }
 
       final topProductsRaw = productQuantities.entries
           .map((e) => {'productId': e.key, 'totalQuantity': e.value})
           .toList()
-        ..sort((a, b) => (b['totalQuantity'] as int).compareTo(a['totalQuantity'] as int));
-      
+        ..sort((a, b) =>
+            (b['totalQuantity'] as int).compareTo(a['totalQuantity'] as int));
+
       // Enrichir avec les informations des produits (nom et catégorie)
-      final topProducts = await _enrichTopProducts(topProductsRaw.take(5).toList());
+      final topProducts =
+          await _enrichTopProducts(topProductsRaw.take(5).toList());
 
       // Commandes récentes
-      final recentOrders = allOrders.take(5).map((o) => {
-        'id': o['id'],
-        'total_amount': o['total_amount'],
-        'status': o['status'],
-        'created_at': o['created_at'],
-      }).toList();
+      final recentOrders = allOrders
+          .take(5)
+          .map((o) => {
+                'id': o['id'],
+                'total_amount': o['total_amount'],
+                'status': o['status'],
+                'created_at': o['created_at'],
+              })
+          .toList();
 
       // Commandes par statut
       final ordersByStatus = <String, int>{};
@@ -426,21 +498,23 @@ class DashboardController extends GetxController {
   }
 
   /// Enrichit les produits les plus vendus avec leurs noms et catégories
-  Future<List<Map<String, dynamic>>> _enrichTopProducts(List<Map<String, dynamic>> topProductsRaw) async {
+  Future<List<Map<String, dynamic>>> _enrichTopProducts(
+      List<Map<String, dynamic>> topProductsRaw) async {
     final enrichedProducts = <Map<String, dynamic>>[];
-    
+
     // Récupérer toutes les catégories pour le mapping
     final categoriesResponse = await _db.from('categories').select('id, name');
     final categoriesMap = <String, String>{};
     for (var cat in categoriesResponse as List) {
-      categoriesMap[cat['id']?.toString() ?? ''] = cat['name']?.toString() ?? 'Inconnue';
+      categoriesMap[cat['id']?.toString() ?? ''] =
+          cat['name']?.toString() ?? 'Inconnue';
     }
-    
+
     // Enrichir chaque produit
     for (var product in topProductsRaw) {
       final productId = product['productId'] as String? ?? '';
       if (productId.isEmpty) continue;
-      
+
       try {
         // Récupérer le produit
         final productResponse = await _db
@@ -448,12 +522,13 @@ class DashboardController extends GetxController {
             .select('id, nom, categorie_id')
             .eq('id', productId)
             .maybeSingle();
-        
+
         if (productResponse != null) {
-          final productName = productResponse['nom']?.toString() ?? 'Produit inconnu';
+          final productName =
+              productResponse['nom']?.toString() ?? 'Produit inconnu';
           final categoryId = productResponse['categorie_id']?.toString() ?? '';
           final categoryName = categoriesMap[categoryId] ?? 'Sans catégorie';
-          
+
           enrichedProducts.add({
             'productId': productId,
             'productName': productName,
@@ -480,22 +555,24 @@ class DashboardController extends GetxController {
         });
       }
     }
-    
+
     return enrichedProducts;
   }
 
   /// Calcule les jours avec le plus de commandes
   List<Map<String, dynamic>> _calculateOrdersByDay(List allOrders) {
     final dayCounts = <String, int>{};
-    
+
     for (var order in allOrders) {
       // Utiliser pickup_day si disponible, sinon utiliser created_at
       String dayKey;
-      if (order['pickup_day'] != null && order['pickup_day'].toString().isNotEmpty) {
+      if (order['pickup_day'] != null &&
+          order['pickup_day'].toString().isNotEmpty) {
         dayKey = order['pickup_day'].toString();
       } else if (order['pickup_date_time'] != null) {
         try {
-          final pickupDate = DateTime.parse(order['pickup_date_time'].toString());
+          final pickupDate =
+              DateTime.parse(order['pickup_date_time'].toString());
           final weekday = pickupDate.weekday;
           dayKey = _weekdayToFrenchDay(weekday);
         } catch (e) {
@@ -519,29 +596,33 @@ class DashboardController extends GetxController {
       } else {
         continue;
       }
-      
+
       dayCounts[dayKey] = (dayCounts[dayKey] ?? 0) + 1;
     }
-    
+
     // Trier par nombre de commandes décroissant et prendre le top 7
     final sortedDays = dayCounts.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
-    return sortedDays.take(7).map((entry) => {
-      'day': entry.key,
-      'count': entry.value,
-    }).toList();
+
+    return sortedDays
+        .take(7)
+        .map((entry) => {
+              'day': entry.key,
+              'count': entry.value,
+            })
+        .toList();
   }
 
   /// Calcule les heures de pickup les plus fréquentes
   List<Map<String, dynamic>> _calculatePickupHours(List allOrders) {
     final hourCounts = <String, int>{};
-    
+
     for (var order in allOrders) {
       String? hourKey;
-      
+
       // Essayer d'abord pickup_time_range (format "HH:MM - HH:MM")
-      if (order['pickup_time_range'] != null && order['pickup_time_range'].toString().isNotEmpty) {
+      if (order['pickup_time_range'] != null &&
+          order['pickup_time_range'].toString().isNotEmpty) {
         final timeRange = order['pickup_time_range'].toString();
         // Extraire l'heure de début (avant le "-")
         final parts = timeRange.split(' - ');
@@ -555,30 +636,34 @@ class DashboardController extends GetxController {
           }
         }
       }
-      
+
       // Si pas de pickup_time_range, utiliser pickup_date_time
       if (hourKey == null && order['pickup_date_time'] != null) {
         try {
-          final pickupDate = DateTime.parse(order['pickup_date_time'].toString());
+          final pickupDate =
+              DateTime.parse(order['pickup_date_time'].toString());
           hourKey = '${pickupDate.hour.toString().padLeft(2, '0')}:00';
         } catch (e) {
           continue;
         }
       }
-      
+
       if (hourKey != null) {
         hourCounts[hourKey] = (hourCounts[hourKey] ?? 0) + 1;
       }
     }
-    
+
     // Trier par nombre de commandes décroissant et prendre le top 10
     final sortedHours = hourCounts.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
-    return sortedHours.take(10).map((entry) => {
-      'hour': entry.key,
-      'count': entry.value,
-    }).toList();
+
+    return sortedHours
+        .take(10)
+        .map((entry) => {
+              'hour': entry.key,
+              'count': entry.value,
+            })
+        .toList();
   }
 
   /// Convertit le numéro de jour de la semaine (1-7) en nom français
@@ -607,51 +692,54 @@ class DashboardController extends GetxController {
   Future<List<Map<String, dynamic>>> _calculateTopUsers(List allOrders) async {
     final userOrderCounts = <String, int>{};
     final userTotalSpent = <String, double>{};
-    
+
     // Compter les commandes et calculer le total dépensé par utilisateur
     for (var order in allOrders) {
       final userId = order['user_id']?.toString() ?? '';
       if (userId.isEmpty) continue;
-      
+
       // Exclure les commandes annulées ou refusées
       final status = order['status']?.toString() ?? '';
       if (status == 'cancelled' || status == 'refused') continue;
-      
+
       userOrderCounts[userId] = (userOrderCounts[userId] ?? 0) + 1;
-      
+
       final totalAmount = (order['total_amount'] as num?)?.toDouble() ?? 0.0;
       userTotalSpent[userId] = (userTotalSpent[userId] ?? 0.0) + totalAmount;
     }
-    
+
     // Trier par nombre de commandes décroissant et prendre le top 10
     final sortedUsers = userOrderCounts.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     final topUserIds = sortedUsers.take(10).map((e) => e.key).toList();
-    
+
     // Enrichir avec les informations des utilisateurs
     final enrichedUsers = <Map<String, dynamic>>[];
-    
+
     for (var userId in topUserIds) {
       try {
         final userResponse = await _db
             .from('users')
-            .select('id, first_name, last_name, email, phone, profile_image_url')
+            .select(
+                'id, first_name, last_name, email, phone, profile_image_url')
             .eq('id', userId)
             .maybeSingle();
-        
+
         if (userResponse != null) {
           final firstName = userResponse['first_name']?.toString() ?? '';
           final lastName = userResponse['last_name']?.toString() ?? '';
           final email = userResponse['email']?.toString() ?? 'N/A';
           final phone = userResponse['phone']?.toString() ?? 'N/A';
           final profileImageUrl = userResponse['profile_image_url']?.toString();
-          
+
           enrichedUsers.add({
             'userId': userId,
             'firstName': firstName,
             'lastName': lastName,
-            'fullName': '$firstName $lastName'.trim().isEmpty ? 'Utilisateur' : '$firstName $lastName',
+            'fullName': '$firstName $lastName'.trim().isEmpty
+                ? 'Utilisateur'
+                : '$firstName $lastName',
             'email': email,
             'phone': phone,
             'profileImageUrl': profileImageUrl,
@@ -688,8 +776,7 @@ class DashboardController extends GetxController {
         });
       }
     }
-    
+
     return enrichedUsers;
   }
 }
-
