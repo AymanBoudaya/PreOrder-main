@@ -42,12 +42,6 @@ class BannerController extends GetxController {
     fetchAllBanners();
   }
 
-  @override
-  void onClose() {
-    nameController.dispose();
-    super.onClose();
-  }
-
   /// Fetch all banners
   Future<void> fetchAllBanners() async {
     try {

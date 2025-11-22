@@ -18,7 +18,7 @@ class AddBannerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bannerController = Get.put(BannerController());
+    final bannerController = Get.find<BannerController>();
     final categoryController = Get.find<CategoryController>();
     final produitRepository = Get.find<ProduitRepository>();
     final etablissementController = Get.find<ListeEtablissementController>();
