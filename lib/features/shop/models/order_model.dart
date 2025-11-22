@@ -5,7 +5,6 @@ import '../../../utils/constants/enums.dart';
 import '../../personalization/models/address_model.dart';
 import 'etablissement_model.dart';
 
-
 class OrderModel {
   final String id;
   final String userId;
@@ -13,7 +12,8 @@ class OrderModel {
   final double totalAmount;
   final DateTime orderDate;
   final String paymentMethod;
-  final AddressModel? address;
+  final String? addressId; // Référence à l'adresse dans la table addresses
+  final AddressModel? address; // Chargé via JOIN depuis la base de données
   final DateTime? deliveryDate;
   final List<CartItemModel> items;
   final DateTime? pickupDateTime;
@@ -35,6 +35,7 @@ class OrderModel {
       required this.orderDate,
       required this.paymentMethod,
       required this.items,
+      this.addressId,
       this.address,
       this.deliveryDate,
       this.pickupDateTime,
@@ -101,6 +102,7 @@ class OrderModel {
     double? totalAmount,
     DateTime? orderDate,
     String? paymentMethod,
+    String? addressId,
     AddressModel? address,
     DateTime? deliveryDate,
     List<CartItemModel>? items,
@@ -123,6 +125,7 @@ class OrderModel {
       totalAmount: totalAmount ?? this.totalAmount,
       orderDate: orderDate ?? this.orderDate,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      addressId: addressId ?? this.addressId,
       address: address ?? this.address,
       deliveryDate: deliveryDate ?? this.deliveryDate,
       items: items ?? this.items,
@@ -154,7 +157,7 @@ class OrderModel {
       'order_date': orderDate.toIso8601String(),
       'delivery_date': deliveryDate?.toIso8601String(),
       'payment_method': paymentMethod,
-      'address': address?.toJson(),
+      'address_id': addressId, // Sauvegarder seulement l'ID
       'items': items.map((item) => item.toJson()).toList(),
       'pickup_date_time': pickupDateTime?.toIso8601String(),
       'pickup_day': pickupDay,
@@ -181,7 +184,8 @@ class OrderModel {
           ? DateTime.parse(json['delivery_date'] as String)
           : null,
       paymentMethod: json['payment_method'] as String,
-      address: json['address'] != null
+      addressId: json['address_id'] as String?,
+      address: json['address'] != null && json['address'] is Map
           ? AddressModel.fromJson(Map<String, dynamic>.from(json['address']))
           : null,
       items: (json['items'] as List)
@@ -277,9 +281,9 @@ class OrderModel {
       return etablissement?.name ?? 'LiteWait';
     }
 
-    final mostFrequent = establishmentCounts.entries
-        .reduce((a, b) => a.value > b.value ? a : b);
-    
+    final mostFrequent =
+        establishmentCounts.entries.reduce((a, b) => a.value > b.value ? a : b);
+
     return mostFrequent.key;
   }
 

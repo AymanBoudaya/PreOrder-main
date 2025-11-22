@@ -7,7 +7,6 @@ import '../authentication/authentication_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OrderRepository extends GetxController {
-  
   final _db = Supabase.instance.client;
   final authRepo = Get.find<AuthenticationRepository>();
 
@@ -19,11 +18,11 @@ class OrderRepository extends GetxController {
         throw 'Unable to find user information, try again later';
       }
 
-      final response = await _db
-          .from('orders')
-          .select('*, etablissement:etablissement_id(*)')
-          .eq('user_id', user.id)
-          .order('order_date', ascending: false);
+      final response = await _db.from('orders').select('''
+            *,
+            etablissement:etablissement_id(*),
+            address:address_id(*)
+          ''').eq('user_id', user.id).order('order_date', ascending: false);
 
       return (response as List)
           .map((json) => OrderModel.fromJson(json as Map<String, dynamic>))
@@ -54,7 +53,8 @@ class OrderRepository extends GetxController {
         'status': order.status.name,
         'total_amount': order.totalAmount,
         'payment_method': order.paymentMethod,
-        'address': order.address,
+        'address_id': order
+            .addressId, // Sauvegarder seulement l'ID au lieu de l'objet complet
         'items': order.items.map((e) => e.toJson()).toList(),
         'pickup_date_time': order.pickupDateTime?.toIso8601String(),
         'pickup_day': order.pickupDay,
@@ -86,7 +86,11 @@ class OrderRepository extends GetxController {
     try {
       final response = await _db
           .from('orders')
-          .select('*, etablissement:etablissements(*)')
+          .select('''
+            *,
+            etablissement:etablissements(*),
+            address:address_id(*)
+          ''')
           .eq('etablissement_id', etablissementId)
           .order('created_at', ascending: false);
       return (response as List)
@@ -130,15 +134,15 @@ class OrderRepository extends GetxController {
 
       // Convertir le dernier code en nombre
       final lastNumber = int.tryParse(lastCode) ?? 0;
-      
+
       // Incrémenter de 1
       var nextNumber = lastNumber + 1;
-      
+
       // Si on arrive à 1000, revenir à 1 (cycle 0001-0999)
       if (nextNumber >= 1000) {
         nextNumber = 1;
       }
-      
+
       // Formater en 4 chiffres avec padding à gauche
       return nextNumber.toString().padLeft(4, '0');
     } catch (e) {
@@ -160,39 +164,41 @@ class OrderRepository extends GetxController {
     try {
       // Date limite (30 jours en arrière)
       final dateLimit = DateTime.now().subtract(Duration(days: days));
-      
+
       // Récupérer toutes les commandes des 30 derniers jours (sauf annulées/refusées)
       final ordersResponse = await _db
           .from('orders')
           .select('items, created_at, status')
           .gte('created_at', dateLimit.toIso8601String())
-          .not('status', 'in', '(cancelled,refused)'); // Exclure les annulées/refusées
-      
+          .not('status', 'in',
+              '(cancelled,refused)'); // Exclure les annulées/refusées
+
       if ((ordersResponse as List).isEmpty) {
         return [];
       }
-      
+
       // Map pour agréger les quantités par produit
       final Map<String, int> productQuantities = {};
-      
+
       // Parcourir toutes les commandes
       for (final orderData in ordersResponse as List) {
         final items = orderData['items'] as List?;
         if (items == null || items.isEmpty) continue;
-        
+
         // Parcourir tous les items de chaque commande
         for (final item in items) {
           final itemMap = Map<String, dynamic>.from(item);
           final productId = itemMap['productId']?.toString() ?? '';
           final quantity = (itemMap['quantity'] as num?)?.toInt() ?? 0;
-          
+
           if (productId.isEmpty || quantity <= 0) continue;
-          
+
           // Ajouter la quantité au total
-          productQuantities[productId] = (productQuantities[productId] ?? 0) + quantity;
+          productQuantities[productId] =
+              (productQuantities[productId] ?? 0) + quantity;
         }
       }
-      
+
       // Créer la liste des résultats avec les quantités totales
       final results = productQuantities.entries.map((entry) {
         return {
@@ -200,13 +206,15 @@ class OrderRepository extends GetxController {
           'totalQuantity': entry.value,
         };
       }).toList();
-      
+
       // Trier par quantité décroissante et limiter
-      results.sort((a, b) => (b['totalQuantity'] as int).compareTo(a['totalQuantity'] as int));
-      
+      results.sort((a, b) =>
+          (b['totalQuantity'] as int).compareTo(a['totalQuantity'] as int));
+
       return results.take(limit).toList();
     } catch (e) {
-      debugPrint('Erreur lors de la récupération des produits les plus commandés: $e');
+      debugPrint(
+          'Erreur lors de la récupération des produits les plus commandés: $e');
       throw 'Erreur lors de la récupération des produits les plus commandés: $e';
     }
   }

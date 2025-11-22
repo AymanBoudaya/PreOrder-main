@@ -3,6 +3,7 @@ import 'package:caferesto/features/notification/controllers/notification_control
 import 'package:caferesto/features/personalization/controllers/address_controller.dart';
 import 'package:caferesto/features/personalization/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/features/shop/controllers/commandes/order_controller.dart';
+import 'package:caferesto/features/shop/controllers/product/all_products_controller.dart';
 import 'package:get/get.dart';
 
 import '../data/repositories/address/address_repository.dart';
@@ -58,6 +59,7 @@ class GeneralBinding extends Bindings {
       fenix: true,
     );
     Get.lazyPut<AddressController>(() => AddressController(), fenix: true);
+    Get.lazyPut<AllProductsController>(() => AllProductsController(), fenix: true);
     Get.lazyPut<PanierController>(() => PanierController(), fenix: true);
     Get.lazyPut<CheckoutController>(() => CheckoutController(), fenix: true);
     Get.lazyPut<OrderController>(() => OrderController(), fenix: true);

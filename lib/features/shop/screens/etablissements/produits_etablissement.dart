@@ -27,7 +27,7 @@ class _BrandProductsState extends State<BrandProducts> {
   @override
   void initState() {
     super.initState();
-    controller = Get.put(AllProductsController());
+    controller = Get.find<AllProductsController>();
     _loadProducts();
   }
 

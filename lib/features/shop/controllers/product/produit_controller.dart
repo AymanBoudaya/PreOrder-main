@@ -10,19 +10,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/popups/loaders.dart';
-import '../etablissement_controller.dart';
 
 class ProduitController extends GetxController {
 
-  // --- FORMULAIRES ET CONTROLLERS ---
-  final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final preparationTimeController = TextEditingController();
-  final stockQuantityController = TextEditingController();
-
   final isStockable = false.obs;
-  final selectedCategoryId = Rx<String?>(null);
   final ImagePicker _picker = ImagePicker();
   final pickedImage = Rx<XFile?>(null);
 
@@ -53,10 +44,6 @@ class ProduitController extends GetxController {
   @override
   void onClose() {
     _unsubscribeFromRealtime();
-    nameController.dispose();
-    descriptionController.dispose();
-    preparationTimeController.dispose();
-    stockQuantityController.dispose();
     super.onClose();
   }
 

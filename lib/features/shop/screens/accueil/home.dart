@@ -9,6 +9,7 @@ import '../../../../common/widgets/shimmer/vertical_product_shimmer.dart';
 import '../../../../common/widgets/texts/section_heading.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../common/widgets/custom_shapes/containers/primary_header_container.dart';
+import '../../controllers/product/all_products_controller.dart';
 import 'widgets/home_categories.dart';
 import '../../controllers/product/produit_controller.dart';
 import '../../controllers/banner_controller.dart';
@@ -104,7 +105,7 @@ class HomeScreen extends StatelessWidget {
                     showActionButton: true,
                     onPressed: () => Get.to(() => AllProducts(
                           title: 'Tout les produits populaires',
-                          futureMethod: controller.fetchAllFeaturedProducts(),
+                          futureMethod: controller.fetchAllFeaturedProducts(),                  
                         )),
                   ),
                   const SizedBox(height: AppSizes.spaceBtwItems),

@@ -96,13 +96,25 @@ class OrderController extends GetxController {
       isLoading.value = true;
 
       /// Écouter les changements dans la table `orders`
+      /// Note: Les streams Supabase ne supportent pas les JOINs directement
+      /// Les adresses seront chargées via les repositories lors des fetchs
       _db
           .from('orders')
           .stream(primaryKey: ['id'])
           .eq('user_id', userId)
           .order('created_at', ascending: false)
-          .listen((data) {
-            orders.value = data.map((row) => OrderModel.fromJson(row)).toList();
+          .listen((data) async {
+            // Charger les orders avec les JOINs via le repository
+            // car le stream ne supporte pas les JOINs
+            try {
+              final userOrders = await orderRepository.fetchUserOrders();
+              orders.value = userOrders;
+            } catch (e) {
+              debugPrint('Erreur lors du chargement des orders avec JOINs: $e');
+              // Fallback: utiliser les données du stream sans JOINs
+              orders.value =
+                  data.map((row) => OrderModel.fromJson(row)).toList();
+            }
             isLoading.value = false;
           }, onError: (error) {
             debugPrint('Erreur lors de l\'écoute des commandes: $error');
@@ -546,9 +558,17 @@ class OrderController extends GetxController {
         return;
       }
 
-      // Récupérer l'adresse sélectionnée (peut être vide - optionnelle)
-      final selectedAddress = addressController.selectedAddress.value;
-      final hasAddress = selectedAddress.id.isNotEmpty;
+      // Utiliser l'addressId passé en paramètre (peut être null - optionnel)
+      final hasAddress = addressId != null && addressId.isNotEmpty;
+
+      // Récupérer l'adresse complète pour les calculs GPS (si nécessaire)
+      // Utiliser l'adresse sélectionnée du controller qui correspond à l'ID
+      final selectedAddressFromController =
+          addressController.selectedAddress.value;
+      final selectedAddress =
+          (hasAddress && selectedAddressFromController.id == addressId)
+              ? selectedAddressFromController
+              : null;
 
       // Vérifier si on modifie une commande existante
       final editingOrderId = panierController.editingOrderId.value;
@@ -588,7 +608,7 @@ class OrderController extends GetxController {
               '🔄 Demande de confirmation pour calculer l\'heure d\'arrivée...');
           debugPrint(
               '   - Raison: ${(pickupDateTime == null || pickupDay == null || pickupTimeRange == null) ? "Créneau non défini" : "Créneau auto-défini"}');
-          if (hasAddress) {
+          if (hasAddress && selectedAddress != null) {
             debugPrint(
                 '📍 Adresse client - Latitude: ${selectedAddress.latitude}, Longitude: ${selectedAddress.longitude}');
           } else {
@@ -663,7 +683,9 @@ class OrderController extends GetxController {
           totalAmount: totalAmount,
           orderDate: DateTime.now(),
           paymentMethod: checkoutController.paymentMethod,
-          address: hasAddress ? selectedAddress : null, // Adresse optionnelle
+          addressId: addressId, // ✅ Utiliser l'ID passé en paramètre
+          address:
+              selectedAddress, // Gardé pour l'affichage immédiat (optionnel)
           deliveryDate: null, // Devrait être null initialement
           items: panierController.cartItems.toList(),
           pickupDateTime: pickupDateTime,

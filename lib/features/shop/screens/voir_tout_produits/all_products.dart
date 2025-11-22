@@ -18,7 +18,7 @@ class AllProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(AllProductsController());
+    Get.find<AllProductsController>();
     return Scaffold(
       appBar: TAppBar(
         title: Text(title),

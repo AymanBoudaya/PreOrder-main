@@ -13,47 +13,8 @@ class TImages {
   // -- Utilisateurs Icones
   static const String userMale = "assets/images/user/pdp.jpg";
   static const String userFemale = "assets/images/user/womanpdp.jpg";
-
-  // -- Category Icons
-
-  static const String coffee = "assets/icons/categories/coffee.jpg";
+  // sans image catégorie
   static const String pasdimage = "assets/icons/categories/pasdimage.png";
-  static const String mlewi = "assets/icons/categories/mlewi.png";
-  static const String boissonsCategory = "assets/icons/categories/boissons.png";
-  static const String petitdej = "assets/icons/categories/petitdej.jpg";
-
-  static const String sportIcon =
-      "assets/icons/categories/icons8-bowling-64.png";
-  static const String clothIcon =
-      "assets/icons/categories/icons8-tailors-dummy-64.png";
-  static const String shoeIcon = "assets/icons/categories/icons8-shoes-64.png";
-  static const String cosmeticsIcon =
-      "assets/icons/categories/icons8-cosmetics-64.png";
-  static const String animalIcon =
-      "assets/icons/categories/icons8-dog-heart-64.png";
-  static const String toyIcon =
-      "assets/icons/categories/icons8-wooden-toy-car-50.png";
-  static const String furnitureIcon =
-      "assets/icons/categories/icons8-dining-chair-64.png";
-  static const String jeweleryIcon =
-      "assets/icons/categories/icons8-sparkling-diamond-64.png";
-  static const String electronicsIcon =
-      "assets/icons/categories/icons8-smartphone-64.png";
-
-  // -- Brand Icons
-  static const String hsouna = "assets/icons/brands/hsouna.png";
-  static const String mokador = "assets/icons/brands/mokador.png";
-  static const String nikeLogo = "assets/icons/brands/nike.png";
-  static const String adidasLogo = "assets/icons/brands/adidas-logo.png";
-  static const String appleLogo = "assets/icons/brands/apple-logo.png";
-  static const String jordanLogo = "assets/icons/brands/jordan-logo.png";
-  static const String pumaLogo = "assets/icons/brands/puma-logo.png";
-  static const String zaraLogo = "assets/icons/brands/zara-logo.png";
-  static const String kenwoodLogo = "assets/icons/brands/kenwood-logo.png";
-  static const String hermanMillerLogo =
-      "assets/icons/brands/herman-miller-logo.png";
-  static const String ikeaLogo = "assets/icons/brands/ikea_logo.png";
-  static const String acerlogo = "assets/icons/brands/acer_logo.png";
 
   // -- Animations
 
@@ -80,22 +41,4 @@ class TImages {
       "assets/images/animations/72462-check-register.json";
   static const String pencilAnimation =
       "assets/images/animations/140429-pencil-drawing.json";
-
-  // -- Products
-  static const String delice = "assets/images/products/cafe/delice.jpg";
-  static const String mlewiCategory = "assets/images/products/mlewi.png";
-
-  // -- Product Reviews
-  static const String userProfileImage1 =
-      "assets/images/reviews/review_profile_image_1.jpg";
-  static const String userProfileImage2 =
-      "assets/images/reviews/review_profile_image_2.jpeg";
-  static const String userProfileImage3 =
-      "assets/images/reviews/review_profile_image_3.jpeg";
-
-  //Banners
-  static const String promoBanner1 = "assets/banners/cafe_banner.png";
-  static const String promoBanner2 = "assets/banners/fastfood_banner.png";
-  static const String promoBanner3 = "assets/banners/glaces_banner.png";
-
 }

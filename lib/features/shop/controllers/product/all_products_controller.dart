@@ -57,6 +57,8 @@ class AllProductsController extends GetxController {
 
       // Trier après assignation
       sortProducts(selectedSortOption.value);
+      print('Total produits chargés: ${products.length}');
+      print('Produits: ${products.map((p) => p.name).toList()}');
     } catch (e) {
       print("Erreur chargement produits : $e");
       // Assigner une liste vide en cas d'erreur
