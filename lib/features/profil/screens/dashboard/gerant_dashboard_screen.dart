@@ -123,7 +123,7 @@ class GerantDashboardScreen extends StatelessWidget {
                         const SizedBox(height: AppSizes.spaceBtwSections),
                         _buildOrdersByStatusChart(stats, dark),
                         const SizedBox(height: AppSizes.spaceBtwSections),
-                        _buildTopProducts(stats, dark),
+                        TopProductsWidget(stats: stats, dark: dark),
                         const SizedBox(height: AppSizes.spaceBtwSections),
                         _buildSystemStats(stats, dark),
                       ],

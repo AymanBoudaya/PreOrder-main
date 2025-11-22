@@ -104,7 +104,7 @@ class AdminDashboardScreen extends StatelessWidget {
                         Expanded(
                           child: Column(
                             children: [
-                              _buildTopProducts(stats, dark),
+                              TopProductsWidget(stats: stats, dark: dark),
                               const SizedBox(height: AppSizes.spaceBtwSections),
                               _buildSystemStats(stats, dark),
                             ],
