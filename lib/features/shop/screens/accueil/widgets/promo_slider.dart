@@ -11,7 +11,7 @@ import '../../../../../utils/helpers/helper_functions.dart';
 import '../../../models/banner_model.dart';
 import '../../../models/category_model.dart';
 import '../../../models/produit_model.dart';
-import '../../etablissements/brand_products.dart';
+import '../../etablissements/produits_etablissement.dart';
 import '../../product_details/product_detail.dart';
 import '../../sub_category/sub_categories.dart';
 import '../../../controllers/category_controller.dart';

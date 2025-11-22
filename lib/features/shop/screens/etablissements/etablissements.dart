@@ -4,7 +4,7 @@ import 'package:caferesto/common/widgets/brands/etablissement_card.dart';
 import 'package:caferesto/common/widgets/shimmer/store_shimmer.dart';
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
 import 'package:caferesto/features/shop/controllers/etablissement_controller.dart';
-import 'package:caferesto/features/shop/screens/etablissements/brand_products.dart';
+import 'package:caferesto/features/shop/screens/etablissements/produits_etablissement.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
