@@ -85,13 +85,10 @@ class TCartItems extends StatelessWidget {
 
                           /// Current Variation Display
                           if (cartItem.product?.productType == 'variable' &&
-                              cartItem.selectedVariation != null &&
-                              cartItem.selectedVariation!.isNotEmpty) ...[
+                              cartItem.selectedVariation != null) ...[
                             const SizedBox(height: 4),
                             Text(
-                              cartItem.selectedVariation!.entries
-                                  .map((e) => '${e.key}: ${e.value}')
-                                  .join(', '),
+                              'Taille: ${cartItem.selectedVariation!.size}',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: dark

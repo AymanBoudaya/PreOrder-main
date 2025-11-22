@@ -48,11 +48,6 @@ class ProductDetailsContent extends StatelessWidget {
         ProductDescriptionSection(product: product, dark: dark),
 
         const SizedBox(height: AppSizes.xl),
-
-        /// Reviews Preview
-        // ProductReviewsSection(dark: dark),
-
-        // const SizedBox(height: 100), // Space for bottom bar
       ],
     );
   }

@@ -346,8 +346,21 @@ class ProductSizePrice {
   factory ProductSizePrice.fromMap(Map<String, dynamic> map) {
     return ProductSizePrice(
       size: map['taille']?.toString() ?? '',
-      price: (map['prix'] ?? 0.0).toDouble(),
+      price: _parsePrice(map['prix']),
     );
+  }
+
+  /// Helper function pour parser le prix de manière sécurisée
+  static double _parsePrice(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      return double.tryParse(value) ?? 0.0;
+    }
+    // Si c'est un num, essayer de convertir
+    if (value is num) return value.toDouble();
+    return 0.0;
   }
 
   Map<String, dynamic> toMap() {

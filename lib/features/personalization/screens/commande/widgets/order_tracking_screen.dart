@@ -181,9 +181,7 @@ class OrderTrackingScreen extends StatelessWidget {
                                         fontWeight: FontWeight.w600)),
                                 if (item.selectedVariation != null)
                                   Text(
-                                    item.selectedVariation!.entries
-                                        .map((e) => "${e.key}: ${e.value}")
-                                        .join(", "),
+                                    'Taille: ${item.selectedVariation!.size}',
                                     style: TextStyle(
                                         color: textColor.withValues(alpha: 0.7),
                                         fontSize: 12),

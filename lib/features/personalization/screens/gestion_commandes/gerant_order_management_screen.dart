@@ -638,8 +638,7 @@ class _GerantOrderManagementScreenState
               // Extraire la taille de la variation si elle existe
               String? taille;
               if (item.selectedVariation != null) {
-                taille = item.selectedVariation!['taille'] ??
-                    (item.variationId.isNotEmpty ? item.variationId : null);
+                taille = item.selectedVariation!.size;
               } else if (item.variationId.isNotEmpty) {
                 taille = item.variationId;
               }

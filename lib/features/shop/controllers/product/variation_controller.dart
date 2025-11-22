@@ -1,12 +1,14 @@
 import 'package:get/get.dart';
 
+import '../../models/produit_model.dart';
+
 class VariationController extends GetxController {
   /// Variables
   final RxMap<String, dynamic> selectedAttributes = <String, dynamic>{}.obs;
   final RxString variationStockStatus = ''.obs;
-  // Use Map<String, String>? to match CartItemModel.selectedVariation
-  final Rx<Map<String, String>?> selectedVariation =
-      Rx<Map<String, String>?>(null);
+  // Use ProductSizePrice? to match CartItemModel.selectedVariation
+  final Rx<ProductSizePrice?> selectedVariation =
+      Rx<ProductSizePrice?>(null);
 
   /// -- Check if selected attributes match variation attributes
   RxString selectedSize = ''.obs;
@@ -16,16 +18,11 @@ class VariationController extends GetxController {
     selectedSize.value = size;
     selectedPrice.value = price;
 
-    // Use size as the variation ID (as it matches cart item variationId)
-    // This ensures consistency between cart items and product variations
-    final variationId = size;
-
     // Create or update the variation map (matching CartItemModel structure)
-    selectedVariation.value = {
-      'id': variationId,
-      'taille': size,
-      'prix': price.toString(),
-    };
+    selectedVariation.value = ProductSizePrice(
+      size: size,
+      price: price,
+    );
   }
 
   void clearVariation() {

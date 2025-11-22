@@ -7,8 +7,6 @@ import '../../models/produit_model.dart';
 import 'variation_controller.dart';
 
 class PanierController extends GetxController {
-
-
   RxInt cartItemsCount = 0.obs;
   RxDouble totalCartPrice = 0.0.obs;
   final RxMap<String, int> tempQuantityMap = <String, int>{}.obs;
@@ -18,7 +16,8 @@ class PanierController extends GetxController {
   final RxString editingOrderId = ''.obs;
 
   // Obtenir VariationController depuis l'injection de dépendance GetX
-  VariationController get variationController => Get.find<VariationController>();
+  VariationController get variationController =>
+      Get.find<VariationController>();
 
   PanierController() {
     chargerArticlesPanier();
@@ -37,10 +36,7 @@ class PanierController extends GetxController {
     int index = cartItems.indexWhere((item) => item.productId == productId);
     if (index >= 0) {
       cartItems[index] = cartItems[index].copyWith(
-        selectedVariation: {
-          'taille': newSize,
-          'prix': newPrice.toString(),
-        },
+        selectedVariation: ProductSizePrice(size: newSize, price: newPrice),
         price: newPrice,
       );
     }
@@ -70,16 +66,14 @@ class PanierController extends GetxController {
   /// Vérifie si une variante est sélectionnée
   bool aVarianteSelectionnee() {
     final variation = variationController.selectedVariation.value;
-    return variation != null && 
-           variation.isNotEmpty && 
-           (variation['id']?.isNotEmpty ?? false);
+    return variation != null;
   }
 
   /// Obtient la clé unique d'un produit (ID + variante)
   String _obtenirCle(ProduitModel product) {
     final variation = variationController.selectedVariation.value;
     final variationId = product.isVariable && variation != null
-        ? (variation['id'] ?? '')
+        ? variation.size // ✅ Accéder directement à .size
         : "";
     return '${product.id}-$variationId';
   }
@@ -112,7 +106,7 @@ class PanierController extends GetxController {
       return obtenirQuantiteProduitDansPanier(product.id);
     } else {
       final variation = variationController.selectedVariation.value;
-      final variationId = variation?['id'] ?? '';
+      final variationId = variation?.size ?? '';
       // Pour les produits variables, retourner la quantité seulement si une variante est sélectionnée
       if (variationId.isEmpty) {
         // Aucune variante sélectionnée, retourner 0 (pas dans le panier)
@@ -133,7 +127,7 @@ class PanierController extends GetxController {
   /// Modifie la variante d'un produit dans le panier
   void modifierVariationPanier(String productId, int currentIndex) {
     final variation = variationController.selectedVariation.value;
-    if (variation == null || (variation['id']?.isEmpty ?? true)) {
+    if (variation == null || variation.size.isEmpty) {
       TLoaders.customToast(message: 'Veuillez choisir une variante');
       return;
     }
@@ -166,19 +160,8 @@ class PanierController extends GetxController {
       return;
     }
 
-    // Get the price from variation map (variation is not null here)
-    final priceStr = variation['prix'] ?? '0.0';
-    final price = double.tryParse(priceStr) ?? 0.0;
-
-    // Get the size from variation map (variation is not null here)
-    final size = variation['taille'] ?? selectedSize;
-
-    // Créer la nouvelle structure de variation
-    final newVariation = <String, String>{
-      'id': selectedSize,
-      'taille': size,
-      'prix': price.toString(),
-    };
+    // Utiliser directement ProductSizePrice
+    final price = variation.price;
 
     // Obtenir la quantité temporaire (l'utilisateur peut l'avoir modifiée)
     final tempQuantity = obtenirQuantiteTemporaire(product);
@@ -188,7 +171,7 @@ class PanierController extends GetxController {
       variationId: selectedSize,
       price: price,
       quantity: finalQuantity, // Update quantity if changed
-      selectedVariation: newVariation,
+      selectedVariation: variation,
       // Keep existing image if variation doesn't have one
       image: item.image,
     );
@@ -209,7 +192,7 @@ class PanierController extends GetxController {
     // Vérifications de base
     if (product.isVariable) {
       final variation = variationController.selectedVariation.value;
-      if (variation == null || (variation['id']?.isEmpty ?? true)) {
+      if (variation == null || variation.size.isEmpty) {
         TLoaders.customToast(message: 'Veuillez choisir une variante');
         return;
       }
@@ -254,27 +237,24 @@ class PanierController extends GetxController {
     }
 
     final variation = variationController.selectedVariation.value;
-    final isVariation = variation != null && (variation['id']?.isNotEmpty ?? false);
-    
-    // Get price from variation map or product
-    final price = isVariation && variation != null
-        ? (double.tryParse(variation['prix'] ?? '0.0') ?? 0.0)
+    final isVariation = variation != null && variation.size.isNotEmpty;
+
+    // Get price from variation or product
+    final price = isVariation
+        ? variation.price
         : (product.salePrice > 0.0 ? product.salePrice : product.price);
 
-    // Use variation map directly if it exists, otherwise null
-    final variationData = isVariation && variation != null
-        ? Map<String, String>.from(variation) 
-        : null;
 
     return CartItemModel(
       productId: product.id,
       title: product.name,
       price: price,
-      image: product.imageUrl, // Use product image (variation doesn't have separate image)
+      image: product
+          .imageUrl, // Use product image (variation doesn't have separate image)
       quantity: quantity,
-      variationId: isVariation && variation != null ? (variation['id'] ?? '') : '',
+      variationId: isVariation ? variation.size : '',
       brandName: product.etablissement?.name ?? 'Inconnu',
-      selectedVariation: variationData,
+      selectedVariation: variation,
       etablissementId: product.etablissementId,
       product: product,
       categoryId: product.categoryId, // Stocker le categoryId
@@ -321,7 +301,7 @@ class PanierController extends GetxController {
         );
       } else {
         dialogRetirerDuPanier(index);
-        return; 
+        return;
       }
       mettreAJourPanier();
     }

@@ -63,12 +63,9 @@ class TCartItem extends StatelessWidget {
               const SizedBox(height: 4),
 
               // Variation attributes
-              if (cartItem.selectedVariation != null &&
-                  cartItem.selectedVariation!.isNotEmpty)
+              if (cartItem.selectedVariation != null)
                 Text(
-                  cartItem.selectedVariation!.entries
-                      .map((e) => '${e.key}: ${e.value}')
-                      .join(' • '),
+                  'Taille: ${cartItem.selectedVariation!.size}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey.shade600,
                       ),

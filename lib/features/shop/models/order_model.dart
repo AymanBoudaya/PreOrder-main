@@ -178,7 +178,7 @@ class OrderModel {
       id: json['id'] as String,
       userId: json['user_id'] as String,
       status: _parseStatus(json['status']),
-      totalAmount: (json['total_amount'] as num).toDouble(),
+      totalAmount: _parseDouble(json['total_amount']),
       orderDate: DateTime.parse(json['order_date'] as String),
       deliveryDate: json['delivery_date'] != null
           ? DateTime.parse(json['delivery_date'] as String)
@@ -213,6 +213,16 @@ class OrderModel {
       clientArrivalTime: json['client_arrival_time'] as String?,
       codeRetrait: json['code_retrait'] as String?,
     );
+  }
+
+  /// Helper function pour parser les doubles de manière sécurisée
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    if (value is num) return value.toDouble();
+    return 0.0;
   }
 
   static OrderStatus _parseStatus(String? statusStr) {

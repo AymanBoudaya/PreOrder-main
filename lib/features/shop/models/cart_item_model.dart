@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:caferesto/features/shop/models/produit_model.dart';
 
 class CartItemModel {
@@ -8,7 +9,7 @@ class CartItemModel {
   int quantity;
   String variationId;
   String? brandName;
-  Map<String, String>? selectedVariation;
+  ProductSizePrice? selectedVariation;
   String etablissementId;
   ProduitModel? product;
   String categoryId; // Ajout du categoryId pour faciliter l'affichage
@@ -21,7 +22,7 @@ class CartItemModel {
     this.price = 0.0,
     this.image,
     this.brandName,
-    this.selectedVariation = const {'id': '', 'taille': '', 'prix': '0.0'},
+    this.selectedVariation,
     this.etablissementId = '',
     this.product,
     this.categoryId = '',
@@ -40,29 +41,57 @@ class CartItemModel {
       'quantity': quantity,
       'variationId': variationId,
       'brandName': brandName,
-      'selectedVariation':
-          selectedVariation ?? {'id': '', 'taille': '', 'prix': '0.0'},
+      'selectedVariation': selectedVariation?.toMap(),
       'etablissementId': etablissementId,
       'categoryId': categoryId,
     };
   }
 
   factory CartItemModel.fromJson(Map<String, dynamic> data) {
+    ProductSizePrice? selectedVariation;
+    if (data['selectedVariation'] != null) {
+      final variationData = data['selectedVariation'];
+      if (variationData is Map<String, dynamic>) {
+        // Si c'est déjà un Map, utiliser fromMap
+        selectedVariation = ProductSizePrice.fromMap(variationData);
+      } else if (variationData is String) {
+        // Si c'est une chaîne JSON, parser d'abord
+        try {
+          final parsed =
+              Map<String, dynamic>.from(json.decode(variationData) as Map);
+          selectedVariation = ProductSizePrice.fromMap(parsed);
+        } catch (e) {
+          selectedVariation = null;
+        }
+      }
+    }
+
     return CartItemModel(
       productId: data['productId'] ?? '',
       title: data['title'] ?? '',
-      price: (data['price'] as num).toDouble(),
+      price: _parseDouble(data['price']),
       image: data['image'],
-      quantity: data['quantity'] ?? 1,
+      quantity: data['quantity'] is int
+          ? data['quantity']
+          : int.tryParse(data['quantity']?.toString() ?? '1') ?? 1,
       variationId: data['variationId'] ?? '',
       brandName: data['brandName'],
-      selectedVariation: data['selectedVariation'] != null
-          ? Map<String, String>.from(data['selectedVariation'])
-          : null,
+      selectedVariation: selectedVariation,
       etablissementId: data['etablissementId'] ?? '',
       categoryId: data['categoryId'] ?? '',
     );
   }
+
+  /// Helper function pour parser les doubles de manière sécurisée
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    if (value is num) return value.toDouble();
+    return 0.0;
+  }
+
   CartItemModel copyWith({
     String? productId,
     String? title,
@@ -71,7 +100,7 @@ class CartItemModel {
     int? quantity,
     String? variationId,
     String? brandName,
-    Map<String, String>? selectedVariation,
+    ProductSizePrice? selectedVariation,
     String? etablissementId,
     ProduitModel? product,
     String? categoryId,
