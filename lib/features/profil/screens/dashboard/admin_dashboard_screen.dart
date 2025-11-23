@@ -8,6 +8,8 @@ import '../../../../utils/helpers/helper_functions.dart';
 import '../../controllers/dashboard_controller.dart';
 import '../../models/dashboard_stats_model.dart';
 import 'dashboard_side_menu.dart';
+import 'widgets/orders_by_day.dart';
+import 'widgets/pickup_hours.dart';
 import 'widgets/top_product_widget.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
@@ -142,11 +144,11 @@ class AdminDashboardScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: _buildOrdersByDay(stats, dark),
+                          child: OrdersByDay(stats: stats, dark: dark),
                         ),
                         const SizedBox(width: AppSizes.spaceBtwItems),
                         Expanded(
-                          child: _buildPickupHours(stats, dark),
+                          child: PickupHours(stats: stats, dark: dark),
                         ),
                       ],
                     );
@@ -154,9 +156,9 @@ class AdminDashboardScreen extends StatelessWidget {
                     // Mobile layout
                     return Column(
                       children: [
-                        _buildOrdersByDay(stats, dark),
+                        OrdersByDay(stats: stats, dark: dark),
                         const SizedBox(height: AppSizes.spaceBtwSections),
-                        _buildPickupHours(stats, dark),
+                        PickupHours(stats: stats, dark: dark),
                       ],
                     );
                   }
@@ -977,223 +979,6 @@ class AdminDashboardScreen extends StatelessWidget {
                 );
               },
             ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOrdersByDay(DashboardStats stats, bool dark) {
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        color: dark ? TColors.darkContainer : Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Iconsax.calendar, color: TColors.primary, size: 24),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Jours avec le Plus de Commandes',
-                  style: Theme.of(Get.context!).textTheme.titleLarge,
-                  softWrap: true,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSizes.spaceBtwItems),
-          if (stats.ordersByDay.isEmpty)
-            const Text('Aucune donnée disponible')
-          else
-            ...stats.ordersByDay.asMap().entries.map((entry) {
-              final index = entry.key;
-              final dayData = entry.value;
-              final day = dayData['day'] as String? ?? 'Inconnu';
-              final count = dayData['count'] as int? ?? 0;
-              final maxCount = stats.ordersByDay.isNotEmpty
-                  ? (stats.ordersByDay[0]['count'] as int? ?? 1)
-                  : 1;
-              final percentage = maxCount > 0 ? (count / maxCount * 100) : 0.0;
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: AppSizes.spaceBtwItems),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                color: TColors.primary.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '${index + 1}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: TColors.primary,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              day,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          '$count commande${count > 1 ? 's' : ''}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: TColors.primary,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    LinearProgressIndicator(
-                      value: percentage / 100,
-                      backgroundColor: TColors.primary.withValues(alpha: 0.1),
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(TColors.primary),
-                      minHeight: 6,
-                    ),
-                  ],
-                ),
-              );
-            }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPickupHours(DashboardStats stats, bool dark) {
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        color: dark ? TColors.darkContainer : Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Iconsax.clock, color: TColors.primary, size: 24),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Heures de Pickup les Plus Fréquentes',
-                  style: Theme.of(Get.context!).textTheme.titleLarge,
-                  softWrap: true,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSizes.spaceBtwItems),
-          if (stats.pickupHours.isEmpty)
-            const Text('Aucune donnée disponible')
-          else
-            ...stats.pickupHours.asMap().entries.map((entry) {
-              final index = entry.key;
-              final hourData = entry.value;
-              final hour = hourData['hour'] as String? ?? 'Inconnu';
-              final count = hourData['count'] as int? ?? 0;
-              final maxCount = stats.pickupHours.isNotEmpty
-                  ? (stats.pickupHours[0]['count'] as int? ?? 1)
-                  : 1;
-              final percentage = maxCount > 0 ? (count / maxCount * 100) : 0.0;
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: AppSizes.spaceBtwItems),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                color: Colors.orange.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '${index + 1}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[700],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              hour,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          '$count commande${count > 1 ? 's' : ''}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange[700],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    LinearProgressIndicator(
-                      value: percentage / 100,
-                      backgroundColor: Colors.orange.withValues(alpha: 0.1),
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
-                      minHeight: 6,
-                    ),
-                  ],
-                ),
-              );
-            }),
         ],
       ),
     );
