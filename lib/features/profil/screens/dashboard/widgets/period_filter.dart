@@ -7,9 +7,9 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 
 class PeriodFilter extends StatelessWidget {
-  final bool dark = false;
+  final bool dark;
   final DashboardController controller;
-  const PeriodFilter({super.key, required this.controller});
+  const PeriodFilter({super.key, required this.controller, required this.dark});
 
   @override
   Widget build(BuildContext context) {

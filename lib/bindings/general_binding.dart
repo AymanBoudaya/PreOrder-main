@@ -1,6 +1,7 @@
 import 'package:caferesto/data/repositories/notifications/notifications_repository.dart';
 import 'package:caferesto/features/notification/controllers/notification_controller.dart';
 import 'package:caferesto/features/profil/controllers/address_controller.dart';
+import 'package:caferesto/features/profil/controllers/gerant_dashboard_controller.dart';
 import 'package:caferesto/features/profil/controllers/liste_etablissement_controller.dart';
 import 'package:caferesto/features/shop/controllers/commandes/order_controller.dart';
 import 'package:caferesto/features/shop/controllers/product/all_products_controller.dart';
@@ -59,7 +60,8 @@ class GeneralBinding extends Bindings {
       fenix: true,
     );
     Get.lazyPut<AddressController>(() => AddressController(), fenix: true);
-    Get.lazyPut<AllProductsController>(() => AllProductsController(), fenix: true);
+    Get.lazyPut<AllProductsController>(() => AllProductsController(),
+        fenix: true);
     Get.lazyPut<PanierController>(() => PanierController(), fenix: true);
     Get.lazyPut<CheckoutController>(() => CheckoutController(), fenix: true);
     Get.lazyPut<OrderController>(() => OrderController(), fenix: true);
@@ -74,5 +76,7 @@ class GeneralBinding extends Bindings {
         () => EtablissementController(Get.find<EtablissementRepository>()),
         fenix: true);
     Get.lazyPut<BannerController>(() => BannerController(), fenix: true);
+    Get.lazyPut<GerantDashboardController>(() => GerantDashboardController(),
+        fenix: true);
   }
 }

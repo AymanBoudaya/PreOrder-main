@@ -40,7 +40,7 @@ class DashboardContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Filtre de période
-              PeriodFilter(controller: controller),
+              PeriodFilter(controller: controller, dark: dark),
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Cartes de statistiques principales
