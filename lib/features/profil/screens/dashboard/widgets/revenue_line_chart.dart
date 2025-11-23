@@ -153,13 +153,13 @@ class RevenueLineChart extends StatelessWidget {
                       );
                     }).toList(),
                     isCurved: true,
-                    color: TColors.primary,
+                    color: Colors.blue.shade400,
                     barWidth: 3,
                     isStrokeCapRound: true,
                     dotData: const FlDotData(show: true),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: TColors.primary.withValues(alpha: 0.1),
+                      color: Colors.blue.shade400.withValues(alpha: 0.1),
                     ),
                   ),
                 ],

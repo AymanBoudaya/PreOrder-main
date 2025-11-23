@@ -82,7 +82,7 @@ class TopEtablissementsChart extends StatelessWidget {
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
-                    getTooltipColor: (group) => TColors.primary,
+                    getTooltipColor: (group) => Colors.blue.shade400,
                     tooltipRoundedRadius: 8,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       final etab = topEtablissements[group.x.toInt()];
@@ -91,7 +91,7 @@ class TopEtablissementsChart extends StatelessWidget {
                       return BarTooltipItem(
                         '$name\n${revenue.toStringAsFixed(2)} DT',
                         TextStyle(
-                          color: TColors.primary,
+                          color: Colors.blue.shade400,
                           fontWeight: FontWeight.bold,
                         ),
                       );

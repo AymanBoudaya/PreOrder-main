@@ -19,7 +19,7 @@ class PeriodFilter extends StatelessWidget {
         color: dark ? TColors.darkContainer : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
         border: Border.all(
-          color: TColors.primary.withValues(alpha: 0.2),
+          color: Colors.blue.shade400.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -27,7 +27,7 @@ class PeriodFilter extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Iconsax.calendar, size: 20, color: TColors.primary),
+              Icon(Iconsax.calendar, size: 20, color: Colors.blue.shade400),
               const SizedBox(width: AppSizes.sm),
               Text(
                 'Filtre par période',

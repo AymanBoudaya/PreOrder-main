@@ -34,7 +34,7 @@ class OrdersByDay extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Iconsax.calendar, color: TColors.primary, size: 24),
+              Icon(Iconsax.calendar, color: Colors.blue.shade400, size: 24),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(

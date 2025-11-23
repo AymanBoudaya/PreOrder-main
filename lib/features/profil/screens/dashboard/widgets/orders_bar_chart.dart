@@ -82,7 +82,7 @@ class OrdersBarChart extends StatelessWidget {
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
-                    getTooltipColor: (group) => TColors.primary,
+                    getTooltipColor: (group) => Colors.blue.shade400,
                     tooltipRoundedRadius: 8,
                   ),
                 ),
@@ -141,7 +141,7 @@ class OrdersBarChart extends StatelessWidget {
                     barRods: [
                       BarChartRodData(
                         toY: ((entry.value['count'] as int?) ?? 0).toDouble(),
-                        color: TColors.primary,
+                        color: Colors.blue.shade400,
                         width: 20,
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(8),

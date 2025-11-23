@@ -15,7 +15,7 @@ class SystemStatItem extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSizes.spaceBtwItems),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: TColors.primary),
+          Icon(icon, size: 20, color: Colors.blue.shade400),
           const SizedBox(width: AppSizes.spaceBtwItems),
           Expanded(
             child: Text(
@@ -27,7 +27,7 @@ class SystemStatItem extends StatelessWidget {
             value,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: TColors.primary,
+                  color: Colors.blue.shade400,
                 ),
           ),
         ],

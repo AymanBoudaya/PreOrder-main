@@ -33,7 +33,7 @@ class PickupHours extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Iconsax.clock, color: TColors.primary, size: 24),
+              Icon(Iconsax.clock, color: Colors.blue.shade400, size: 24),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(

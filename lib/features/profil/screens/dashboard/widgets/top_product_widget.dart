@@ -40,11 +40,11 @@ class TopProductsWidget extends StatelessWidget {
               final product = entry.value;
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: TColors.primary.withValues(alpha: 0.1),
+                  backgroundColor: Colors.blue.shade400.withValues(alpha: 0.1),
                   child: Text(
                     '${index + 1}',
-                    style: const TextStyle(
-                      color: TColors.primary,
+                    style: TextStyle(
+                      color: Colors.blue.shade400,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -62,9 +62,9 @@ class TopProductsWidget extends StatelessWidget {
                 ),
                 trailing: Text(
                   '${product['totalQuantity']}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: TColors.primary,
+                    color: Colors.blue.shade400,
                   ),
                 ),
               );

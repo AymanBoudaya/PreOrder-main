@@ -32,7 +32,7 @@ class TopUsers extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Iconsax.profile_2user, color: TColors.primary),
+              Icon(Iconsax.profile_2user, color: Colors.blue.shade400),
               const SizedBox(width: AppSizes.sm),
               Text(
                 'Clients les Plus Fidèles',
@@ -76,7 +76,7 @@ class TopUsers extends StatelessWidget {
                         profileImageUrl != null && profileImageUrl.isNotEmpty
                             ? NetworkImage(profileImageUrl)
                             : null,
-                    backgroundColor: TColors.primary.withValues(alpha: 0.1),
+                    backgroundColor: Colors.blue.shade400.withValues(alpha: 0.1),
                     child: profileImageUrl == null || profileImageUrl.isEmpty
                         ? Text(
                             fullName.isNotEmpty
@@ -102,7 +102,7 @@ class TopUsers extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: TColors.primary.withValues(alpha: 0.1),
+                              color: Colors.blue.shade400.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
