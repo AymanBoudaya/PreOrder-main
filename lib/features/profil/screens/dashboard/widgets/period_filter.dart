@@ -5,11 +5,21 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
+import '../../../../../utils/popups/loaders.dart';
 
 class PeriodFilter extends StatelessWidget {
   final bool dark;
   final DashboardController controller;
   const PeriodFilter({super.key, required this.controller, required this.dark});
+
+  bool _isDateRangeValid(DateTime? start, DateTime? end) {
+    if (start == null || end == null) return false;
+    return start.isBefore(end) || start.isAtSameMomentAs(end);
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,79 +50,168 @@ class PeriodFilter extends StatelessWidget {
           const SizedBox(height: AppSizes.md),
           // Options de période rapide
           Wrap(
+            spacing: AppSizes.sm,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               const Text('Période rapide: '),
-              const SizedBox(width: AppSizes.sm),
-              DropdownButton<String>(
-                value: controller.useCustomDateRange.value
-                    ? 'custom'
-                    : controller.selectedPeriod.value,
-                underline: const SizedBox(),
-                items: [
-                  const DropdownMenuItem(value: '7', child: Text('7 jours')),
-                  const DropdownMenuItem(value: '30', child: Text('30 jours')),
-                  const DropdownMenuItem(value: '90', child: Text('90 jours')),
-                  const DropdownMenuItem(
-                      value: 'custom', child: Text('Personnalisé')),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    if (value == 'custom') {
-                      controller.useCustomDateRange.value = true;
-                    } else {
-                      controller.updatePeriod(value);
-                    }
-                  }
-                },
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue.shade400.withValues(alpha: 0.3),
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Obx(() => DropdownButton<String>(
+                      value: controller.useCustomDateRange.value
+                          ? 'custom'
+                          : controller.selectedPeriod.value,
+                      underline: const SizedBox(),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      icon: Icon(
+                        Iconsax.arrow_down_1,
+                        size: 16,
+                        color: Colors.blue.shade400,
+                      ),
+                      items: [
+                        const DropdownMenuItem(
+                          value: '7',
+                          child: Text('7 jours'),
+                        ),
+                        const DropdownMenuItem(
+                          value: '30',
+                          child: Text('30 jours'),
+                        ),
+                        const DropdownMenuItem(
+                          value: '90',
+                          child: Text('90 jours'),
+                        ),
+                        const DropdownMenuItem(
+                          value: 'custom',
+                          child: Text('Personnalisé'),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          if (value == 'custom') {
+                            controller.useCustomDateRange.value = true;
+                          } else {
+                            controller.updatePeriod(value);
+                          }
+                        }
+                      },
+                    )),
               ),
             ],
           ),
           // Filtre par dates personnalisées
           Obx(() {
             if (controller.useCustomDateRange.value) {
+              final startDate = controller.startDate.value;
+              final endDate = controller.endDate.value;
+              final isValid = _isDateRangeValid(startDate, endDate);
+              final hasError = startDate != null &&
+                  endDate != null &&
+                  !_isDateRangeValid(startDate, endDate);
+
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: AppSizes.md),
-                  Row(
+                  // Message d'erreur si dates invalides
+                  if (hasError)
+                    Container(
+                      padding: const EdgeInsets.all(AppSizes.sm),
+                      margin: const EdgeInsets.only(bottom: AppSizes.sm),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.red.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Iconsax.warning_2,
+                            size: 16,
+                            color: Colors.red.shade700,
+                          ),
+                          const SizedBox(width: AppSizes.xs),
+                          Expanded(
+                            child: Text(
+                              'La date de début doit être antérieure à la date de fin',
+                              style: TextStyle(
+                                color: Colors.red.shade700,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  // Champs de date avec Wrap pour responsive
+                  Wrap(
+                    spacing: AppSizes.sm,
+                    runSpacing: AppSizes.sm,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Expanded(
+                      // Date de début
+                      Flexible(
                         child: InkWell(
                           onTap: () async {
                             final pickedDate = await showDatePicker(
                               context: context,
-                              initialDate:
-                                  controller.startDate.value ?? DateTime.now(),
+                              initialDate: startDate ?? DateTime.now(),
                               firstDate: DateTime(2020),
-                              lastDate: DateTime.now(),
+                              lastDate: endDate ?? DateTime.now(),
+                              locale: const Locale('fr', 'FR'),
                             );
                             if (pickedDate != null) {
                               controller.startDate.value = pickedDate;
-                              if (controller.endDate.value != null) {
-                                controller.updateCustomDateRange(
-                                  controller.startDate.value,
-                                  controller.endDate.value,
-                                );
+                              // Si la date de fin est avant la nouvelle date de début, la réinitialiser
+                              if (endDate != null &&
+                                  pickedDate.isAfter(endDate)) {
+                                controller.endDate.value = null;
                               }
                             }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(AppSizes.sm),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
+                              border: Border.all(
+                                color: hasError
+                                    ? Colors.red
+                                    : Colors.blue.shade400.withValues(alpha: 0.3),
+                                width: hasError ? 2 : 1,
+                              ),
                               borderRadius: BorderRadius.circular(8),
+                              color: hasError
+                                  ? Colors.red.withValues(alpha: 0.05)
+                                  : null,
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Iconsax.calendar_1, size: 16),
+                                Icon(
+                                  Iconsax.calendar_1,
+                                  size: 16,
+                                  color: hasError
+                                      ? Colors.red
+                                      : Colors.blue.shade400,
+                                ),
                                 const SizedBox(width: AppSizes.xs),
-                                Text(
-                                  controller.startDate.value != null
-                                      ? '${controller.startDate.value!.day}/${controller.startDate.value!.month}/${controller.startDate.value!.year}'
-                                      : 'Date de début',
-                                  style: TextStyle(
-                                    color: controller.startDate.value != null
-                                        ? Colors.black
-                                        : Colors.grey,
+                                Flexible(
+                                  child: Text(
+                                    startDate != null
+                                        ? _formatDate(startDate)
+                                        : 'Date de début',
+                                    style: TextStyle(
+                                      color: startDate != null
+                                          ? (dark ? Colors.white : Colors.black)
+                                          : Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
@@ -120,48 +219,66 @@ class PeriodFilter extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: AppSizes.sm),
-                      const Text('à'),
-                      const SizedBox(width: AppSizes.sm),
-                      Expanded(
+                      // Séparateur "à"
+                      Text(
+                        'à',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                      // Date de fin
+                      Flexible(
                         child: InkWell(
                           onTap: () async {
                             final pickedDate = await showDatePicker(
                               context: context,
-                              initialDate:
-                                  controller.endDate.value ?? DateTime.now(),
-                              firstDate:
-                                  controller.startDate.value ?? DateTime(2020),
+                              initialDate: endDate ?? DateTime.now(),
+                              firstDate: startDate ?? DateTime(2020),
                               lastDate: DateTime.now(),
+                              locale: const Locale('fr', 'FR'),
                             );
                             if (pickedDate != null) {
                               controller.endDate.value = pickedDate;
-                              if (controller.startDate.value != null) {
-                                controller.updateCustomDateRange(
-                                  controller.startDate.value,
-                                  controller.endDate.value,
-                                );
-                              }
                             }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(AppSizes.sm),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
+                              border: Border.all(
+                                color: hasError
+                                    ? Colors.red
+                                    : Colors.blue.shade400.withValues(alpha: 0.3),
+                                width: hasError ? 2 : 1,
+                              ),
                               borderRadius: BorderRadius.circular(8),
+                              color: hasError
+                                  ? Colors.red.withValues(alpha: 0.05)
+                                  : null,
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Iconsax.calendar_1, size: 16),
+                                Icon(
+                                  Iconsax.calendar_1,
+                                  size: 16,
+                                  color: hasError
+                                      ? Colors.red
+                                      : Colors.blue.shade400,
+                                ),
                                 const SizedBox(width: AppSizes.xs),
-                                Text(
-                                  controller.endDate.value != null
-                                      ? '${controller.endDate.value!.day}/${controller.endDate.value!.month}/${controller.endDate.value!.year}'
-                                      : 'Date de fin',
-                                  style: TextStyle(
-                                    color: controller.endDate.value != null
-                                        ? Colors.black
-                                        : Colors.grey,
+                                Flexible(
+                                  child: Text(
+                                    endDate != null
+                                        ? _formatDate(endDate)
+                                        : 'Date de fin',
+                                    style: TextStyle(
+                                      color: endDate != null
+                                          ? (dark ? Colors.white : Colors.black)
+                                          : Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
@@ -169,16 +286,54 @@ class PeriodFilter extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: AppSizes.sm),
-                      if (controller.startDate.value != null &&
-                          controller.endDate.value != null)
+                      // Bouton effacer
+                      if (startDate != null || endDate != null)
                         IconButton(
-                          icon: const Icon(Iconsax.close_circle),
+                          icon: Icon(
+                            Iconsax.close_circle,
+                            color: Colors.grey[600],
+                            size: 20,
+                          ),
                           onPressed: () => controller.clearCustomDateRange(),
                           tooltip: 'Effacer',
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
                         ),
                     ],
                   ),
+                  // Bouton Valider
+                  if (startDate != null && endDate != null) ...[
+                    const SizedBox(height: AppSizes.md),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: isValid
+                            ? () {
+                                controller.updateCustomDateRange(
+                                  startDate,
+                                  endDate,
+                                );
+                                TLoaders.successSnackBar(
+                                  title: 'Succès',
+                                  message: 'Période personnalisée appliquée',
+                                );
+                              }
+                            : null,
+                        icon: const Icon(Iconsax.tick_circle, size: 18),
+                        label: const Text('Valider'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade400,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSizes.sm,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               );
             }
