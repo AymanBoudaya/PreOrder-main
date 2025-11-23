@@ -12,7 +12,7 @@ class OrderListController extends GetxController
   final panierController = Get.find<PanierController>();
 
   late TabController tabController;
-  final List<String> tabLabels = ['Toutes', 'Actives', 'Terminées'];
+  final List<String> tabLabels = ['En Attente', 'Actives', 'Terminées'];
 
   @override
   void onInit() {
@@ -32,7 +32,7 @@ class OrderListController extends GetxController
       case 2:
         return orderController.commandesTerminees;
       default:
-        return orderController.orders;
+        return orderController.commandesEnAttente;
     }
   }
 
@@ -51,7 +51,10 @@ class OrderListController extends GetxController
           ElevatedButton(
             onPressed: () => Get.back(result: true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text("Oui, annuler"),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const Text("Oui, annuler"),
+            ),
           ),
         ],
       ),
@@ -62,7 +65,7 @@ class OrderListController extends GetxController
     }
   }
 
-  // ✏️ Charger la commande dans le panier pour modification
+  // Charger la commande dans le panier pour modification
   void showEditDialog(BuildContext context, OrderModel order) {
     // Vérifier que la commande peut être modifiée
     if (!order.canBeModified) {

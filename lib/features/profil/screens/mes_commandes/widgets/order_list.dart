@@ -161,12 +161,9 @@ class TOrderListItems extends StatelessWidget {
   }
 
   Widget _header(BuildContext context, OrderModel order) {
-    return Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      runSpacing: 8,
+    return Row(
       children: [
-        Flexible(
+        Expanded(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
