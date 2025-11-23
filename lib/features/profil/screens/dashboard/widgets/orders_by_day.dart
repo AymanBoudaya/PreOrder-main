@@ -74,7 +74,7 @@ class OrdersByDay extends StatelessWidget {
                               width: 24,
                               height: 24,
                               decoration: BoxDecoration(
-                                color: TColors.primary.withValues(alpha: 0.1),
+                                color: Colors.orange.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Center(
@@ -83,7 +83,7 @@ class OrdersByDay extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: TColors.primary,
+                                    color: Colors.orange[700],
                                   ),
                                 ),
                               ),
@@ -102,7 +102,7 @@ class OrdersByDay extends StatelessWidget {
                           '$count commande${count > 1 ? 's' : ''}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: TColors.primary,
+                            color: Colors.orange[700],
                             fontSize: 14,
                           ),
                         ),
@@ -111,9 +111,8 @@ class OrdersByDay extends StatelessWidget {
                     const SizedBox(height: 4),
                     LinearProgressIndicator(
                       value: percentage / 100,
-                      backgroundColor: TColors.primary.withValues(alpha: 0.1),
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(TColors.primary),
+                      backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
                       minHeight: 6,
                     ),
                   ],

@@ -779,4 +779,114 @@ class DashboardController extends GetxController {
 
     return enrichedUsers;
   }
+
+  // ==================== MÉTHODES POUR LES GRAPHIQUES ====================
+
+  /// Récupère les revenus quotidiens pour les 7 derniers jours
+  Future<List<Map<String, dynamic>>> getDailyRevenue(int days) async {
+    try {
+      final now = DateTime.now();
+      final List<Map<String, dynamic>> dailyRevenue = [];
+
+      for (int i = days - 1; i >= 0; i--) {
+        final date = now.subtract(Duration(days: i));
+        final startOfDay = DateTime(date.year, date.month, date.day);
+        final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+
+        final orders = await _db
+            .from('orders')
+            .select('total_amount, status, delivery_date')
+            .eq('status', 'delivered')
+            .not('delivery_date', 'is', null)
+            .gte('delivery_date', startOfDay.toIso8601String())
+            .lte('delivery_date', endOfDay.toIso8601String());
+
+        final revenue = (orders as List).fold<double>(0.0,
+            (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
+
+        dailyRevenue.add({
+          'date':
+              '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
+          'revenue': revenue,
+        });
+      }
+
+      return dailyRevenue;
+    } catch (e) {
+      debugPrint('Erreur getDailyRevenue: $e');
+      return [];
+    }
+  }
+
+  /// Récupère les top établissements par revenus
+  Future<List<Map<String, dynamic>>> getTopEtablissements(int limit) async {
+    try {
+      final orders = await _db
+          .from('orders')
+          .select(
+              'etablissement_id, total_amount, status, etablissement:etablissement_id(name)')
+          .inFilter('status', ['delivered', 'ready']);
+
+      final Map<String, double> revenueByEtab = {};
+      final Map<String, String> namesByEtab = {};
+
+      for (var order in orders as List) {
+        final etabId = order['etablissement_id']?.toString() ?? '';
+        if (etabId.isEmpty) continue;
+
+        final amount = (order['total_amount'] as num?)?.toDouble() ?? 0.0;
+        final etab = order['etablissement'] as Map?;
+        final name = etab?['name']?.toString() ?? 'Inconnu';
+
+        revenueByEtab[etabId] = (revenueByEtab[etabId] ?? 0.0) + amount;
+        namesByEtab[etabId] = name;
+      }
+
+      final sorted = revenueByEtab.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+
+      return sorted
+          .take(limit)
+          .map((e) => {
+                'id': e.key,
+                'name': namesByEtab[e.key] ?? 'Inconnu',
+                'revenue': e.value,
+              })
+          .toList();
+    } catch (e) {
+      debugPrint('Erreur getTopEtablissements: $e');
+      return [];
+    }
+  }
+
+  /// Récupère les commandes par jour de la semaine (format pour bar chart)
+  List<Map<String, dynamic>> getOrdersByDayForChart(
+      List<Map<String, dynamic>> ordersByDay) {
+    // Les jours de la semaine dans l'ordre
+    final weekDays = [
+      'Lundi',
+      'Mardi',
+      'Mercredi',
+      'Jeudi',
+      'Vendredi',
+      'Samedi',
+      'Dimanche'
+    ];
+
+    // Créer un map pour faciliter la recherche
+    final ordersMap = <String, int>{};
+    for (var order in ordersByDay) {
+      final day = order['day'] as String? ?? '';
+      final count = order['count'] as int? ?? 0;
+      ordersMap[day] = count;
+    }
+
+    // Retourner dans l'ordre des jours de la semaine
+    return weekDays.map((day) {
+      return {
+        'day': day,
+        'count': ordersMap[day] ?? 0,
+      };
+    }).toList();
+  }
 }

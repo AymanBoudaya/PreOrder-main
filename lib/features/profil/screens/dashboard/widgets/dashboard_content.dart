@@ -4,12 +4,15 @@ import 'package:get/get.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../controllers/dashboard_controller.dart';
 import 'main_stats_card.dart';
+import 'orders_bar_chart.dart';
 import 'orders_by_day.dart';
 import 'orders_by_status_chart.dart';
 import 'period_filter.dart';
 import 'pickup_hours.dart';
-import 'revenue_chart.dart';
+import 'revenue_line_chart.dart';
+import 'status_pie_chart.dart';
 import 'system_stats.dart';
+import 'top_etablissements_chart.dart';
 import 'top_product_widget.dart';
 import 'top_users.dart';
 
@@ -48,52 +51,112 @@ class DashboardContent extends StatelessWidget {
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Graphiques et statistiques détaillées
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  if (constraints.maxWidth > 800) {
-                    // Desktop layout
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            children: [
-                              RevenueChart(stats: stats, dark: dark),
-                              const SizedBox(height: AppSizes.spaceBtwSections),
-                              OrdersByStatusChart(stats: stats, dark: dark),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: AppSizes.spaceBtwItems),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              TopProductsWidget(stats: stats, dark: dark),
-                              const SizedBox(height: AppSizes.spaceBtwSections),
-                              SystemStats(stats: stats, dark: dark),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  } else {
-                    // Mobile layout
-                    return Column(
-                      children: [
-                        RevenueChart(stats: stats, dark: dark),
-                        const SizedBox(height: AppSizes.spaceBtwSections),
-                        OrdersByStatusChart(stats: stats, dark: dark),
-                        const SizedBox(height: AppSizes.spaceBtwSections),
-                        TopProductsWidget(
-                          stats: stats,
-                          dark: dark,
-                        ),
-                        const SizedBox(height: AppSizes.spaceBtwSections),
-                        SystemStats(stats: stats, dark: dark),
-                      ],
-                    );
-                  }
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: controller.getDailyRevenue(7),
+                builder: (context, dailyRevenueSnapshot) {
+                  return FutureBuilder<List<Map<String, dynamic>>>(
+                    future: controller.getTopEtablissements(5),
+                    builder: (context, topEtablissementsSnapshot) {
+                      final dailyRevenue = dailyRevenueSnapshot.data ?? [];
+                      final topEtablissements = topEtablissementsSnapshot.data ?? [];
+                      final ordersByDayForChart = controller.getOrdersByDayForChart(stats.ordersByDay);
+
+                      return LayoutBuilder(
+                        builder: (context, constraints) {
+                          if (constraints.maxWidth > 800) {
+                            // Desktop layout
+                            return Column(
+                              children: [
+                                // Première ligne : Revenue Line Chart et Status Pie Chart
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: RevenueLineChart(
+                                        dailyRevenue: dailyRevenue,
+                                        dark: dark,
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppSizes.spaceBtwItems),
+                                    Expanded(
+                                      child: StatusPieChart(
+                                        ordersByStatus: stats.ordersByStatus,
+                                        dark: dark,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                // Deuxième ligne : Orders Bar Chart et Top Etablissements
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: OrdersBarChart(
+                                        ordersByDay: ordersByDayForChart,
+                                        dark: dark,
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppSizes.spaceBtwItems),
+                                    Expanded(
+                                      child: TopEtablissementsChart(
+                                        topEtablissements: topEtablissements,
+                                        dark: dark,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                // Troisième ligne : Top Products et System Stats
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: TopProductsWidget(stats: stats, dark: dark),
+                                    ),
+                                    const SizedBox(width: AppSizes.spaceBtwItems),
+                                    Expanded(
+                                      child: SystemStats(stats: stats, dark: dark),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          } else {
+                            // Mobile layout
+                            return Column(
+                              children: [
+                                RevenueLineChart(
+                                  dailyRevenue: dailyRevenue,
+                                  dark: dark,
+                                ),
+                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                StatusPieChart(
+                                  ordersByStatus: stats.ordersByStatus,
+                                  dark: dark,
+                                ),
+                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                OrdersBarChart(
+                                  ordersByDay: ordersByDayForChart,
+                                  dark: dark,
+                                ),
+                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                TopEtablissementsChart(
+                                  topEtablissements: topEtablissements,
+                                  dark: dark,
+                                ),
+                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                TopProductsWidget(stats: stats, dark: dark),
+                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                SystemStats(stats: stats, dark: dark),
+                              ],
+                            );
+                          }
+                        },
+                      );
+                    },
+                  );
                 },
               ),
               const SizedBox(height: AppSizes.spaceBtwSections),

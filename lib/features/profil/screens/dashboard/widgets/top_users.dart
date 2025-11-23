@@ -96,7 +96,7 @@ class TopUsers extends StatelessWidget {
                       Text(email,
                           style: TextStyle(fontSize: 12, color: Colors.grey)),
                       const SizedBox(height: 4),
-                      Row(
+                      Wrap(
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -109,14 +109,14 @@ class TopUsers extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Iconsax.shopping_bag,
-                                    size: 14, color: TColors.primary),
+                                    size: 14, color: TColors.warning),
                                 const SizedBox(width: 4),
                                 Text(
                                   '$orderCount commande${orderCount > 1 ? 's' : ''}',
                                   style: const TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
-                                    color: TColors.primary,
+                                    color: TColors.warning,
                                   ),
                                 ),
                               ],
@@ -155,7 +155,7 @@ class TopUsers extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: TColors.primary.withValues(alpha: 0.1),
+                      color: TColors.warning.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -163,7 +163,7 @@ class TopUsers extends StatelessWidget {
                         '${index + 1}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: TColors.primary,
+                          color: TColors.warning,
                           fontSize: 14,
                         ),
                       ),
