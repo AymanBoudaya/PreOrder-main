@@ -65,9 +65,9 @@ class HomeScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  /// -- PromoSlider avec hauteur responsive - Charger les bannières depuis la DB
+                  /// -- PromoSlider avec hauteur responsive - Charger les bannières publiées depuis la DB
                   FutureBuilder(
-                    future: bannerController.getFeaturedBanners(),
+                    future: bannerController.getPublishedBanners(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return SizedBox(

@@ -8,23 +8,26 @@ import '../models/banner_model.dart';
 import '../models/category_model.dart';
 import '../models/etablissement_model.dart';
 import '../models/produit_model.dart';
+import '../../profil/controllers/user_controller.dart';
 
 class BannerController extends GetxController {
 
   // Repository
   final _bannerRepository = Get.find<BannerRepository>();
+  final _userController = Get.find<UserController>();
 
   // Observable variables
   final RxList<BannerModel> allBanners = <BannerModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxString searchQuery = ''.obs;
+  final RxInt selectedTabIndex = 0.obs; // 0: en_attente, 1: publiee, 2: refusee
 
   // Form variables
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final Rx<XFile?> pickedImage = Rx<XFile?>(null);
   final RxString imageUrl = ''.obs;
-  final RxBool isFeatured = false.obs;
+  final RxString selectedStatus = 'en_attente'.obs; // 'en_attente', 'publiee', 'refusee'
   final RxString selectedLinkType = ''.obs; // 'product', 'category', 'establishment'
   final RxString selectedLinkId = ''.obs;
 
@@ -55,15 +58,42 @@ class BannerController extends GetxController {
     }
   }
 
-  /// Fetch featured banners (for home screen)
-  Future<List<BannerModel>> getFeaturedBanners() async {
+  /// Fetch published banners (for home screen)
+  Future<List<BannerModel>> getPublishedBanners() async {
     try {
-      return await _bannerRepository.getFeaturedBanners();
+      return await _bannerRepository.getPublishedBanners();
     } catch (e) {
-      debugPrint('Erreur lors du chargement des bannières mises en avant: $e');
+      debugPrint('Erreur lors du chargement des bannières publiées: $e');
       return [];
     }
   }
+
+  /// Get banners by status
+  List<BannerModel> getBannersByStatus(String status) {
+    return allBanners.where((banner) => banner.status == status).toList();
+  }
+
+  /// Get filtered banners based on selected tab
+  List<BannerModel> getFilteredBannersByTab() {
+    final statuses = ['en_attente', 'publiee', 'refusee'];
+    if (selectedTabIndex.value >= 0 && selectedTabIndex.value < statuses.length) {
+      final status = statuses[selectedTabIndex.value];
+      return getFilteredBanners().where((banner) => banner.status == status).toList();
+    }
+    return [];
+  }
+
+  /// Check if user is Admin
+  bool get isAdmin => _userController.userRole == 'Admin';
+
+  /// Check if user is Gerant
+  bool get isGerant => _userController.userRole == 'Gérant';
+
+  /// Check if user can add/edit/delete banners
+  bool get canManageBanners => isGerant;
+
+  /// Check if user can change banner status
+  bool get canChangeStatus => isAdmin;
 
   /// Pick image from gallery or camera
   Future<void> pickImage({bool isMobile = false}) async {
@@ -114,12 +144,20 @@ class BannerController extends GetxController {
         );
       }
 
-      // Create banner
+      // Create banner (Gérant only, status always 'en_attente' for new banners)
+      if (!canManageBanners) {
+        TLoaders.errorSnackBar(
+          title: 'Permission refusée',
+          message: 'Seuls les gérants peuvent ajouter des bannières',
+        );
+        return;
+      }
+
       final banner = BannerModel(
         id: '',
         name: nameController.text.trim(),
         imageUrl: finalImageUrl,
-        isFeatured: isFeatured.value,
+        status: 'en_attente', // Nouvelle bannière toujours en attente
         link: selectedLinkId.value.isNotEmpty ? selectedLinkId.value : null,
         linkType: selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
         createdAt: DateTime.now(),
@@ -145,12 +183,24 @@ class BannerController extends GetxController {
   /// Update banner
   Future<void> updateBanner(String bannerId) async {
     try {
+      // Check permissions
+      if (!canManageBanners) {
+        TLoaders.errorSnackBar(
+          title: 'Permission refusée',
+          message: 'Seuls les gérants peuvent modifier des bannières',
+        );
+        return;
+      }
+
       // Validation
       if (!formKey.currentState!.validate()) {
         return;
       }
 
       isLoading.value = true;
+
+      // Get existing banner to preserve status
+      final existingBanner = allBanners.firstWhere((b) => b.id == bannerId);
 
       // Upload new image if one was picked
       String finalImageUrl = imageUrl.value;
@@ -163,14 +213,15 @@ class BannerController extends GetxController {
         );
       }
 
-      // Update banner
+      // Update banner (Gérant cannot change status, only Admin can)
       final banner = BannerModel(
         id: bannerId,
         name: nameController.text.trim(),
         imageUrl: finalImageUrl,
-        isFeatured: isFeatured.value,
+        status: existingBanner.status, // Preserve existing status
         link: selectedLinkId.value.isNotEmpty ? selectedLinkId.value : null,
         linkType: selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
+        createdAt: existingBanner.createdAt,
         updatedAt: DateTime.now(),
       );
 
@@ -193,6 +244,15 @@ class BannerController extends GetxController {
   /// Delete banner
   Future<void> deleteBanner(String bannerId) async {
     try {
+      // Check permissions
+      if (!canManageBanners) {
+        TLoaders.errorSnackBar(
+          title: 'Permission refusée',
+          message: 'Seuls les gérants peuvent supprimer des bannières',
+        );
+        return;
+      }
+
       // Get banner to delete image
       final banner = allBanners.firstWhere((b) => b.id == bannerId);
       
@@ -219,13 +279,47 @@ class BannerController extends GetxController {
     }
   }
 
+  /// Update banner status (Admin only)
+  Future<void> updateBannerStatus(String bannerId, String newStatus) async {
+    try {
+      if (!canChangeStatus) {
+        TLoaders.errorSnackBar(
+          title: 'Permission refusée',
+          message: 'Seuls les administrateurs peuvent changer le statut des bannières',
+        );
+        return;
+      }
+
+      if (!['en_attente', 'publiee', 'refusee'].contains(newStatus)) {
+        TLoaders.errorSnackBar(
+          title: 'Erreur',
+          message: 'Statut invalide',
+        );
+        return;
+      }
+
+      isLoading.value = true;
+      await _bannerRepository.updateBannerStatus(bannerId, newStatus);
+      await fetchAllBanners();
+      
+      TLoaders.successSnackBar(
+        title: 'Succès',
+        message: 'Statut de la bannière mis à jour',
+      );
+    } catch (e) {
+      TLoaders.errorSnackBar(message: 'Erreur lors de la mise à jour du statut: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   /// Load banner for editing
   void loadBannerForEditing(BannerModel banner) {
     selectedBanner.value = banner;
     nameController.text = banner.name;
     imageUrl.value = banner.imageUrl;
     pickedImage.value = null;
-    isFeatured.value = banner.isFeatured ?? false;
+    selectedStatus.value = banner.status;
     selectedLinkType.value = banner.linkType ?? '';
     selectedLinkId.value = banner.link ?? '';
   }
@@ -235,7 +329,7 @@ class BannerController extends GetxController {
     nameController.clear();
     pickedImage.value = null;
     imageUrl.value = '';
-    isFeatured.value = false;
+    selectedStatus.value = 'en_attente';
     selectedLinkType.value = '';
     selectedLinkId.value = '';
     selectedBanner.value = null;

@@ -195,7 +195,7 @@ class SettingsScreen extends StatelessWidget {
                         }
                       },
                     ),
-                  if (isAdminOnly())
+                  if (isAdminGerant())
                     TSettingsMenuTile(
                       icon: Iconsax.picture_frame,
                       title: "Gérer bannières",

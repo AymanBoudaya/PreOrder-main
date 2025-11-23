@@ -2,7 +2,7 @@ class BannerModel {
   String id;
   String name;
   String imageUrl;
-  bool? isFeatured;
+  String status; // 'en_attente', 'publiee', 'refusee'
   String? link; // ID du produit, catégorie ou établissement
   String? linkType; // 'product', 'category', 'establishment'
   DateTime? createdAt;
@@ -12,7 +12,7 @@ class BannerModel {
     required this.id,
     required this.name,
     required this.imageUrl,
-    this.isFeatured,
+    this.status = 'en_attente',
     this.link,
     this.linkType,
     this.createdAt,
@@ -24,6 +24,7 @@ class BannerModel {
       id: '',
       imageUrl: '',
       name: '',
+      status: 'en_attente',
     );
   }
 
@@ -32,7 +33,7 @@ class BannerModel {
       'id': id,
       'name': name,
       'image_url': imageUrl,
-      'is_featured': isFeatured ?? false,
+      'status': status,
       'link': link,
       'link_type': linkType,
       'created_at': createdAt?.toIso8601String(),
@@ -48,7 +49,7 @@ class BannerModel {
       id: data['id']?.toString() ?? '',
       name: data['name'] ?? '',
       imageUrl: data['image_url'] ?? '',
-      isFeatured: data['is_featured'] as bool? ?? false,
+      status: data['status']?.toString() ?? 'en_attente',
       link: data['link']?.toString(),
       linkType: data['link_type']?.toString(),
       createdAt: data['created_at'] != null

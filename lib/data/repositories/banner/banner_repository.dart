@@ -29,13 +29,13 @@ class BannerRepository extends GetxController {
     }
   }
 
-  /// Charger les bannières en vedette
-  Future<List<BannerModel>> getFeaturedBanners() async {
+  /// Charger les bannières publiées (for home screen)
+  Future<List<BannerModel>> getPublishedBanners() async {
     try {
       final response = await _db
           .from(_table)
           .select()
-          .eq('is_featured', true)
+          .eq('status', 'publiee')
           .order('created_at', ascending: false);
       return response
           .map((banner) => BannerModel.fromJson(banner))
@@ -43,7 +43,24 @@ class BannerRepository extends GetxController {
     } on PostgrestException catch (e) {
       throw 'Erreur Supabase: ${e.message}';
     } catch (e) {
-      throw 'Échec de récupération des bannières mises en avant : $e';
+      throw 'Échec de récupération des bannières publiées : $e';
+    }
+  }
+
+  /// Mettre à jour le statut d'une bannière
+  Future<void> updateBannerStatus(String bannerId, String newStatus) async {
+    try {
+      await _db
+          .from(_table)
+          .update({
+            'status': newStatus,
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .eq('id', bannerId);
+    } on PostgrestException catch (e) {
+      throw 'Erreur base de données : ${e.code} - ${e.message}';
+    } catch (e) {
+      throw 'Erreur lors de la mise à jour du statut : $e';
     }
   }
 
