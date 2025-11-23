@@ -1,23 +1,12 @@
-import 'package:caferesto/features/profil/screens/dashboard/widgets/system_stats.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../controllers/dashboard_controller.dart';
-import '../../models/dashboard_stats_model.dart';
 import 'dashboard_side_menu.dart';
 import 'widgets/dashboard_content.dart';
-import 'widgets/orders_by_day.dart';
-import 'widgets/orders_by_status_chart.dart';
-import 'widgets/period_filter.dart';
-import 'widgets/pickup_hours.dart';
-import 'widgets/revenue_chart.dart';
-import 'widgets/stat_card.dart';
-import 'widgets/top_product_widget.dart';
-import 'widgets/top_users.dart';
+
 
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
