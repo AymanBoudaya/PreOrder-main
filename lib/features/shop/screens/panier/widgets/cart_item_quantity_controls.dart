@@ -83,7 +83,11 @@ class CartItemQuantityControls extends StatelessWidget {
 
             /// Increment Button
             GestureDetector(
-              onTap: () => controller.ajouterUnAuPanier(cartItem),
+              onTap: () {
+                controller.ajouterUnAuPanier(cartItem).catchError((error) {
+                  // L'erreur est déjà gérée dans ajouterUnAuPanier avec TLoaders
+                });
+              },
               child: Container(
                 width: 28,
                 height: 28,

@@ -63,15 +63,42 @@ class ProductDetailBottomBarWrapper extends StatelessWidget {
 
     // Ajouter un nouvel article (soit une nouvelle variation soit un nouveau produit)
     // Utiliser ajouterAuPanier qui gère la logique correctement
-    controller.ajouterAuPanier(product);
+    controller.ajouterAuPanier(product).catchError((error) {
+      // L'erreur est déjà gérée dans ajouterAuPanier avec TLoaders
+    });
   }
 
-  void _handleIncrement(PanierController controller) {
+  Future<void> _handleIncrement(PanierController controller) async {
     if (!controller.peutAjouterProduit(product)) return;
     if (product.productType == 'single' || controller.aVarianteSelectionnee()) {
-      // Obtenir la quantité temporaire actuelle et l'incrémenter
+      // Obtenir la quantité temporaire actuelle
       final currentQuantity = controller.obtenirQuantiteTemporaire(product);
-      controller.mettreAJourQuantiteTemporaire(product, currentQuantity + 1);
+      final nouvelleQuantite = currentQuantity + 1;
+
+      // Vérifier le stock disponible si le produit est stockable
+      if (product.isStockable) {
+        final stockDisponible = await controller.obtenirStockDisponible(product.id);
+        final quantiteDansPanier = controller.obtenirQuantiteProduitDansPanier(product.id);
+        final quantiteTotale = quantiteDansPanier + nouvelleQuantite;
+
+        if (quantiteTotale > stockDisponible) {
+          // Afficher un message d'erreur
+          Get.snackbar(
+            'Stock insuffisant',
+            stockDisponible == 0
+                ? 'Stock disponible: 0 article. Ce produit est actuellement hors stock.'
+                : 'Stock disponible: $stockDisponible article${stockDisponible > 1 ? 's' : ''}. Vous avez déjà $quantiteDansPanier dans votre panier. Quantité demandée: $nouvelleQuantite.',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM,
+            duration: const Duration(seconds: 3),
+          );
+          return;
+        }
+      }
+
+      // Si le stock est suffisant, incrémenter la quantité temporaire
+      controller.mettreAJourQuantiteTemporaire(product, nouvelleQuantite);
     }
   }
 
@@ -94,7 +121,11 @@ class ProductDetailBottomBarWrapper extends StatelessWidget {
       product: product,
       dark: dark,
       isSmallScreen: isSmallScreen,
-      onIncrement: () => _handleIncrement(controller),
+      onIncrement: () {
+        _handleIncrement(controller).catchError((error) {
+          // L'erreur est déjà gérée dans _handleIncrement avec Get.snackbar
+        });
+      },
       onDecrement: () => _handleDecrement(controller),
       onMainAction: () => _handleMainAction(controller),
     );

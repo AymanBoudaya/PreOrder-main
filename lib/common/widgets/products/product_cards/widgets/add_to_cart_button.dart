@@ -145,7 +145,9 @@ class ProductCardAddToCartButton extends StatelessWidget {
     // Pour les produits simples, ajouter directement au panier
     if (isSingleProduct) {
       final cartItem = panierController.produitVersArticlePanier(product, 1);
-      panierController.ajouterUnAuPanier(cartItem);
+      panierController.ajouterUnAuPanier(cartItem).catchError((error) {
+        // L'erreur est déjà gérée dans ajouterUnAuPanier avec TLoaders
+      });
     }
   }
 
@@ -162,7 +164,9 @@ class ProductCardAddToCartButton extends StatelessWidget {
     // Pour les produits simples, ajouter directement au panier
     if (isSingleProduct) {
       final cartItem = panierController.produitVersArticlePanier(product, 1);
-      panierController.ajouterUnAuPanier(cartItem);
+      panierController.ajouterUnAuPanier(cartItem).catchError((error) {
+        // L'erreur est déjà gérée dans ajouterUnAuPanier avec TLoaders
+      });
     }
   }
 

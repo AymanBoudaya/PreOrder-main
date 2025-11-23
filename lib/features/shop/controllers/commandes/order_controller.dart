@@ -191,7 +191,7 @@ class OrderController extends GetxController {
 
       // Envoyer une notification au client
       await _envoyerNotificationStatut(order, newStatus, refusalReason);
-print(updates);
+      print(updates);
 
       TLoaders.successSnackBar(
         title: "Succès",
@@ -714,6 +714,22 @@ print(updates);
         debugPrint(
             '═══════════════════════════════════════════════════════════');
 
+        // Vérifier le stock disponible AVANT de créer la commande
+        try {
+          debugPrint(
+              '🔄 Vérification du stock disponible avant création de la commande');
+          await _verifierStockDisponible(order.items);
+          debugPrint('✅ Stock disponible vérifié avec succès');
+        } catch (e) {
+          debugPrint('❌ Stock insuffisant: $e');
+          TFullScreenLoader.stopLoading();
+          TLoaders.errorSnackBar(
+            title: 'Stock insuffisant',
+            message: e.toString(),
+          );
+          return; // Ne pas continuer si le stock est insuffisant
+        }
+
         // Diminuer le stock des produits stockables commandés AVANT de sauvegarder la commande
         try {
           debugPrint(
@@ -974,6 +990,57 @@ print(updates);
     } finally {
       isUpdating.value = false;
     }
+  }
+
+  /// Vérifie que tous les produits ont suffisamment de stock disponible
+  Future<void> _verifierStockDisponible(List<CartItemModel> items) async {
+    debugPrint('🔍 Vérification du stock pour ${items.length} items');
+
+    for (final item in items) {
+      String productName = 'Produit inconnu';
+      try {
+        // Récupérer le produit pour vérifier s'il est stockable
+        final productResponse = await _db
+            .from('produits')
+            .select('est_stockable, quantite_stock, name')
+            .eq('id', item.productId)
+            .single();
+
+        final isStockable = productResponse['est_stockable'] as bool? ?? false;
+        productName = productResponse['name'] as String? ?? 'Produit inconnu';
+
+        if (!isStockable) {
+          continue; // Produit non stockable, passer au suivant
+        }
+
+        // Vérifier le stock disponible
+        final currentStock =
+            (productResponse['quantite_stock'] as num?)?.toInt() ?? 0;
+
+        debugPrint(
+            '🔍 Produit: $productName, Stock actuel: $currentStock, Quantité demandée: ${item.quantity}');
+
+        if (currentStock < item.quantity) {
+          final message = currentStock == 0
+              ? 'Le produit "$productName" est actuellement hors stock. Stock disponible: 0 article.'
+              : 'Stock insuffisant pour "$productName". Stock disponible: $currentStock article${currentStock > 1 ? 's' : ''}, quantité demandée: ${item.quantity} article${item.quantity > 1 ? 's' : ''}.';
+          throw Exception(message);
+        }
+      } catch (e) {
+        // Si c'est déjà une Exception avec un message, la relancer
+        if (e is Exception &&
+            (e.toString().contains('Stock insuffisant') ||
+                e.toString().contains('hors stock'))) {
+          rethrow;
+        }
+        debugPrint(
+            '❌ Erreur lors de la vérification du stock pour ${item.productId}: $e');
+        throw Exception(
+            'Erreur lors de la vérification du stock pour "$productName": $e');
+      }
+    }
+
+    debugPrint('✅ Tous les produits ont suffisamment de stock');
   }
 
   /// Diminue le stock des produits stockables lors de la création d'une commande

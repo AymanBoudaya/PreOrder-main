@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../utils/popups/loaders.dart';
 import '../../models/cart_item_model.dart';
@@ -15,12 +17,56 @@ class PanierController extends GetxController {
   // ID de la commande en cours de modification (null si nouvelle commande)
   final RxString editingOrderId = ''.obs;
 
+  // Accès à la base de données Supabase
+  final _db = Supabase.instance.client;
+
   // Obtenir VariationController depuis l'injection de dépendance GetX
   VariationController get variationController =>
       Get.find<VariationController>();
 
   PanierController() {
     chargerArticlesPanier();
+  }
+
+  /// Vérifie le stock disponible d'un produit depuis la base de données
+  Future<int> obtenirStockDisponible(String productId) async {
+    try {
+      final productResponse = await _db
+          .from('produits')
+          .select('est_stockable, quantite_stock')
+          .eq('id', productId)
+          .single();
+
+      final isStockable = productResponse['est_stockable'] as bool? ?? false;
+      if (!isStockable) {
+        // Produit non stockable, retourner une valeur élevée pour permettre l'ajout
+        return 999999;
+      }
+
+      final stock = (productResponse['quantite_stock'] as num?)?.toInt() ?? 0;
+      return stock;
+    } catch (e) {
+      debugPrint('Erreur lors de la récupération du stock: $e');
+      // En cas d'erreur, retourner 0 pour bloquer l'ajout
+      return 0;
+    }
+  }
+
+  /// Vérifie si la quantité demandée est disponible en stock
+  Future<bool> verifierStockDisponible(
+      String productId, int quantiteDemandee) async {
+    final stockDisponible = await obtenirStockDisponible(productId);
+
+    // Si le produit n'est pas stockable, toujours autoriser
+    if (stockDisponible >= 999999) {
+      return true;
+    }
+
+    // Vérifier la quantité déjà dans le panier pour ce produit
+    final quantiteDansPanier = obtenirQuantiteProduitDansPanier(productId);
+    final quantiteTotale = quantiteDansPanier + quantiteDemandee;
+
+    return quantiteTotale <= stockDisponible;
   }
 
   /// Vérifie si une variante est dans le panier
@@ -184,7 +230,7 @@ class PanierController extends GetxController {
   }
 
   /// Ajoute un produit au panier
-  void ajouterAuPanier(ProduitModel product) {
+  Future<void> ajouterAuPanier(ProduitModel product) async {
     if (!peutAjouterProduit(product)) return;
 
     final quantity = obtenirQuantiteTemporaire(product);
@@ -196,16 +242,37 @@ class PanierController extends GetxController {
         TLoaders.customToast(message: 'Veuillez choisir une variante');
         return;
       }
-      // Note: Stock checking for variations would need to be implemented
-      // based on your product model structure if needed
     } else if (product.isStockable && product.stockQuantity < 1) {
       // Vérifier le stock uniquement pour les produits stockables
-      TLoaders.customToast(message: 'Produit hors stock');
+      TLoaders.errorSnackBar(
+        title: 'Stock insuffisant',
+        message:
+            'Stock disponible: 0 article. Ce produit est actuellement hors stock.',
+      );
       return;
     }
 
     // Si la quantité est 0, par défaut mettre 1 pour les nouveaux articles
     final quantityToAdd = quantity > 0 ? quantity : 1;
+
+    // Vérifier le stock disponible depuis la base de données
+    final stockDisponible = await obtenirStockDisponible(product.id);
+
+    // Si le produit est stockable, vérifier le stock
+    if (product.isStockable) {
+      final quantiteDansPanier = obtenirQuantiteProduitDansPanier(product.id);
+      final quantiteTotale = quantiteDansPanier + quantityToAdd;
+
+      if (quantiteTotale > stockDisponible) {
+        TLoaders.errorSnackBar(
+          title: 'Stock insuffisant',
+          message: stockDisponible == 0
+              ? 'Stock disponible: 0 article. Ce produit est actuellement hors stock.'
+              : 'Stock disponible: $stockDisponible article${stockDisponible > 1 ? 's' : ''}. Vous avez déjà $quantiteDansPanier dans votre panier. Quantité demandée: $quantityToAdd.',
+        );
+        return;
+      }
+    }
 
     final selectedCartItem = produitVersArticlePanier(product, quantityToAdd);
 
@@ -244,7 +311,6 @@ class PanierController extends GetxController {
         ? variation.price
         : (product.salePrice > 0.0 ? product.salePrice : product.price);
 
-
     return CartItemModel(
       productId: product.id,
       title: product.name,
@@ -271,12 +337,30 @@ class PanierController extends GetxController {
   }
 
   /// Ajoute un article au panier (ou augmente la quantité si déjà présent)
-  void ajouterUnAuPanier(CartItemModel item) {
+  Future<void> ajouterUnAuPanier(CartItemModel item) async {
     final index = cartItems.indexWhere((cartItem) =>
         cartItem.productId == item.productId &&
         cartItem.variationId == item.variationId);
 
     if (index >= 0) {
+      // Vérifier le stock avant d'augmenter la quantité
+      final product = item.product;
+      if (product != null && product.isStockable) {
+        final stockDisponible = await obtenirStockDisponible(item.productId);
+        final quantiteActuelle = cartItems[index].quantity;
+        final nouvelleQuantite = quantiteActuelle + 1;
+
+        if (nouvelleQuantite > stockDisponible) {
+          TLoaders.errorSnackBar(
+            title: 'Stock insuffisant',
+            message: stockDisponible == 0
+                ? 'Stock disponible: 0 article. Ce produit est actuellement hors stock.'
+                : 'Stock disponible: $stockDisponible article${stockDisponible > 1 ? 's' : ''}. Vous avez déjà $quantiteActuelle dans votre panier. Quantité demandée: $nouvelleQuantite.',
+          );
+          return;
+        }
+      }
+
       // Créer une nouvelle instance pour déclencher la réactivité
       cartItems[index] = cartItems[index].copyWith(
         quantity: cartItems[index].quantity + 1,
