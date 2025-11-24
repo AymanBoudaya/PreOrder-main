@@ -15,8 +15,6 @@ Future<void> main() async {
   // Assurer l'initialisation du binding des widgets Flutter
   WidgetsFlutterBinding.ensureInitialized();
 
-  // On n'utilise plus le splash screen natif, on utilise notre splash screen Flutter
-
   // Initialiser GetStorage (stockage local pour GetX)
   await GetStorage.init();
 
@@ -31,7 +29,6 @@ Future<void> main() async {
   Get.put<UserRepository>(UserRepository(), permanent: true);
   Get.put<UserController>(UserController(), permanent: true);
   
-  // NOW AuthenticationRepository can safely find its dependencies
   Get.put<AuthenticationRepository>(AuthenticationRepository(), permanent: true);
 
   // Utiliser la stratégie d'URL basée sur le chemin pour Flutter web (optionnel)
