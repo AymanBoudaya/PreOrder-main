@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../../data/repositories/banner/banner_repository.dart';
 import '../../../utils/popups/loaders.dart';
 import '../models/banner_model.dart';
-import '../models/category_model.dart';
 import '../models/etablissement_model.dart';
 import '../models/produit_model.dart';
 import '../../profil/controllers/user_controller.dart';
@@ -28,12 +27,11 @@ class BannerController extends GetxController {
   final Rx<XFile?> pickedImage = Rx<XFile?>(null);
   final RxString imageUrl = ''.obs;
   final RxString selectedStatus = 'en_attente'.obs; // 'en_attente', 'publiee', 'refusee'
-  final RxString selectedLinkType = ''.obs; // 'product', 'category', 'establishment'
+  final RxString selectedLinkType = ''.obs; // 'product', 'establishment'
   final RxString selectedLinkId = ''.obs;
 
   // Dropdown options
   final RxList<ProduitModel> products = <ProduitModel>[].obs;
-  final RxList<CategoryModel> categories = <CategoryModel>[].obs;
   final RxList<Etablissement> establishments = <Etablissement>[].obs;
 
   // Selected banner for editing

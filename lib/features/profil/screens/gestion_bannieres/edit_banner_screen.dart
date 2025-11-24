@@ -15,8 +15,10 @@ import '../../controllers/liste_etablissement_controller.dart';
 
 class EditBannerScreen extends StatelessWidget {
   final BannerModel banner;
+  final bool isAdminView;
 
-  const EditBannerScreen({super.key, required this.banner});
+  const EditBannerScreen(
+      {super.key, required this.banner, this.isAdminView = false});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,8 @@ class EditBannerScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: TAppBar(
-        title: const Text("Modifier la bannière"),
+        title: Text(
+            isAdminView ? "Détails de la bannière" : "Modifier la bannière"),
       ),
       body: Obx(() => _buildBody(context, bannerController)),
     );
@@ -74,12 +77,14 @@ class EditBannerScreen extends StatelessWidget {
               // Nom de la bannière
               TextFormField(
                 controller: controller.nameController,
-                decoration: const InputDecoration(
+                readOnly: isAdminView, // Lecture seule pour admin
+                decoration: InputDecoration(
                   labelText: 'Nom de la bannière',
-                  prefixIcon: Icon(Iconsax.text),
+                  prefixIcon: const Icon(Iconsax.text),
+                  filled: isAdminView,
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (!isAdminView && (value == null || value.isEmpty)) {
                     return 'Veuillez entrer un nom';
                   }
                   return null;
@@ -91,10 +96,11 @@ class EditBannerScreen extends StatelessWidget {
               Obx(() {
                 final currentValue = controller.selectedLinkType.value;
                 return DropdownButtonFormField<String?>(
-                  initialValue: currentValue.isEmpty ? null : currentValue,
-                  decoration: const InputDecoration(
+                  value: currentValue.isEmpty ? null : currentValue,
+                  decoration: InputDecoration(
                     labelText: 'Type de lien',
-                    prefixIcon: Icon(Iconsax.link),
+                    prefixIcon: const Icon(Iconsax.link),
+                    filled: isAdminView,
                   ),
                   items: const [
                     DropdownMenuItem(value: null, child: Text('Aucun lien')),
@@ -104,28 +110,31 @@ class EditBannerScreen extends StatelessWidget {
                       child: Text('Établissement'),
                     ),
                   ],
-                  onChanged: (value) {
-                    controller.selectedLinkType.value = value ?? '';
-                    if (value != banner.linkType) {
-                      controller.selectedLinkId.value = ''; // Reset selection
-                    }
-                  },
+                  onChanged: isAdminView
+                      ? null
+                      : (value) {
+                          controller.selectedLinkType.value = value ?? '';
+                          if (value != banner.linkType) {
+                            controller.selectedLinkId.value =
+                                ''; // Reset selection
+                          }
+                        },
                 );
               }),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
 
               // Sélection du lien selon le type
               if (controller.selectedLinkType.value.isNotEmpty)
-                _buildLinkSelector(context, controller),
+                _buildLinkSelector(context, controller, isAdminView),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
 
-              // État actuel (affichage seulement, non modifiable par le gérant)
+              // État actuel - modifiable par l'admin
               Obx(() {
                 final status = controller.selectedStatus.value;
                 String statusLabel;
                 MaterialColor statusColor;
                 IconData statusIcon;
-                
+
                 switch (status) {
                   case 'publiee':
                     statusLabel = 'Publiée';
@@ -142,71 +151,89 @@ class EditBannerScreen extends StatelessWidget {
                     statusColor = Colors.orange;
                     statusIcon = Iconsax.clock;
                 }
-                
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: statusColor.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: statusColor.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(statusIcon, color: statusColor.shade700),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'État actuel',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: statusColor.shade900,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              statusLabel,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: statusColor.shade800,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Seul l\'administrateur peut modifier le statut.',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey[600],
-                ),
-              ),
-                          ],
-                        ),
+
+                return GestureDetector(
+                  onTap: isAdminView
+                      ? () =>
+                          _showStatusChangeDialog(context, banner, controller)
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: statusColor.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: statusColor.shade200,
+                        width: isAdminView ? 2 : 1,
                       ),
-                    ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(statusIcon, color: statusColor.shade700),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'État actuel',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: statusColor.shade900,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                statusLabel,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: statusColor.shade800,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                isAdminView
+                                    ? 'Appuyez pour changer le statut'
+                                    : 'Seul l\'administrateur peut modifier le statut.',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (isAdminView)
+                          Icon(
+                            Iconsax.arrow_right_3,
+                            color: statusColor.shade700,
+                            size: 20,
+                          ),
+                      ],
+                    ),
                   ),
                 );
               }),
               const SizedBox(height: AppSizes.spaceBtwSections),
 
-              // Bouton Modifier
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: controller.isLoading.value
-                      ? null
-                      : () => controller.updateBanner(banner.id),
-                  child: controller.isLoading.value
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Modifier la bannière'),
+              // Bouton Modifier (seulement pour Gérant)
+              if (!isAdminView)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () => controller.updateBanner(banner.id),
+                    child: controller.isLoading.value
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Modifier la bannière'),
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -247,13 +274,17 @@ class EditBannerScreen extends StatelessWidget {
             }
           }),
           const SizedBox(height: AppSizes.spaceBtwItems),
-          ElevatedButton.icon(
-            onPressed: () => controller.pickImage(isMobile: isMobile),
-            icon: const Icon(Iconsax.image),
-            label: Text(isMobile
-                ? 'Changer l\'image (Mobile)'
-                : 'Changer l\'image (PC)'),
-          ),
+          if (!isAdminView)
+            ElevatedButton.icon(
+              onPressed: () => controller.pickImage(isMobile: isMobile),
+              icon: const Icon(Iconsax.image),
+              label: Text(isMobile
+                  ? 'Changer l\'image (Mobile)'
+                  : 'Changer l\'image (PC)'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              ),
+            ),
         ],
       ),
     );
@@ -356,9 +387,94 @@ class EditBannerScreen extends StatelessWidget {
     );
   }
 
+  void _showStatusChangeDialog(
+      BuildContext context, BannerModel banner, BannerController controller) {
+    final currentStatus = banner.status;
+
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text("Changer le statut"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Bannière: ${banner.name}"),
+            const SizedBox(height: 16),
+            const Text("Sélectionner le nouveau statut:"),
+            const SizedBox(height: 16),
+            _buildStatusOption('en_attente', 'En attente', Colors.orange,
+                Iconsax.clock, currentStatus, banner, controller),
+            const SizedBox(height: 8),
+            _buildStatusOption('publiee', 'Publiée', Colors.green,
+                Iconsax.tick_circle, currentStatus, banner, controller),
+            const SizedBox(height: 8),
+            _buildStatusOption('refusee', 'Refusée', Colors.red,
+                Iconsax.close_circle, currentStatus, banner, controller),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Annuler"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusOption(
+    String status,
+    String label,
+    MaterialColor color,
+    IconData icon,
+    String currentStatus,
+    BannerModel banner,
+    BannerController controller,
+  ) {
+    final isSelected = status == currentStatus;
+
+    return InkWell(
+      onTap: isSelected
+          ? null
+          : () {
+              Get.back();
+              controller.updateBannerStatus(banner.id, status);
+            },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isSelected ? color.shade100 : color.shade50,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? color.shade300 : color.shade200,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color.shade700, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  color: color.shade700,
+                ),
+              ),
+            ),
+            if (isSelected)
+              Icon(Iconsax.tick_circle, color: color.shade700, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildLinkSelector(
     BuildContext context,
     BannerController controller,
+    bool isAdminView,
   ) {
     return Obx(() {
       final linkType = controller.selectedLinkType.value;
@@ -379,10 +495,10 @@ class EditBannerScreen extends StatelessWidget {
             products.any((p) => p.id == selectedValue);
 
         return DropdownButtonFormField<String>(
-          initialValue: isValidValue ? selectedValue : null,
-          decoration: const InputDecoration(
+          value: isValidValue ? selectedValue : null,
+          decoration: InputDecoration(
             labelText: 'Sélectionner un produit',
-            prefixIcon: Icon(Iconsax.shop),
+            prefixIcon: const Icon(Iconsax.shop),
           ),
           items: products.map((product) {
             return DropdownMenuItem(
@@ -390,9 +506,11 @@ class EditBannerScreen extends StatelessWidget {
               child: Text(product.name),
             );
           }).toList(),
-          onChanged: (value) {
-            controller.selectedLinkId.value = value ?? '';
-          },
+          onChanged: isAdminView
+              ? null
+              : (value) {
+                  controller.selectedLinkId.value = value ?? '';
+                },
         );
       } else if (linkType == 'establishment') {
         final establishments =
@@ -410,10 +528,11 @@ class EditBannerScreen extends StatelessWidget {
             establishments.any((e) => e.id == selectedValue);
 
         return DropdownButtonFormField<String>(
-          initialValue: isValidValue ? selectedValue : null,
-          decoration: const InputDecoration(
+          value: isValidValue ? selectedValue : null,
+          decoration: InputDecoration(
             labelText: 'Sélectionner un établissement',
-            prefixIcon: Icon(Iconsax.home),
+            prefixIcon: const Icon(Iconsax.home),
+            filled: isAdminView,
           ),
           items: establishments.map((establishment) {
             return DropdownMenuItem(
@@ -421,9 +540,11 @@ class EditBannerScreen extends StatelessWidget {
               child: Text(establishment.name),
             );
           }).toList(),
-          onChanged: (value) {
-            controller.selectedLinkId.value = value ?? '';
-          },
+          onChanged: isAdminView
+              ? null
+              : (value) {
+                  controller.selectedLinkId.value = value ?? '';
+                },
         );
       }
 

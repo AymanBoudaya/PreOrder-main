@@ -70,7 +70,7 @@ class LoginController extends GetxController {
           ));
       TLoaders.successSnackBar(
           title: 'OTP envoyé !', message: 'Vérifier votre boîte e-mail');
-    } catch (e) {
+    } catch (e,st) {
       TFullScreenLoader.stopLoading();
       final errorMessage = e.toString();
       if (errorMessage.contains("you can only request this")) {
@@ -87,8 +87,9 @@ class LoginController extends GetxController {
       } else {
         TLoaders.errorSnackBar(
           title: 'Erreur Login !',
-          message: errorMessage,
+          message: errorMessage + st.toString(),
         );
+        debugPrintStack(stackTrace: st);
       }
     }
   }

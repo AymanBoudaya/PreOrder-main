@@ -226,9 +226,15 @@ class BannerManagementScreen extends StatelessWidget {
                     onPressed: () => _showBannerOptions(context, banner, viewModel),
                   )
                 : null,
-        onTap: viewModel.isGerant
-            ? () => _showBannerOptions(context, banner, viewModel)
-            : null, // Admin ne peut pas cliquer sur la carte
+        onTap: viewModel.isAdmin
+            ? () {
+                // Admin peut cliquer pour voir les détails et changer le statut
+                viewModel.loadBannerForEditing(banner);
+                Get.to(() => EditBannerScreen(banner: banner, isAdminView: true));
+              }
+            : viewModel.isGerant
+                ? () => _showBannerOptions(context, banner, viewModel)
+                : null,
       ),
     );
   }

@@ -212,6 +212,9 @@ class AddBannerScreen extends StatelessWidget {
             label: Text(isMobile
                 ? 'Sélectionner une image (Mobile)'
                 : 'Sélectionner une image (PC)'),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            ),
           ),
         ],
       ),
