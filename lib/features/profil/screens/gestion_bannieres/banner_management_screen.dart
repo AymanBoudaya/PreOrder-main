@@ -347,11 +347,10 @@ class BannerManagementScreen extends StatelessWidget {
       BannerManagementViewModel viewModel) {
     if (!viewModel.isGerant) return;
 
-    showModalBottomSheet(
-      context: context,
+    Get.bottomSheet(
+      _buildBottomSheetContent(context, banner, viewModel),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => _buildBottomSheetContent(context, banner, viewModel),
     );
   }
 
@@ -384,7 +383,7 @@ class BannerManagementScreen extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Get.back(),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.grey[600],
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -438,7 +437,7 @@ class BannerManagementScreen extends StatelessWidget {
           Expanded(
             child: ElevatedButton.icon(
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
                 viewModel.loadBannerForEditing(banner);
                 Get.to(() => EditBannerScreen(banner: banner));
               },
@@ -477,7 +476,7 @@ class BannerManagementScreen extends StatelessWidget {
 
   void _showDeleteDialog(BuildContext context, BannerModel banner,
       BannerManagementViewModel viewModel) {
-    Navigator.pop(context);
+    Get.back();
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

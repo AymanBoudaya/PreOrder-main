@@ -11,7 +11,6 @@ import '../models/produit_model.dart';
 import '../../profil/controllers/user_controller.dart';
 
 class BannerController extends GetxController {
-
   // Repository
   final _bannerRepository = Get.find<BannerRepository>();
   final _userController = Get.find<UserController>();
@@ -34,7 +33,8 @@ class BannerController extends GetxController {
   final nameController = TextEditingController();
   final Rx<XFile?> pickedImage = Rx<XFile?>(null);
   final RxString imageUrl = ''.obs;
-  final RxString selectedStatus = 'en_attente'.obs; // 'en_attente', 'publiee', 'refusee'
+  final RxString selectedStatus =
+      'en_attente'.obs; // 'en_attente', 'publiee', 'refusee'
   final RxString selectedLinkType = ''.obs; // 'product', 'establishment'
   final RxString selectedLinkId = ''.obs;
 
@@ -67,7 +67,8 @@ class BannerController extends GetxController {
       final banners = await _bannerRepository.getAllBanners();
       allBanners.assignAll(banners);
     } catch (e) {
-      TLoaders.errorSnackBar(message: 'Erreur lors du chargement des bannières: $e');
+      TLoaders.errorSnackBar(
+          message: 'Erreur lors du chargement des bannières: $e');
     } finally {
       isLoading.value = false;
     }
@@ -94,9 +95,12 @@ class BannerController extends GetxController {
   /// Get filtered banners based on selected tab
   List<BannerModel> getFilteredBannersByTab() {
     final statuses = ['en_attente', 'publiee', 'refusee'];
-    if (selectedTabIndex.value >= 0 && selectedTabIndex.value < statuses.length) {
+    if (selectedTabIndex.value >= 0 &&
+        selectedTabIndex.value < statuses.length) {
       final status = statuses[selectedTabIndex.value];
-      return getFilteredBanners().where((banner) => banner.status == status).toList();
+      return getFilteredBanners()
+          .where((banner) => banner.status == status)
+          .toList();
     }
     return [];
   }
@@ -129,7 +133,8 @@ class BannerController extends GetxController {
         imageUrl.value = ''; // Reset URL when new image is picked
       }
     } catch (e) {
-      TLoaders.errorSnackBar(message: 'Erreur lors de la sélection de l\'image: $e');
+      TLoaders.errorSnackBar(
+          message: 'Erreur lors de la sélection de l\'image: $e');
     }
   }
 
@@ -177,17 +182,18 @@ class BannerController extends GetxController {
         imageUrl: finalImageUrl,
         status: 'en_attente', // Nouvelle bannière toujours en attente
         link: selectedLinkId.value.isNotEmpty ? selectedLinkId.value : null,
-        linkType: selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
+        linkType:
+            selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
       final newBanner = await _bannerRepository.addBanner(banner);
       await fetchAllBanners();
-      
+
       // Envoyer une notification aux admins
       await _notifyAdminsNewBanner(newBanner);
-      
+
       clearForm();
       Get.back(); // Fermer l'écran
       TLoaders.successSnackBar(
@@ -195,7 +201,8 @@ class BannerController extends GetxController {
         message: 'Bannière ajoutée avec succès',
       );
     } catch (e) {
-      TLoaders.errorSnackBar(message: 'Erreur lors de l\'ajout de la bannière: $e');
+      TLoaders.errorSnackBar(
+          message: 'Erreur lors de l\'ajout de la bannière: $e');
     } finally {
       isLoading.value = false;
     }
@@ -239,7 +246,8 @@ class BannerController extends GetxController {
         'name': nameController.text.trim(),
         'image_url': finalImageUrl,
         'link': selectedLinkId.value.isNotEmpty ? selectedLinkId.value : null,
-        'link_type': selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
+        'link_type':
+            selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
       };
 
       // Gérer selon le statut actuel
@@ -258,7 +266,7 @@ class BannerController extends GetxController {
 
         await _bannerRepository.updateBanner(banner);
         await fetchAllBanners();
-        
+
         clearForm();
         Get.back();
         TLoaders.successSnackBar(
@@ -269,15 +277,16 @@ class BannerController extends GetxController {
         // Statut "publiee" : sauvegarder les modifications en attente
         await _bannerRepository.savePendingChanges(bannerId, updatedData);
         await fetchAllBanners();
-        
+
         // Notifier les admins
         await _notifyAdminsPendingChanges(bannerId, existingBanner.name);
-        
+
         clearForm();
         Get.back();
         TLoaders.successSnackBar(
           title: 'Modifications en attente',
-          message: 'Vos modifications ont été soumises et attendent l\'approbation de l\'administrateur',
+          message:
+              'Vos modifications ont été soumises et attendent l\'approbation de l\'administrateur',
         );
       } else if (existingBanner.status == 'refusee') {
         // Statut "refusee" : modifier directement et remettre en attente
@@ -294,7 +303,7 @@ class BannerController extends GetxController {
 
         await _bannerRepository.updateBanner(banner);
         await fetchAllBanners();
-        
+
         clearForm();
         Get.back();
         TLoaders.successSnackBar(
@@ -303,7 +312,8 @@ class BannerController extends GetxController {
         );
       }
     } catch (e) {
-      TLoaders.errorSnackBar(message: 'Erreur lors de la mise à jour de la bannière: $e');
+      TLoaders.errorSnackBar(
+          message: 'Erreur lors de la mise à jour de la bannière: $e');
     } finally {
       isLoading.value = false;
     }
@@ -323,25 +333,26 @@ class BannerController extends GetxController {
 
       // Get banner to delete image
       final banner = allBanners.firstWhere((b) => b.id == bannerId);
-      
+
       isLoading.value = true;
-      
+
       // Delete image from storage
       if (banner.imageUrl.isNotEmpty) {
         await _bannerRepository.deleteBannerImage(banner.imageUrl);
       }
-      
+
       // Delete banner
       await _bannerRepository.deleteBanner(bannerId);
       await fetchAllBanners();
-      
+
       // Afficher le snackbar de succès
       TLoaders.successSnackBar(
         title: 'Succès',
         message: 'Bannière supprimée avec succès',
       );
     } catch (e) {
-      TLoaders.errorSnackBar(message: 'Erreur lors de la suppression de la bannière: $e');
+      TLoaders.errorSnackBar(
+          message: 'Erreur lors de la suppression de la bannière: $e');
     } finally {
       isLoading.value = false;
     }
@@ -353,7 +364,8 @@ class BannerController extends GetxController {
       if (!canChangeStatus) {
         TLoaders.errorSnackBar(
           title: 'Permission refusée',
-          message: 'Seuls les administrateurs peuvent changer le statut des bannières',
+          message:
+              'Seuls les administrateurs peuvent changer le statut des bannières',
         );
         return;
       }
@@ -371,13 +383,14 @@ class BannerController extends GetxController {
       // Ne pas recharger toutes les bannières, le Realtime s'en chargera
       // Cela évite les conflits et permet une mise à jour plus fluide
       // await fetchAllBanners();
-      
+
       TLoaders.successSnackBar(
         title: 'Succès',
         message: 'Statut de la bannière mis à jour',
       );
     } catch (e) {
-      TLoaders.errorSnackBar(message: 'Erreur lors de la mise à jour du statut: $e');
+      TLoaders.errorSnackBar(
+          message: 'Erreur lors de la mise à jour du statut: $e');
       // En cas d'erreur, recharger pour s'assurer que l'état est cohérent
       await fetchAllBanners();
     } finally {
@@ -432,7 +445,7 @@ class BannerController extends GetxController {
   void _subscribeToRealtimeBanners() {
     try {
       _bannersChannel = _db.channel('banners_realtime');
-      
+
       _bannersChannel!.onPostgresChanges(
         event: PostgresChangeEvent.all,
         schema: 'public',
@@ -447,7 +460,8 @@ class BannerController extends GetxController {
 
             if (eventType == PostgresChangeEvent.insert) {
               final banner = BannerModel.fromJson(newData);
-              debugPrint('➕ Nouvelle bannière reçue: ${banner.id} - ${banner.name} - ${banner.status}');
+              debugPrint(
+                  '➕ Nouvelle bannière reçue: ${banner.id} - ${banner.name} - ${banner.status}');
               // Vérifier si la bannière n'existe pas déjà dans la liste
               final index = allBanners.indexWhere((b) => b.id == banner.id);
               if (index == -1) {
@@ -457,19 +471,22 @@ class BannerController extends GetxController {
               }
             } else if (eventType == PostgresChangeEvent.update) {
               final banner = BannerModel.fromJson(newData);
-              debugPrint('🔄 Bannière mise à jour: ${banner.id} - ${banner.name} - Statut: ${banner.status}');
+              debugPrint(
+                  '🔄 Bannière mise à jour: ${banner.id} - ${banner.name} - Statut: ${banner.status}');
               final index = allBanners.indexWhere((b) => b.id == banner.id);
               if (index != -1) {
                 // Remplacer complètement l'élément pour forcer la mise à jour
                 allBanners.removeAt(index);
                 allBanners.insert(index, banner);
                 allBanners.refresh();
-                debugPrint('✅ Bannière mise à jour dans la liste (index: $index)');
+                debugPrint(
+                    '✅ Bannière mise à jour dans la liste (index: $index)');
               } else {
                 // Si la bannière n'existe pas, l'ajouter
                 allBanners.insert(0, banner);
                 allBanners.refresh();
-                debugPrint('✅ Bannière ajoutée (n\'existait pas dans la liste)');
+                debugPrint(
+                    '✅ Bannière ajoutée (n\'existait pas dans la liste)');
               }
             } else if (eventType == PostgresChangeEvent.delete) {
               final id = oldData['id']?.toString();
@@ -483,7 +500,8 @@ class BannerController extends GetxController {
               }
             }
           } catch (e, stackTrace) {
-            debugPrint('❌ Erreur traitement changement bannière temps réel: $e');
+            debugPrint(
+                '❌ Erreur traitement changement bannière temps réel: $e');
             debugPrint('Stack trace: $stackTrace');
           }
         },
@@ -528,10 +546,8 @@ class BannerController extends GetxController {
           : 'Un gérant';
 
       // Récupérer tous les admins
-      final adminUsers = await _db
-          .from('users')
-          .select('id')
-          .eq('role', 'Admin');
+      final adminUsers =
+          await _db.from('users').select('id').eq('role', 'Admin');
 
       if (adminUsers.isEmpty) {
         debugPrint('⚠️ Aucun admin trouvé pour notifier');
@@ -544,13 +560,15 @@ class BannerController extends GetxController {
           await _db.from('notifications').insert({
             'user_id': admin['id'],
             'title': 'Nouvelle bannière à valider',
-            'message': '$gerantName a ajouté une nouvelle bannière "${banner.name}".',
+            'message':
+                '$gerantName a ajouté une nouvelle bannière "${banner.name}".',
             'read': false,
             'created_at': DateTime.now().toIso8601String(),
           });
           debugPrint('Notification créée pour admin ${admin['id']}');
         } catch (e) {
-          debugPrint('Erreur création notification pour admin ${admin['id']}: $e');
+          debugPrint(
+              'Erreur création notification pour admin ${admin['id']}: $e');
         }
       }
     } catch (e) {
@@ -565,7 +583,8 @@ class BannerController extends GetxController {
       if (!canChangeStatus) {
         TLoaders.errorSnackBar(
           title: 'Permission refusée',
-          message: 'Seuls les administrateurs peuvent approuver les modifications',
+          message:
+              'Seuls les administrateurs peuvent approuver les modifications',
         );
         return;
       }
@@ -573,7 +592,7 @@ class BannerController extends GetxController {
       isLoading.value = true;
       await _bannerRepository.approvePendingChanges(bannerId);
       await fetchAllBanners();
-      
+
       TLoaders.successSnackBar(
         title: 'Succès',
         message: 'Modifications approuvées et appliquées',
@@ -591,7 +610,8 @@ class BannerController extends GetxController {
       if (!canChangeStatus) {
         TLoaders.errorSnackBar(
           title: 'Permission refusée',
-          message: 'Seuls les administrateurs peuvent refuser les modifications',
+          message:
+              'Seuls les administrateurs peuvent refuser les modifications',
         );
         return;
       }
@@ -599,7 +619,7 @@ class BannerController extends GetxController {
       isLoading.value = true;
       await _bannerRepository.rejectPendingChanges(bannerId);
       await fetchAllBanners();
-      
+
       TLoaders.successSnackBar(
         title: 'Succès',
         message: 'Modifications refusées',
@@ -616,11 +636,13 @@ class BannerController extends GetxController {
     try {
       final count = await _bannerRepository.checkAndUpdateExpiredBanners();
       if (count > 0) {
-        debugPrint('✅ $count bannière(s) expirée(s) mise(s) à jour automatiquement');
+        debugPrint(
+            '✅ $count bannière(s) expirée(s) mise(s) à jour automatiquement');
         await fetchAllBanners();
       }
     } catch (e) {
-      debugPrint('⚠️ Erreur lors de la vérification des bannières expirées: $e');
+      debugPrint(
+          '⚠️ Erreur lors de la vérification des bannières expirées: $e');
     }
   }
 
@@ -628,7 +650,7 @@ class BannerController extends GetxController {
   void _startExpirationCheckTimer() {
     // Vérifier immédiatement
     checkExpiredBanners();
-    
+
     // Puis vérifier toutes les heures
     _expirationCheckTimer = Timer.periodic(
       const Duration(hours: 1),
@@ -642,7 +664,8 @@ class BannerController extends GetxController {
   }
 
   /// Notifier les admins lorsqu'une modification est en attente pour une bannière publiée
-  Future<void> _notifyAdminsPendingChanges(String bannerId, String bannerName) async {
+  Future<void> _notifyAdminsPendingChanges(
+      String bannerId, String bannerName) async {
     try {
       // Récupérer le nom du gérant
       final gerantName = _userController.user.value.fullName.isNotEmpty
@@ -650,10 +673,8 @@ class BannerController extends GetxController {
           : 'Un gérant';
 
       // Récupérer tous les admins
-      final adminUsers = await _db
-          .from('users')
-          .select('id')
-          .eq('role', 'Admin');
+      final adminUsers =
+          await _db.from('users').select('id').eq('role', 'Admin');
 
       if (adminUsers.isEmpty) {
         debugPrint('⚠️ Aucun admin trouvé pour notifier');
@@ -666,13 +687,16 @@ class BannerController extends GetxController {
           await _db.from('notifications').insert({
             'user_id': admin['id'],
             'title': 'Modifications en attente',
-            'message': '$gerantName a demandé des modifications pour la bannière "$bannerName".',
+            'message':
+                '$gerantName a demandé des modifications pour la bannière "$bannerName".',
             'read': false,
             'created_at': DateTime.now().toIso8601String(),
           });
-          debugPrint('Notification de modification créée pour admin ${admin['id']}');
+          debugPrint(
+              'Notification de modification créée pour admin ${admin['id']}');
         } catch (e) {
-          debugPrint('Erreur création notification pour admin ${admin['id']}: $e');
+          debugPrint(
+              'Erreur création notification pour admin ${admin['id']}: $e');
         }
       }
     } catch (e) {
@@ -680,4 +704,3 @@ class BannerController extends GetxController {
     }
   }
 }
-
