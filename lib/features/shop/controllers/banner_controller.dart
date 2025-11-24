@@ -315,7 +315,9 @@ class BannerController extends GetxController {
 
       isLoading.value = true;
       await _bannerRepository.updateBannerStatus(bannerId, newStatus);
-      await fetchAllBanners();
+      // Ne pas recharger toutes les bannières, le Realtime s'en chargera
+      // Cela évite les conflits et permet une mise à jour plus fluide
+      // await fetchAllBanners();
       
       TLoaders.successSnackBar(
         title: 'Succès',
@@ -323,6 +325,8 @@ class BannerController extends GetxController {
       );
     } catch (e) {
       TLoaders.errorSnackBar(message: 'Erreur lors de la mise à jour du statut: $e');
+      // En cas d'erreur, recharger pour s'assurer que l'état est cohérent
+      await fetchAllBanners();
     } finally {
       isLoading.value = false;
     }
@@ -386,49 +390,66 @@ class BannerController extends GetxController {
             final newData = payload.newRecord;
             final oldData = payload.oldRecord;
 
+            debugPrint('📢 Événement Realtime bannière: $eventType');
+
             if (eventType == PostgresChangeEvent.insert) {
               final banner = BannerModel.fromJson(newData);
+              debugPrint('➕ Nouvelle bannière reçue: ${banner.id} - ${banner.name} - ${banner.status}');
               // Vérifier si la bannière n'existe pas déjà dans la liste
               final index = allBanners.indexWhere((b) => b.id == banner.id);
               if (index == -1) {
                 allBanners.insert(0, banner);
                 allBanners.refresh();
+                debugPrint('✅ Bannière ajoutée à la liste');
               }
             } else if (eventType == PostgresChangeEvent.update) {
               final banner = BannerModel.fromJson(newData);
+              debugPrint('🔄 Bannière mise à jour: ${banner.id} - ${banner.name} - Statut: ${banner.status}');
               final index = allBanners.indexWhere((b) => b.id == banner.id);
               if (index != -1) {
-                allBanners[index] = banner;
+                // Remplacer complètement l'élément pour forcer la mise à jour
+                allBanners.removeAt(index);
+                allBanners.insert(index, banner);
                 allBanners.refresh();
+                debugPrint('✅ Bannière mise à jour dans la liste (index: $index)');
               } else {
                 // Si la bannière n'existe pas, l'ajouter
                 allBanners.insert(0, banner);
                 allBanners.refresh();
+                debugPrint('✅ Bannière ajoutée (n\'existait pas dans la liste)');
               }
             } else if (eventType == PostgresChangeEvent.delete) {
               final id = oldData['id']?.toString();
               if (id != null) {
+                final hadBanner = allBanners.any((b) => b.id == id);
                 allBanners.removeWhere((b) => b.id == id);
-                allBanners.refresh();
+                if (hadBanner) {
+                  allBanners.refresh();
+                  debugPrint('✅ Bannière supprimée de la liste: $id');
+                }
               }
             }
-          } catch (e) {
-            debugPrint('Erreur traitement changement bannière temps réel: $e');
+          } catch (e, stackTrace) {
+            debugPrint('❌ Erreur traitement changement bannière temps réel: $e');
+            debugPrint('Stack trace: $stackTrace');
           }
         },
       );
 
       _bannersChannel!.subscribe(
-        (status, [_]) {
+        (status, [error]) {
           if (status == RealtimeSubscribeStatus.subscribed) {
-            debugPrint('Abonnement temps réel activé pour les bannières');
+            debugPrint('✅ Abonnement temps réel activé pour les bannières');
           } else if (status == RealtimeSubscribeStatus.channelError) {
-            debugPrint('Erreur abonnement temps réel bannières');
+            debugPrint('❌ Erreur abonnement temps réel bannières: $error');
+          } else {
+            debugPrint('⚠️ Statut abonnement bannières: $status');
           }
         },
       );
-    } catch (e) {
-      debugPrint('Erreur abonnement temps réel bannières: $e');
+    } catch (e, stackTrace) {
+      debugPrint('❌ Erreur abonnement temps réel bannières: $e');
+      debugPrint('Stack trace: $stackTrace');
     }
   }
 
