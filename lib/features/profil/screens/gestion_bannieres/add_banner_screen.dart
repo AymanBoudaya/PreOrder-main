@@ -9,7 +9,6 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/controllers/banner_controller.dart';
-import '../../../shop/controllers/category_controller.dart';
 import '../../../../data/repositories/product/produit_repository.dart';
 import '../../controllers/liste_etablissement_controller.dart';
 
@@ -19,13 +18,11 @@ class AddBannerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bannerController = Get.find<BannerController>();
-    final categoryController = Get.find<CategoryController>();
     final produitRepository = Get.find<ProduitRepository>();
     final etablissementController = Get.find<ListeEtablissementController>();
 
     // Charger les données pour les dropdowns
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      bannerController.categories.assignAll(categoryController.allCategories);
       try {
         final products = await produitRepository.getAllProducts();
         bannerController.products.assignAll(products);
@@ -96,8 +93,6 @@ class AddBannerScreen extends StatelessWidget {
                   items: const [
                     DropdownMenuItem(value: null, child: Text('Aucun lien')),
                     DropdownMenuItem(value: 'product', child: Text('Produit')),
-                    DropdownMenuItem(
-                        value: 'category', child: Text('Catégorie')),
                     DropdownMenuItem(
                       value: 'establishment',
                       child: Text('Établissement'),
@@ -360,42 +355,6 @@ class AddBannerScreen extends StatelessWidget {
           validator: (value) {
             if (linkType.isNotEmpty && (value == null || value.isEmpty)) {
               return 'Veuillez sélectionner un produit';
-            }
-            return null;
-          },
-        );
-      } else if (linkType == 'category') {
-        final categories = controller.categories;
-        if (categories.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Aucune catégorie disponible',
-                style: TextStyle(color: Colors.grey)),
-          );
-        }
-
-        final selectedValue = controller.selectedLinkId.value;
-        final isValidValue = selectedValue.isNotEmpty &&
-            categories.any((c) => c.id == selectedValue);
-
-        return DropdownButtonFormField<String>(
-          initialValue: isValidValue ? selectedValue : null,
-          decoration: const InputDecoration(
-            labelText: 'Sélectionner une catégorie',
-            prefixIcon: Icon(Iconsax.category),
-          ),
-          items: categories.map((category) {
-            return DropdownMenuItem(
-              value: category.id,
-              child: Text(category.name),
-            );
-          }).toList(),
-          onChanged: (value) {
-            controller.selectedLinkId.value = value ?? '';
-          },
-          validator: (value) {
-            if (linkType.isNotEmpty && (value == null || value.isEmpty)) {
-              return 'Veuillez sélectionner une catégorie';
             }
             return null;
           },

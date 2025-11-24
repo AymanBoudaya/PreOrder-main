@@ -9,12 +9,9 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
 import '../../../models/banner_model.dart';
-import '../../../models/category_model.dart';
 import '../../../models/produit_model.dart';
 import '../../etablissements/produits_etablissement.dart';
 import '../../product_details/product_detail.dart';
-import '../../sub_category/sub_categories.dart';
-import '../../../controllers/category_controller.dart';
 import '../../../../../data/repositories/product/produit_repository.dart';
 
 class TPromoSlider extends StatefulWidget {
@@ -267,9 +264,6 @@ class _TPromoSliderState extends State<TPromoSlider> {
       case 'product':
         _navigateToProduct(banner.link!);
         break;
-      case 'category':
-        _navigateToCategory(banner.link!);
-        break;
       case 'establishment':
         _navigateToEstablishment(banner.link!);
         break;
@@ -299,33 +293,6 @@ class _TPromoSliderState extends State<TPromoSlider> {
       Get.snackbar(
         'Erreur',
         'Impossible de charger le produit',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
-  }
-
-  void _navigateToCategory(String categoryId) async {
-    try {
-      final categoryController = Get.find<CategoryController>();
-      await categoryController.fetchCategories();
-      final category = categoryController.allCategories.firstWhere(
-        (c) => c.id == categoryId,
-        orElse: () => CategoryModel.empty(),
-      );
-
-      if (category.id.isNotEmpty) {
-        Get.to(() => SubCategoriesScreen(category: category));
-      } else {
-        Get.snackbar(
-          'Erreur',
-          'Catégorie non trouvée',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
-    } catch (e) {
-      Get.snackbar(
-        'Erreur',
-        'Impossible de charger la catégorie',
         snackPosition: SnackPosition.BOTTOM,
       );
     }
