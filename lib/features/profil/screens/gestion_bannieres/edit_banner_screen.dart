@@ -736,7 +736,12 @@ class EditBannerScreen extends StatelessWidget {
     BannerModel banner,
   ) {
     return Obx(() {
-      final linkType = controller.selectedLinkType.value;
+      // Déterminer le type de lien à afficher : priorité au type dans pendingChanges si présent
+      final pendingLinkType = banner.pendingChanges != null
+          ? banner.pendingChanges!['link_type']?.toString()
+          : null;
+      final linkType = pendingLinkType ?? controller.selectedLinkType.value;
+      
       if (linkType.isEmpty) return const SizedBox.shrink();
 
       if (linkType == 'product') {
@@ -753,14 +758,15 @@ class EditBannerScreen extends StatelessWidget {
         final isValidValue = selectedValue.isNotEmpty &&
             products.any((p) => p.id == selectedValue);
 
-        // Vérifier si une modification est en attente
+        // Vérifier si une modification est en attente pour un produit
+        // Soit le type de lien a changé vers 'product', soit le produit a changé (même type)
         final hasPendingLink = banner.pendingChanges != null &&
-            (banner.pendingChanges!['link'] != null ||
-                banner.pendingChanges!['link_type'] == 'product');
-        final pendingLinkId = hasPendingLink
+            (banner.pendingChanges!['link_type'] == 'product' ||
+                (banner.pendingChanges!['link'] != null && linkType == 'product'));
+        final pendingLinkId = hasPendingLink && banner.pendingChanges!['link'] != null
             ? banner.pendingChanges!['link']?.toString()
             : null;
-        final pendingProduct = pendingLinkId != null
+        final pendingProduct = pendingLinkId != null && pendingLinkId.isNotEmpty
             ? products.firstWhereOrNull((p) => p.id == pendingLinkId)
             : null;
 
@@ -844,14 +850,15 @@ class EditBannerScreen extends StatelessWidget {
         final isValidValue = selectedValue.isNotEmpty &&
             establishments.any((e) => e.id == selectedValue);
 
-        // Vérifier si une modification est en attente
+        // Vérifier si une modification est en attente pour un établissement
+        // Soit le type de lien a changé vers 'establishment', soit l'établissement a changé (même type)
         final hasPendingLink = banner.pendingChanges != null &&
-            (banner.pendingChanges!['link'] != null ||
-                banner.pendingChanges!['link_type'] == 'establishment');
-        final pendingLinkId = hasPendingLink
+            (banner.pendingChanges!['link_type'] == 'establishment' ||
+                (banner.pendingChanges!['link'] != null && linkType == 'establishment'));
+        final pendingLinkId = hasPendingLink && banner.pendingChanges!['link'] != null
             ? banner.pendingChanges!['link']?.toString()
             : null;
-        final pendingEstablishment = pendingLinkId != null
+        final pendingEstablishment = pendingLinkId != null && pendingLinkId.isNotEmpty
             ? establishments.firstWhereOrNull((e) => e.id == pendingLinkId)
             : null;
 
