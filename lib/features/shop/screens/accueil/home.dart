@@ -9,7 +9,6 @@ import '../../../../common/widgets/shimmer/vertical_product_shimmer.dart';
 import '../../../../common/widgets/texts/section_heading.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../common/widgets/custom_shapes/containers/primary_header_container.dart';
-import '../../controllers/product/all_products_controller.dart';
 import 'widgets/home_categories.dart';
 import '../../controllers/product/produit_controller.dart';
 import '../../controllers/banner_controller.dart';
@@ -27,6 +26,11 @@ class HomeScreen extends StatelessWidget {
     final bannerController = Get.find<BannerController>();
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
+    // Charger les bannières une seule fois si nécessaire
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      bannerController.loadPublishedBannersIfNeeded();
+    });
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -65,37 +69,34 @@ class HomeScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  /// -- PromoSlider avec hauteur responsive - Charger les bannières publiées depuis la DB
-                  FutureBuilder(
-                    future: bannerController.getPublishedBanners(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return SizedBox(
-                          height: TDeviceUtils.getPromoSliderHeight(
-                              screenWidth, screenHeight),
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-
-                      if (snapshot.hasError ||
-                          !snapshot.hasData ||
-                          snapshot.data!.isEmpty) {
-                        // Si pas de bannières, ne rien afficher ou afficher un message
-                        return const SizedBox.shrink();
-                      }
-
-                      final banners = snapshot.data!;
-                      return TPromoSlider(
-                        banners: banners,
+                  /// -- PromoSlider avec cache - Ne se recharge pas à chaque rebuild
+                  Obx(() {
+                    final banners = bannerController.getPublishedBanners();
+                    
+                    // Afficher un loader seulement si on charge initialement et qu'il n'y a pas de bannières
+                    if (bannerController.isLoading.value && banners.isEmpty) {
+                      return SizedBox(
                         height: TDeviceUtils.getPromoSliderHeight(
                             screenWidth, screenHeight),
-                        autoPlay: true,
-                        autoPlayInterval: 5000,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       );
-                    },
-                  ),
+                    }
+
+                    // Si pas de bannières, ne rien afficher
+                    if (banners.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return TPromoSlider(
+                      banners: banners,
+                      height: TDeviceUtils.getPromoSliderHeight(
+                          screenWidth, screenHeight),
+                      autoPlay: true,
+                      autoPlayInterval: 5000,
+                    );
+                  }),
                   const SizedBox(height: AppSizes.spaceBtwSections),
 
                   /// -- En tête

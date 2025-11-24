@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -56,13 +55,16 @@ class BannerController extends GetxController {
     }
   }
 
-  /// Fetch published banners (for home screen)
-  Future<List<BannerModel>> getPublishedBanners() async {
-    try {
-      return await _bannerRepository.getPublishedBanners();
-    } catch (e) {
-      debugPrint('Erreur lors du chargement des bannières publiées: $e');
-      return [];
+  /// Get published banners from cache (allBanners) - Ne recharge pas depuis la DB
+  List<BannerModel> getPublishedBanners() {
+    return getBannersByStatus('publiee');
+  }
+
+  /// Load published banners from DB (only if needed)
+  Future<void> loadPublishedBannersIfNeeded() async {
+    // Si allBanners est vide, charger toutes les bannières
+    if (allBanners.isEmpty && !isLoading.value) {
+      await fetchAllBanners();
     }
   }
 
