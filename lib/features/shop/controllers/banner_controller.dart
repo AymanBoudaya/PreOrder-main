@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/repositories/banner/banner_repository.dart';
 import '../../../utils/popups/loaders.dart';
 import '../models/banner_model.dart';
@@ -13,6 +14,10 @@ class BannerController extends GetxController {
   // Repository
   final _bannerRepository = Get.find<BannerRepository>();
   final _userController = Get.find<UserController>();
+  final _db = Supabase.instance.client;
+
+  // Realtime channel
+  RealtimeChannel? _bannersChannel;
 
   // Observable variables
   final RxList<BannerModel> allBanners = <BannerModel>[].obs;
@@ -40,6 +45,13 @@ class BannerController extends GetxController {
   void onInit() {
     super.onInit();
     fetchAllBanners();
+    _subscribeToRealtimeBanners();
+  }
+
+  @override
+  void onClose() {
+    _unsubscribeFromRealtimeBanners();
+    super.onClose();
   }
 
   /// Fetch all banners
@@ -164,8 +176,11 @@ class BannerController extends GetxController {
         updatedAt: DateTime.now(),
       );
 
-      await _bannerRepository.addBanner(banner);
+      final newBanner = await _bannerRepository.addBanner(banner);
       await fetchAllBanners();
+      
+      // Envoyer une notification aux admins
+      await _notifyAdminsNewBanner(newBanner);
       
       clearForm();
       Get.back(); // Fermer l'écran
@@ -354,6 +369,120 @@ class BannerController extends GetxController {
   /// Refresh banners
   Future<void> refreshBanners() async {
     await fetchAllBanners();
+  }
+
+  /// S'abonner aux changements en temps réel des bannières
+  void _subscribeToRealtimeBanners() {
+    try {
+      _bannersChannel = _db.channel('banners_realtime');
+      
+      _bannersChannel!.onPostgresChanges(
+        event: PostgresChangeEvent.all,
+        schema: 'public',
+        table: 'banners',
+        callback: (payload) {
+          try {
+            final eventType = payload.eventType;
+            final newData = payload.newRecord;
+            final oldData = payload.oldRecord;
+
+            if (eventType == PostgresChangeEvent.insert) {
+              final banner = BannerModel.fromJson(newData);
+              // Vérifier si la bannière n'existe pas déjà dans la liste
+              final index = allBanners.indexWhere((b) => b.id == banner.id);
+              if (index == -1) {
+                allBanners.insert(0, banner);
+                allBanners.refresh();
+              }
+            } else if (eventType == PostgresChangeEvent.update) {
+              final banner = BannerModel.fromJson(newData);
+              final index = allBanners.indexWhere((b) => b.id == banner.id);
+              if (index != -1) {
+                allBanners[index] = banner;
+                allBanners.refresh();
+              } else {
+                // Si la bannière n'existe pas, l'ajouter
+                allBanners.insert(0, banner);
+                allBanners.refresh();
+              }
+            } else if (eventType == PostgresChangeEvent.delete) {
+              final id = oldData['id']?.toString();
+              if (id != null) {
+                allBanners.removeWhere((b) => b.id == id);
+                allBanners.refresh();
+              }
+            }
+          } catch (e) {
+            debugPrint('Erreur traitement changement bannière temps réel: $e');
+          }
+        },
+      );
+
+      _bannersChannel!.subscribe(
+        (status, [_]) {
+          if (status == RealtimeSubscribeStatus.subscribed) {
+            debugPrint('Abonnement temps réel activé pour les bannières');
+          } else if (status == RealtimeSubscribeStatus.channelError) {
+            debugPrint('Erreur abonnement temps réel bannières');
+          }
+        },
+      );
+    } catch (e) {
+      debugPrint('Erreur abonnement temps réel bannières: $e');
+    }
+  }
+
+  /// Se désabonner des changements en temps réel
+  void _unsubscribeFromRealtimeBanners() {
+    if (_bannersChannel != null) {
+      try {
+        _db.removeChannel(_bannersChannel!);
+        _bannersChannel = null;
+        debugPrint('Désabonné de l\'écoute temps réel des bannières');
+      } catch (e) {
+        debugPrint('Erreur lors de la désinscription temps réel: $e');
+      }
+    }
+  }
+
+  /// Notifier les admins lorsqu'une nouvelle bannière est ajoutée
+  Future<void> _notifyAdminsNewBanner(BannerModel banner) async {
+    try {
+      // Récupérer le nom du gérant
+      final gerantName = _userController.user.value.fullName.isNotEmpty
+          ? _userController.user.value.fullName
+          : 'Un gérant';
+
+      // Récupérer tous les admins
+      final adminUsers = await _db
+          .from('users')
+          .select('id')
+          .eq('role', 'Admin');
+
+      if (adminUsers.isEmpty) {
+        debugPrint('⚠️ Aucun admin trouvé pour notifier');
+        return;
+      }
+
+      // Envoyer une notification à chaque admin
+      for (final admin in adminUsers) {
+        try {
+          await _db.from('notifications').insert({
+            'user_id': admin['id'],
+            'title': 'Nouvelle bannière à valider',
+            'message': '$gerantName a ajouté une nouvelle bannière "${banner.name}".',
+            'read': false,
+            'created_at': DateTime.now().toIso8601String(),
+          });
+          debugPrint('Notification créée pour admin ${admin['id']}');
+        } catch (e) {
+          debugPrint('Erreur création notification pour admin ${admin['id']}: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('⚠️ Erreur envoi notification aux admins: $e');
+      // Ne pas faire échouer l'ajout de la bannière si la notification échoue
+    }
   }
 }
 
