@@ -10,7 +10,9 @@ import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/controllers/banner_controller.dart';
 import '../../../../data/repositories/product/produit_repository.dart';
+import '../../../shop/models/etablissement_model.dart';
 import '../../controllers/liste_etablissement_controller.dart';
+import '../../controllers/user_controller.dart';
 
 class AddBannerScreen extends StatelessWidget {
   const AddBannerScreen({super.key});
@@ -20,6 +22,7 @@ class AddBannerScreen extends StatelessWidget {
     final bannerController = Get.find<BannerController>();
     final produitRepository = Get.find<ProduitRepository>();
     final etablissementController = Get.find<ListeEtablissementController>();
+    final userController = Get.find<UserController>();
 
     // Charger les données pour les dropdowns
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -30,9 +33,17 @@ class AddBannerScreen extends StatelessWidget {
         debugPrint('Erreur chargement produits: $e');
       }
       try {
-        final establishments =
-            await etablissementController.getTousEtablissements();
-        bannerController.establishments.assignAll(establishments);
+        // Si gérant, charger uniquement son établissement
+        if (userController.userRole == 'Gérant') {
+          final gerantEtablissement = await etablissementController.getEtablissementUtilisateurConnecte();
+          if (gerantEtablissement != null) {
+            bannerController.establishments.assignAll([gerantEtablissement]);
+          }
+        } else {
+          // Pour admin, charger tous les établissements
+          final establishments = await etablissementController.getTousEtablissements();
+          bannerController.establishments.assignAll(establishments);
+        }
       } catch (e) {
         debugPrint('Erreur chargement établissements: $e');
       }
@@ -84,6 +95,9 @@ class AddBannerScreen extends StatelessWidget {
               // Type de lien
               Obx(() {
                 final currentValue = controller.selectedLinkType.value;
+                final userController = Get.find<UserController>();
+                final isGerant = userController.userRole == 'Gérant';
+                
                 return DropdownButtonFormField<String?>(
                   initialValue: currentValue.isEmpty ? null : currentValue,
                   decoration: const InputDecoration(
@@ -101,6 +115,13 @@ class AddBannerScreen extends StatelessWidget {
                   onChanged: (value) {
                     controller.selectedLinkType.value = value ?? '';
                     controller.selectedLinkId.value = ''; // Reset selection
+                    // Si gérant sélectionne "établissement", définir automatiquement son établissement
+                    if (isGerant && value == 'establishment' && controller.establishments.isNotEmpty) {
+                      final gerantEtablissement = controller.establishments.firstWhereOrNull((e) => e.id != null);
+                      if (gerantEtablissement != null) {
+                        controller.selectedLinkId.value = gerantEtablissement.id ?? '';
+                      }
+                    }
                   },
                 );
               }),
@@ -363,6 +384,9 @@ class AddBannerScreen extends StatelessWidget {
           },
         );
       } else if (linkType == 'establishment') {
+        final userController = Get.find<UserController>();
+        final isGerant = userController.userRole == 'Gérant';
+        
         final establishments =
             controller.establishments.where((e) => e.id != null).toList();
         if (establishments.isEmpty) {
@@ -373,10 +397,67 @@ class AddBannerScreen extends StatelessWidget {
           );
         }
 
+        // Pour le gérant, récupérer son établissement par défaut
+        Etablissement? gerantEtablissement;
+        if (isGerant && establishments.isNotEmpty) {
+          gerantEtablissement = establishments.first;
+          // Définir automatiquement l'établissement du gérant si pas encore défini
+          if (controller.selectedLinkId.value.isEmpty) {
+            controller.selectedLinkId.value = gerantEtablissement.id ?? '';
+          }
+        }
+
         final selectedValue = controller.selectedLinkId.value;
         final isValidValue = selectedValue.isNotEmpty &&
             establishments.any((e) => e.id == selectedValue);
 
+        // Déterminer l'établissement actuel à afficher
+        final currentEstablishment = isValidValue
+            ? establishments.firstWhere((e) => e.id == selectedValue)
+            : gerantEtablissement;
+
+        // Ne pas afficher le dropdown pour le gérant, afficher directement l'établissement
+        if (isGerant && currentEstablishment != null) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Row(
+              children: [
+                Icon(Iconsax.home, color: Colors.grey.shade700),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Établissement',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        currentEstablishment.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[900],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Pour l'admin, afficher le dropdown
         return DropdownButtonFormField<String>(
           initialValue: isValidValue ? selectedValue : null,
           decoration: const InputDecoration(

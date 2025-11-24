@@ -11,7 +11,9 @@ import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/controllers/banner_controller.dart';
 import '../../../../data/repositories/product/produit_repository.dart';
 import '../../../shop/models/banner_model.dart';
+import '../../../shop/models/etablissement_model.dart';
 import '../../controllers/liste_etablissement_controller.dart';
+import '../../controllers/user_controller.dart';
 
 class EditBannerScreen extends StatelessWidget {
   final BannerModel banner;
@@ -25,6 +27,7 @@ class EditBannerScreen extends StatelessWidget {
     final bannerController = Get.find<BannerController>();
     final produitRepository = Get.find<ProduitRepository>();
     final etablissementController = Get.find<ListeEtablissementController>();
+    final userController = Get.find<UserController>();
 
     // Charger les données pour les dropdowns
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -35,9 +38,21 @@ class EditBannerScreen extends StatelessWidget {
         debugPrint('Erreur chargement produits: $e');
       }
       try {
-        final establishments =
-            await etablissementController.getTousEtablissements();
-        bannerController.establishments.assignAll(establishments);
+        // Si gérant, charger uniquement son établissement
+        if (userController.userRole == 'Gérant') {
+          final gerantEtablissement = await etablissementController.getEtablissementUtilisateurConnecte();
+          if (gerantEtablissement != null) {
+            bannerController.establishments.assignAll([gerantEtablissement]);
+            // Si le type de lien est "establishment" et qu'aucun lien n'est sélectionné, utiliser l'établissement du gérant
+            if (banner.linkType == 'establishment' && (banner.link == null || banner.link!.isEmpty)) {
+              bannerController.selectedLinkId.value = gerantEtablissement.id ?? '';
+            }
+          }
+        } else {
+          // Pour admin, charger tous les établissements
+          final establishments = await etablissementController.getTousEtablissements();
+          bannerController.establishments.assignAll(establishments);
+        }
       } catch (e) {
         debugPrint('Erreur chargement établissements: $e');
       }
@@ -86,6 +101,8 @@ class EditBannerScreen extends StatelessWidget {
                 final pendingLinkType = hasPendingLinkType
                     ? banner.pendingChanges!['link_type'].toString()
                     : null;
+                final userController = Get.find<UserController>();
+                final isGerant = userController.userRole == 'Gérant';
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,6 +129,13 @@ class EditBannerScreen extends StatelessWidget {
                               if (value != banner.linkType) {
                                 controller.selectedLinkId.value =
                                     ''; // Reset selection
+                              }
+                              // Si gérant sélectionne "établissement", définir automatiquement son établissement
+                              if (isGerant && value == 'establishment' && controller.establishments.isNotEmpty) {
+                                final gerantEtablissement = controller.establishments.firstWhereOrNull((e) => e.id != null);
+                                if (gerantEtablissement != null) {
+                                  controller.selectedLinkId.value = gerantEtablissement.id ?? '';
+                                }
                               }
                             },
                     ),
@@ -836,6 +860,9 @@ class EditBannerScreen extends StatelessWidget {
           ],
         );
       } else if (linkType == 'establishment') {
+        final userController = Get.find<UserController>();
+        final isGerant = userController.userRole == 'Gérant';
+        
         final establishments =
             controller.establishments.where((e) => e.id != null).toList();
         if (establishments.isEmpty) {
@@ -844,6 +871,16 @@ class EditBannerScreen extends StatelessWidget {
             child: Text('Aucun établissement disponible',
                 style: TextStyle(color: Colors.grey)),
           );
+        }
+
+        // Pour le gérant, récupérer son établissement par défaut
+        Etablissement? gerantEtablissement;
+        if (isGerant && establishments.isNotEmpty) {
+          gerantEtablissement = establishments.first;
+          // Définir automatiquement l'établissement du gérant si pas encore défini
+          if (controller.selectedLinkId.value.isEmpty && !isAdminView) {
+            controller.selectedLinkId.value = gerantEtablissement.id ?? '';
+          }
         }
 
         final selectedValue = controller.selectedLinkId.value;
@@ -862,29 +899,78 @@ class EditBannerScreen extends StatelessWidget {
             ? establishments.firstWhereOrNull((e) => e.id == pendingLinkId)
             : null;
 
+        // Déterminer l'établissement actuel à afficher
+        final currentEstablishment = isValidValue
+            ? establishments.firstWhere((e) => e.id == selectedValue)
+            : gerantEtablissement;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DropdownButtonFormField<String>(
-              value: isValidValue ? selectedValue : null,
-              decoration: InputDecoration(
-                labelText: 'Sélectionner un établissement',
-                prefixIcon: const Icon(Iconsax.home),
-                filled: isAdminView,
+            // Ne pas afficher le dropdown pour le gérant, afficher directement l'établissement
+            if (isGerant && !isAdminView) ...[
+              if (currentEstablishment != null) ...[
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Iconsax.home, color: Colors.grey.shade700),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Établissement',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              currentEstablishment.name,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey[900],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ] else ...[
+              // Pour l'admin, afficher le dropdown
+              DropdownButtonFormField<String>(
+                value: isValidValue ? selectedValue : null,
+                decoration: InputDecoration(
+                  labelText: 'Sélectionner un établissement',
+                  prefixIcon: const Icon(Iconsax.home),
+                  filled: isAdminView,
+                ),
+                items: establishments.map((establishment) {
+                  return DropdownMenuItem(
+                    value: establishment.id!,
+                    child: Text(establishment.name),
+                  );
+                }).toList(),
+                onChanged: isAdminView
+                    ? null
+                    : (value) {
+                        controller.selectedLinkId.value = value ?? '';
+                      },
               ),
-              items: establishments.map((establishment) {
-                return DropdownMenuItem(
-                  value: establishment.id!,
-                  child: Text(establishment.name),
-                );
-              }).toList(),
-              onChanged: isAdminView
-                  ? null
-                  : (value) {
-                      controller.selectedLinkId.value = value ?? '';
-                    },
-            ),
-            // Afficher le nouvel établissement sélectionné sous le dropdown
+            ],
+            // Afficher le nouvel établissement sélectionné sous le dropdown/champ
             if (hasPendingLink && pendingEstablishment != null) ...[
               const SizedBox(height: 8),
               Container(
