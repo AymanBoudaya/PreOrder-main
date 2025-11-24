@@ -101,6 +101,95 @@ class BannerRepository extends GetxController {
     }
   }
 
+  /// Sauvegarder les modifications en attente pour une bannière publiée
+  Future<void> savePendingChanges(String bannerId, Map<String, dynamic> pendingChanges) async {
+    try {
+      await _db
+          .from(_table)
+          .update({
+            'pending_changes': pendingChanges,
+            'pending_changes_requested_at': DateTime.now().toIso8601String(),
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .eq('id', bannerId);
+    } on PostgrestException catch (e) {
+      throw 'Erreur base de données : ${e.code} - ${e.message}';
+    } catch (e) {
+      throw 'Erreur lors de la sauvegarde des modifications en attente : $e';
+    }
+  }
+
+  /// Approuver les modifications en attente (Admin)
+  Future<void> approvePendingChanges(String bannerId) async {
+    try {
+      // Récupérer la bannière avec les modifications en attente
+      final response = await _db
+          .from(_table)
+          .select()
+          .eq('id', bannerId)
+          .single();
+
+      final banner = BannerModel.fromJson(response);
+      
+      if (banner.pendingChanges == null) {
+        throw 'Aucune modification en attente pour cette bannière';
+      }
+
+      // Appliquer les modifications en attente
+      final updates = Map<String, dynamic>.from(banner.pendingChanges!);
+      updates['pending_changes'] = null;
+      updates['pending_changes_requested_at'] = null;
+      updates['updated_at'] = DateTime.now().toIso8601String();
+
+      await _db.from(_table).update(updates).eq('id', bannerId);
+    } on PostgrestException catch (e) {
+      throw 'Erreur base de données : ${e.code} - ${e.message}';
+    } catch (e) {
+      throw 'Erreur lors de l\'approbation des modifications : $e';
+    }
+  }
+
+  /// Refuser les modifications en attente (Admin)
+  Future<void> rejectPendingChanges(String bannerId) async {
+    try {
+      await _db
+          .from(_table)
+          .update({
+            'pending_changes': null,
+            'pending_changes_requested_at': null,
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .eq('id', bannerId);
+    } on PostgrestException catch (e) {
+      throw 'Erreur base de données : ${e.code} - ${e.message}';
+    } catch (e) {
+      throw 'Erreur lors du refus des modifications : $e';
+    }
+  }
+
+  /// Vérifier et mettre à jour les bannières expirées (en_attente depuis plus de 3 jours)
+  Future<int> checkAndUpdateExpiredBanners() async {
+    try {
+      final threeDaysAgo = DateTime.now().subtract(const Duration(days: 3));
+      
+      final response = await _db
+          .from(_table)
+          .update({
+            'status': 'refusee',
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .eq('status', 'en_attente')
+          .lt('created_at', threeDaysAgo.toIso8601String())
+          .select();
+
+      return (response as List).length;
+    } on PostgrestException catch (e) {
+      throw 'Erreur base de données : ${e.code} - ${e.message}';
+    } catch (e) {
+      throw 'Erreur lors de la vérification des bannières expirées : $e';
+    }
+  }
+
   /// Supprimer une bannière
   Future<void> deleteBanner(String bannerId) async {
     try {

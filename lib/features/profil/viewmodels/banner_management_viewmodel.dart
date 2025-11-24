@@ -72,6 +72,18 @@ class BannerManagementViewModel extends GetxController with GetSingleTickerProvi
     bannerController.loadBannerForEditing(banner);
   }
 
+  Future<void> approvePendingChanges(String bannerId) async {
+    await bannerController.approvePendingChanges(bannerId);
+  }
+
+  Future<void> rejectPendingChanges(String bannerId) async {
+    await bannerController.rejectPendingChanges(bannerId);
+  }
+
+  bool hasPendingChanges(BannerModel banner) {
+    return bannerController.hasPendingChanges(banner);
+  }
+
   String getStatusLabel(String status) {
     switch (status) {
       case 'publiee':

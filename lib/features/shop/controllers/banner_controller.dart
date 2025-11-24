@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +19,9 @@ class BannerController extends GetxController {
 
   // Realtime channel
   RealtimeChannel? _bannersChannel;
+
+  // Timer pour vérifier les bannières expirées
+  Timer? _expirationCheckTimer;
 
   // Observable variables
   final RxList<BannerModel> allBanners = <BannerModel>[].obs;
@@ -46,11 +50,13 @@ class BannerController extends GetxController {
     super.onInit();
     fetchAllBanners();
     _subscribeToRealtimeBanners();
+    _startExpirationCheckTimer();
   }
 
   @override
   void onClose() {
     _unsubscribeFromRealtimeBanners();
+    _expirationCheckTimer?.cancel();
     super.onClose();
   }
 
@@ -214,7 +220,7 @@ class BannerController extends GetxController {
 
       isLoading.value = true;
 
-      // Get existing banner to preserve status
+      // Get existing banner to check status
       final existingBanner = allBanners.firstWhere((b) => b.id == bannerId);
 
       // Upload new image if one was picked
@@ -228,27 +234,74 @@ class BannerController extends GetxController {
         );
       }
 
-      // Update banner (Gérant cannot change status, only Admin can)
-      final banner = BannerModel(
-        id: bannerId,
-        name: nameController.text.trim(),
-        imageUrl: finalImageUrl,
-        status: existingBanner.status, // Preserve existing status
-        link: selectedLinkId.value.isNotEmpty ? selectedLinkId.value : null,
-        linkType: selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
-        createdAt: existingBanner.createdAt,
-        updatedAt: DateTime.now(),
-      );
+      // Préparer les données de modification
+      final updatedData = {
+        'name': nameController.text.trim(),
+        'image_url': finalImageUrl,
+        'link': selectedLinkId.value.isNotEmpty ? selectedLinkId.value : null,
+        'link_type': selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
+      };
 
-      await _bannerRepository.updateBanner(banner);
-      await fetchAllBanners();
-      
-      clearForm();
-      Get.back(); // Fermer l'écran
-      TLoaders.successSnackBar(
-        title: 'Succès',
-        message: 'Bannière mise à jour avec succès',
-      );
+      // Gérer selon le statut actuel
+      if (existingBanner.status == 'en_attente') {
+        // Statut "en_attente" : modification directe
+        final banner = BannerModel(
+          id: bannerId,
+          name: updatedData['name'].toString(),
+          imageUrl: updatedData['image_url'].toString(),
+          status: 'en_attente', // Reste en attente
+          link: updatedData['link']?.toString(),
+          linkType: updatedData['link_type']?.toString(),
+          createdAt: existingBanner.createdAt,
+          updatedAt: DateTime.now(),
+        );
+
+        await _bannerRepository.updateBanner(banner);
+        await fetchAllBanners();
+        
+        clearForm();
+        Get.back();
+        TLoaders.successSnackBar(
+          title: 'Succès',
+          message: 'Bannière mise à jour avec succès',
+        );
+      } else if (existingBanner.status == 'publiee') {
+        // Statut "publiee" : sauvegarder les modifications en attente
+        await _bannerRepository.savePendingChanges(bannerId, updatedData);
+        await fetchAllBanners();
+        
+        // Notifier les admins
+        await _notifyAdminsPendingChanges(bannerId, existingBanner.name);
+        
+        clearForm();
+        Get.back();
+        TLoaders.successSnackBar(
+          title: 'Modifications en attente',
+          message: 'Vos modifications ont été soumises et attendent l\'approbation de l\'administrateur',
+        );
+      } else if (existingBanner.status == 'refusee') {
+        // Statut "refusee" : modifier directement et remettre en attente
+        final banner = BannerModel(
+          id: bannerId,
+          name: updatedData['name'].toString(),
+          imageUrl: updatedData['image_url'].toString(),
+          status: 'en_attente', // Revenir en attente
+          link: updatedData['link']?.toString(),
+          linkType: updatedData['link_type']?.toString(),
+          createdAt: existingBanner.createdAt,
+          updatedAt: DateTime.now(),
+        );
+
+        await _bannerRepository.updateBanner(banner);
+        await fetchAllBanners();
+        
+        clearForm();
+        Get.back();
+        TLoaders.successSnackBar(
+          title: 'Succès',
+          message: 'Bannière modifiée et remise en attente de validation',
+        );
+      }
     } catch (e) {
       TLoaders.errorSnackBar(message: 'Erreur lors de la mise à jour de la bannière: $e');
     } finally {
@@ -503,6 +556,127 @@ class BannerController extends GetxController {
     } catch (e) {
       debugPrint('⚠️ Erreur envoi notification aux admins: $e');
       // Ne pas faire échouer l'ajout de la bannière si la notification échoue
+    }
+  }
+
+  /// Approuver les modifications en attente (Admin only)
+  Future<void> approvePendingChanges(String bannerId) async {
+    try {
+      if (!canChangeStatus) {
+        TLoaders.errorSnackBar(
+          title: 'Permission refusée',
+          message: 'Seuls les administrateurs peuvent approuver les modifications',
+        );
+        return;
+      }
+
+      isLoading.value = true;
+      await _bannerRepository.approvePendingChanges(bannerId);
+      await fetchAllBanners();
+      
+      TLoaders.successSnackBar(
+        title: 'Succès',
+        message: 'Modifications approuvées et appliquées',
+      );
+    } catch (e) {
+      TLoaders.errorSnackBar(message: 'Erreur lors de l\'approbation: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Refuser les modifications en attente (Admin only)
+  Future<void> rejectPendingChanges(String bannerId) async {
+    try {
+      if (!canChangeStatus) {
+        TLoaders.errorSnackBar(
+          title: 'Permission refusée',
+          message: 'Seuls les administrateurs peuvent refuser les modifications',
+        );
+        return;
+      }
+
+      isLoading.value = true;
+      await _bannerRepository.rejectPendingChanges(bannerId);
+      await fetchAllBanners();
+      
+      TLoaders.successSnackBar(
+        title: 'Succès',
+        message: 'Modifications refusées',
+      );
+    } catch (e) {
+      TLoaders.errorSnackBar(message: 'Erreur lors du refus: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Vérifier et mettre à jour les bannières expirées
+  Future<void> checkExpiredBanners() async {
+    try {
+      final count = await _bannerRepository.checkAndUpdateExpiredBanners();
+      if (count > 0) {
+        debugPrint('✅ $count bannière(s) expirée(s) mise(s) à jour automatiquement');
+        await fetchAllBanners();
+      }
+    } catch (e) {
+      debugPrint('⚠️ Erreur lors de la vérification des bannières expirées: $e');
+    }
+  }
+
+  /// Démarrer le timer pour vérifier périodiquement les bannières expirées
+  void _startExpirationCheckTimer() {
+    // Vérifier immédiatement
+    checkExpiredBanners();
+    
+    // Puis vérifier toutes les heures
+    _expirationCheckTimer = Timer.periodic(
+      const Duration(hours: 1),
+      (_) => checkExpiredBanners(),
+    );
+  }
+
+  /// Vérifier si une bannière a des modifications en attente
+  bool hasPendingChanges(BannerModel banner) {
+    return banner.pendingChanges != null && banner.pendingChanges!.isNotEmpty;
+  }
+
+  /// Notifier les admins lorsqu'une modification est en attente pour une bannière publiée
+  Future<void> _notifyAdminsPendingChanges(String bannerId, String bannerName) async {
+    try {
+      // Récupérer le nom du gérant
+      final gerantName = _userController.user.value.fullName.isNotEmpty
+          ? _userController.user.value.fullName
+          : 'Un gérant';
+
+      // Récupérer tous les admins
+      final adminUsers = await _db
+          .from('users')
+          .select('id')
+          .eq('role', 'Admin');
+
+      if (adminUsers.isEmpty) {
+        debugPrint('⚠️ Aucun admin trouvé pour notifier');
+        return;
+      }
+
+      // Envoyer une notification à chaque admin
+      for (final admin in adminUsers) {
+        try {
+          await _db.from('notifications').insert({
+            'user_id': admin['id'],
+            'title': 'Modifications en attente',
+            'message': '$gerantName a demandé des modifications pour la bannière "$bannerName".',
+            'read': false,
+            'created_at': DateTime.now().toIso8601String(),
+          });
+          debugPrint('Notification de modification créée pour admin ${admin['id']}');
+        } catch (e) {
+          debugPrint('Erreur création notification pour admin ${admin['id']}: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('⚠️ Erreur envoi notification aux admins: $e');
     }
   }
 }

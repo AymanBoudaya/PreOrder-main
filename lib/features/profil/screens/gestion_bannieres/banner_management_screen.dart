@@ -216,10 +216,17 @@ class BannerManagementScreen extends StatelessWidget {
             _buildBannerSubtitle(banner),
             const SizedBox(height: 4),
             _buildStatusChip(banner, viewModel),
+            // Afficher les modifications en attente pour l'admin
+            if (viewModel.isAdmin && viewModel.hasPendingChanges(banner)) ...[
+              const SizedBox(height: 8),
+              _buildPendingChangesIndicator(banner, viewModel),
+            ],
           ],
         ),
         trailing: viewModel.isAdmin
-            ? null // Admin ne peut que changer le statut via le chip
+            ? (viewModel.hasPendingChanges(banner)
+                ? _buildPendingChangesActions(banner, viewModel)
+                : null)
             : viewModel.isGerant
                 ? IconButton(
                     icon: const Icon(Iconsax.more),
@@ -610,6 +617,377 @@ class BannerManagementScreen extends StatelessWidget {
             ),
             child: const Text("Supprimer"),
           )
+        ],
+      ),
+    );
+  }
+
+  /// Widget pour afficher l'indicateur de modifications en attente
+  Widget _buildPendingChangesIndicator(BannerModel banner, BannerManagementViewModel viewModel) {
+    return InkWell(
+      onTap: () => _showPendingChangesDetails(banner, viewModel),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.blue.shade50,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.blue.shade300, width: 1.5),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
+            const SizedBox(width: 6),
+            Text(
+              'Modifications en attente',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.blue.shade700,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(Iconsax.arrow_right_2, size: 14, color: Colors.blue.shade700),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Widget pour les boutons d'action sur les modifications en attente (Admin)
+  Widget _buildPendingChangesActions(BannerModel banner, BannerManagementViewModel viewModel) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: Icon(Iconsax.tick_circle, color: Colors.green.shade600),
+          tooltip: 'Approuver les modifications',
+          onPressed: () => _showApprovePendingChangesDialog(banner, viewModel),
+        ),
+        IconButton(
+          icon: Icon(Iconsax.close_circle, color: Colors.red.shade600),
+          tooltip: 'Refuser les modifications',
+          onPressed: () => _showRejectPendingChangesDialog(banner, viewModel),
+        ),
+        IconButton(
+          icon: const Icon(Iconsax.eye),
+          tooltip: 'Voir les modifications',
+          onPressed: () => _showPendingChangesDetails(banner, viewModel),
+        ),
+      ],
+    );
+  }
+
+  /// Dialog pour afficher les détails des modifications en attente
+  void _showPendingChangesDetails(BannerModel banner, BannerManagementViewModel viewModel) {
+    if (banner.pendingChanges == null) return;
+
+    final pendingChanges = banner.pendingChanges!;
+    final currentBanner = banner;
+
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Iconsax.edit, color: Colors.blue.shade600),
+            const SizedBox(width: 8),
+            const Text("Modifications en attente"),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Bannière: ${banner.name}",
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 8),
+              _buildChangeComparison(
+                "Nom",
+                currentBanner.name,
+                pendingChanges['name']?.toString() ?? currentBanner.name,
+              ),
+              const SizedBox(height: 12),
+              _buildImageComparison(
+                currentBanner.imageUrl,
+                pendingChanges['image_url']?.toString(),
+              ),
+              if (pendingChanges['link'] != null || pendingChanges['link_type'] != null) ...[
+                const SizedBox(height: 12),
+                _buildChangeComparison(
+                  "Lien",
+                  "${currentBanner.linkType ?? 'Aucun'} - ${currentBanner.link ?? 'Aucun'}",
+                  "${pendingChanges['link_type'] ?? currentBanner.linkType ?? 'Aucun'} - ${pendingChanges['link'] ?? currentBanner.link ?? 'Aucun'}",
+                ),
+              ],
+              if (banner.pendingChangesRequestedAt != null) ...[
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 8),
+                Text(
+                  "Demandé le: ${_formatDate(banner.pendingChangesRequestedAt!)}",
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                ),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Fermer"),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Get.back();
+              _showApprovePendingChangesDialog(banner, viewModel);
+            },
+            icon: const Icon(Iconsax.tick_circle, size: 18),
+            label: const Text("Approuver"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade600,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChangeComparison(String label, String current, String pending) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Actuel:",
+                      style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      current,
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(Iconsax.arrow_right_3, size: 16, color: Colors.grey[600]),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Nouveau:",
+                      style: TextStyle(fontSize: 11, color: Colors.blue.shade600),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      pending,
+                      style: TextStyle(fontSize: 13, color: Colors.blue.shade700),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageComparison(String currentImageUrl, String? pendingImageUrl) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Image",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Actuelle:",
+                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        currentImageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Icon(Iconsax.image, color: Colors.grey[400]),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Iconsax.arrow_right_3, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Nouvelle:",
+                    style: TextStyle(fontSize: 11, color: Colors.blue.shade600),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.blue.shade300, width: 2),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: pendingImageUrl != null
+                          ? Image.network(
+                              pendingImageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Icon(Iconsax.image, color: Colors.grey[400]),
+                            )
+                          : Center(
+                              child: Text(
+                                "Aucun changement",
+                                style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return "${date.day}/${date.month}/${date.year} à ${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+  }
+
+  /// Dialog pour confirmer l'approbation des modifications
+  void _showApprovePendingChangesDialog(BannerModel banner, BannerManagementViewModel viewModel) {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Iconsax.tick_circle, color: Colors.green.shade600),
+            const SizedBox(width: 8),
+            const Text("Approuver les modifications"),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Approuver les modifications pour la bannière \"${banner.name}\" ?"),
+            const SizedBox(height: 8),
+            Text(
+              "Les modifications seront appliquées immédiatement.",
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Annuler"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              await viewModel.approvePendingChanges(banner.id);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade600,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text("Approuver"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Dialog pour confirmer le refus des modifications
+  void _showRejectPendingChangesDialog(BannerModel banner, BannerManagementViewModel viewModel) {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Iconsax.close_circle, color: Colors.red.shade600),
+            const SizedBox(width: 8),
+            const Text("Refuser les modifications"),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Refuser les modifications pour la bannière \"${banner.name}\" ?"),
+            const SizedBox(height: 8),
+            Text(
+              "Les modifications en attente seront supprimées.",
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Annuler"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              await viewModel.rejectPendingChanges(banner.id);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade600,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text("Refuser"),
+          ),
         ],
       ),
     );

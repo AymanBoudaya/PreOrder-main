@@ -7,6 +7,8 @@ class BannerModel {
   String? linkType; // 'product', 'category', 'establishment'
   DateTime? createdAt;
   DateTime? updatedAt;
+  Map<String, dynamic>? pendingChanges; // Modifications en attente d'approbation (pour bannières publiées)
+  DateTime? pendingChangesRequestedAt; // Date de la demande de modification
 
   BannerModel({
     required this.id,
@@ -17,6 +19,8 @@ class BannerModel {
     this.linkType,
     this.createdAt,
     this.updatedAt,
+    this.pendingChanges,
+    this.pendingChangesRequestedAt,
   });
 
   static BannerModel empty() {
@@ -38,6 +42,8 @@ class BannerModel {
       'link_type': linkType,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
+      'pending_changes': pendingChanges,
+      'pending_changes_requested_at': pendingChangesRequestedAt?.toIso8601String(),
     };
   }
 
@@ -57,6 +63,12 @@ class BannerModel {
           : null,
       updatedAt: data['updated_at'] != null
           ? DateTime.parse(data['updated_at'])
+          : null,
+      pendingChanges: data['pending_changes'] != null
+          ? Map<String, dynamic>.from(data['pending_changes'])
+          : null,
+      pendingChangesRequestedAt: data['pending_changes_requested_at'] != null
+          ? DateTime.parse(data['pending_changes_requested_at'])
           : null,
     );
   }
