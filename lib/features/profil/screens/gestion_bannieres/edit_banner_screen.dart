@@ -70,26 +70,17 @@ class EditBannerScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Afficher les modifications en attente si admin et bannière publiée
+              if (isAdminView && banner.status == 'publiee' && banner.pendingChanges != null) ...[
+                _buildPendingChangesSection(context, banner, controller),
+                const SizedBox(height: AppSizes.spaceBtwSections),
+              ],
               // Section Image
-              _buildImageSection(context, controller, isMobile),
+              _buildImageSection(context, controller, isMobile, banner),
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Nom de la bannière
-              TextFormField(
-                controller: controller.nameController,
-                readOnly: isAdminView, // Lecture seule pour admin
-                decoration: InputDecoration(
-                  labelText: 'Nom de la bannière',
-                  prefixIcon: const Icon(Iconsax.text),
-                  filled: isAdminView,
-                ),
-                validator: (value) {
-                  if (!isAdminView && (value == null || value.isEmpty)) {
-                    return 'Veuillez entrer un nom';
-                  }
-                  return null;
-                },
-              ),
+              _buildNameField(context, controller, isAdminView, banner),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
 
               // Type de lien
@@ -125,7 +116,7 @@ class EditBannerScreen extends StatelessWidget {
 
               // Sélection du lien selon le type
               if (controller.selectedLinkType.value.isNotEmpty)
-                _buildLinkSelector(context, controller, isAdminView),
+                _buildLinkSelector(context, controller, isAdminView, banner),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
 
               // État actuel - modifiable par l'admin
@@ -217,8 +208,44 @@ class EditBannerScreen extends StatelessWidget {
               }),
               const SizedBox(height: AppSizes.spaceBtwSections),
 
-              // Bouton Modifier (seulement pour Gérant)
-              if (!isAdminView)
+              // Boutons d'action
+              if (isAdminView && banner.status == 'publiee' && banner.pendingChanges != null) ...[
+                // Boutons pour approuver/refuser les modifications (Admin)
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: controller.isLoading.value
+                            ? null
+                            : () => _showApproveDialog(context, banner, controller),
+                        icon: const Icon(Iconsax.tick_circle),
+                        label: const Text('Approuver'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.shade600,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: controller.isLoading.value
+                            ? null
+                            : () => _showRejectDialog(context, banner, controller),
+                        icon: const Icon(Iconsax.close_circle),
+                        label: const Text('Refuser'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red.shade600,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ] else if (!isAdminView) ...[
+                // Bouton Modifier (seulement pour Gérant)
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -234,6 +261,7 @@ class EditBannerScreen extends StatelessWidget {
                         : const Text('Modifier la bannière'),
                   ),
                 ),
+              ],
             ],
           ),
         ),
@@ -241,10 +269,236 @@ class EditBannerScreen extends StatelessWidget {
     );
   }
 
+  /// Section pour afficher les modifications en attente
+  Widget _buildPendingChangesSection(
+    BuildContext context,
+    BannerModel banner,
+    BannerController controller,
+  ) {
+    final pendingChanges = banner.pendingChanges!;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSizes.md),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
+        border: Border.all(color: Colors.blue.shade300, width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Iconsax.edit, color: Colors.blue.shade700),
+              const SizedBox(width: 8),
+              Text(
+                'Modifications en attente',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (pendingChanges['name'] != null) ...[
+            _buildPendingChangeItem(
+              'Nom',
+              banner.name,
+              pendingChanges['name'].toString(),
+            ),
+            const SizedBox(height: 12),
+          ],
+          if (pendingChanges['image_url'] != null) ...[
+            _buildPendingChangeItem(
+              'Image',
+              'Image actuelle',
+              'Nouvelle image',
+            ),
+            const SizedBox(height: 12),
+          ],
+          if (pendingChanges['link'] != null || pendingChanges['link_type'] != null) ...[
+            _buildPendingLinkChange(
+              banner,
+              pendingChanges,
+              controller,
+            ),
+            const SizedBox(height: 12),
+          ],
+          if (banner.pendingChangesRequestedAt != null) ...[
+            const Divider(),
+            const SizedBox(height: 8),
+            Text(
+              'Demandé le: ${_formatDate(banner.pendingChangesRequestedAt!)}',
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPendingChangeItem(String label, String current, String pending) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Actuel:",
+                      style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      current,
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Iconsax.arrow_right_3, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue.shade300),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Nouveau:",
+                      style: TextStyle(fontSize: 11, color: Colors.blue.shade700),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      pending,
+                      style: TextStyle(fontSize: 13, color: Colors.blue.shade800),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPendingLinkChange(
+    BannerModel banner,
+    Map<String, dynamic> pendingChanges,
+    BannerController controller,
+  ) {
+    final currentLinkType = banner.linkType ?? 'Aucun';
+    final currentLinkId = banner.link ?? 'Aucun';
+    final pendingLinkType = pendingChanges['link_type']?.toString() ?? currentLinkType;
+    final pendingLinkId = pendingChanges['link']?.toString() ?? currentLinkId;
+
+    // Récupérer les labels
+    String currentLabel = _getLinkLabel(currentLinkType, currentLinkId, controller);
+    String pendingLabel = _getLinkLabel(pendingLinkType, pendingLinkId, controller);
+
+    return _buildPendingChangeItem('Lien', currentLabel, pendingLabel);
+  }
+
+  String _getLinkLabel(String linkType, String linkId, BannerController controller) {
+    if (linkType == 'Aucun' || linkId == 'Aucun' || linkId.isEmpty) {
+      return 'Aucun lien';
+    }
+
+    if (linkType == 'product') {
+      final product = controller.products.firstWhereOrNull((p) => p.id == linkId);
+      return product != null ? 'Produit: ${product.name}' : 'Produit (ID: $linkId)';
+    } else if (linkType == 'establishment') {
+      final establishment = controller.establishments.firstWhereOrNull((e) => e.id == linkId);
+      return establishment != null
+          ? 'Établissement: ${establishment.name}'
+          : 'Établissement (ID: $linkId)';
+    }
+
+    return '$linkType (ID: $linkId)';
+  }
+
+  String _formatDate(DateTime date) {
+    return "${date.day}/${date.month}/${date.year} à ${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+  }
+
+  Widget _buildNameField(
+    BuildContext context,
+    BannerController controller,
+    bool isAdminView,
+    BannerModel banner,
+  ) {
+    final hasPendingName = banner.pendingChanges != null &&
+        banner.pendingChanges!['name'] != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          controller: controller.nameController,
+          readOnly: isAdminView,
+          decoration: InputDecoration(
+            labelText: 'Nom de la bannière',
+            prefixIcon: const Icon(Iconsax.text),
+            filled: isAdminView,
+            suffixIcon: hasPendingName
+                ? Container(
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade100,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      'Nouveau: ${banner.pendingChanges!['name']}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.blue.shade700,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          validator: (value) {
+            if (!isAdminView && (value == null || value.isEmpty)) {
+              return 'Veuillez entrer un nom';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _buildImageSection(
     BuildContext context,
     BannerController controller,
     bool isMobile,
+    BannerModel banner,
   ) {
     final dark = THelperFunctions.isDarkMode(context);
 
@@ -264,6 +518,19 @@ class EditBannerScreen extends StatelessWidget {
           const SizedBox(height: AppSizes.spaceBtwItems),
           Obx(() {
             final pickedImage = controller.pickedImage.value;
+            final hasPendingImage = banner.pendingChanges != null &&
+                banner.pendingChanges!['image_url'] != null;
+
+            // Si admin et modifications en attente, afficher les deux images
+            if (isAdminView && hasPendingImage) {
+              return _buildImageComparison(
+                context,
+                controller.imageUrl.value,
+                banner.pendingChanges!['image_url'].toString(),
+              );
+            }
+
+            // Sinon, affichage normal
             if (pickedImage != null) {
               return _buildLocalImagePreview(context, pickedImage);
             } else if (controller.imageUrl.value.isNotEmpty) {
@@ -471,10 +738,103 @@ class EditBannerScreen extends StatelessWidget {
     );
   }
 
+  /// Widget pour afficher la comparaison des images (ancienne vs nouvelle)
+  Widget _buildImageComparison(
+    BuildContext context,
+    String currentImageUrl,
+    String pendingImageUrl,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Image actuelle
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Image actuelle',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
+              child: CachedNetworkImage(
+                imageUrl: currentImageUrl,
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: double.infinity,
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.error, size: 40),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        // Nouvelle image
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Iconsax.arrow_down_2, size: 16, color: Colors.blue.shade700),
+                const SizedBox(width: 4),
+                Text(
+                  'Nouvelle image',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.blue.shade700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
+                border: Border.all(color: Colors.blue.shade300, width: 2),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
+                child: CachedNetworkImage(
+                  imageUrl: pendingImageUrl,
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: double.infinity,
+                    height: 200,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.error, size: 40),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildLinkSelector(
     BuildContext context,
     BannerController controller,
     bool isAdminView,
+    BannerModel banner,
   ) {
     return Obx(() {
       final linkType = controller.selectedLinkType.value;
@@ -494,23 +854,84 @@ class EditBannerScreen extends StatelessWidget {
         final isValidValue = selectedValue.isNotEmpty &&
             products.any((p) => p.id == selectedValue);
 
-        return DropdownButtonFormField<String>(
-          value: isValidValue ? selectedValue : null,
-          decoration: InputDecoration(
-            labelText: 'Sélectionner un produit',
-            prefixIcon: const Icon(Iconsax.shop),
-          ),
-          items: products.map((product) {
-            return DropdownMenuItem(
-              value: product.id,
-              child: Text(product.name),
-            );
-          }).toList(),
-          onChanged: isAdminView
-              ? null
-              : (value) {
-                  controller.selectedLinkId.value = value ?? '';
-                },
+        // Vérifier si une modification est en attente
+        final hasPendingLink = banner.pendingChanges != null &&
+            (banner.pendingChanges!['link'] != null ||
+                banner.pendingChanges!['link_type'] == 'product');
+        final pendingLinkId = hasPendingLink
+            ? banner.pendingChanges!['link']?.toString()
+            : null;
+        final pendingProduct = pendingLinkId != null
+            ? products.firstWhereOrNull((p) => p.id == pendingLinkId)
+            : null;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButtonFormField<String>(
+              value: isValidValue ? selectedValue : null,
+              decoration: InputDecoration(
+                labelText: 'Sélectionner un produit',
+                prefixIcon: const Icon(Iconsax.shop),
+                filled: isAdminView,
+                suffixIcon: hasPendingLink && pendingProduct != null
+                    ? Container(
+                        margin: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade100,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          'Nouveau: ${pendingProduct.name}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.blue.shade700,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    : null,
+              ),
+              items: products.map((product) {
+                return DropdownMenuItem(
+                  value: product.id,
+                  child: Text(product.name),
+                );
+              }).toList(),
+              onChanged: isAdminView
+                  ? null
+                  : (value) {
+                      controller.selectedLinkId.value = value ?? '';
+                    },
+            ),
+            if (hasPendingLink && pendingProduct != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Iconsax.info_circle, size: 16, color: Colors.blue.shade700),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Nouveau produit sélectionné: ${pendingProduct.name}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
         );
       } else if (linkType == 'establishment') {
         final establishments =
@@ -527,28 +948,162 @@ class EditBannerScreen extends StatelessWidget {
         final isValidValue = selectedValue.isNotEmpty &&
             establishments.any((e) => e.id == selectedValue);
 
-        return DropdownButtonFormField<String>(
-          value: isValidValue ? selectedValue : null,
-          decoration: InputDecoration(
-            labelText: 'Sélectionner un établissement',
-            prefixIcon: const Icon(Iconsax.home),
-            filled: isAdminView,
-          ),
-          items: establishments.map((establishment) {
-            return DropdownMenuItem(
-              value: establishment.id!,
-              child: Text(establishment.name),
-            );
-          }).toList(),
-          onChanged: isAdminView
-              ? null
-              : (value) {
-                  controller.selectedLinkId.value = value ?? '';
-                },
+        // Vérifier si une modification est en attente
+        final hasPendingLink = banner.pendingChanges != null &&
+            (banner.pendingChanges!['link'] != null ||
+                banner.pendingChanges!['link_type'] == 'establishment');
+        final pendingLinkId = hasPendingLink
+            ? banner.pendingChanges!['link']?.toString()
+            : null;
+        final pendingEstablishment = pendingLinkId != null
+            ? establishments.firstWhereOrNull((e) => e.id == pendingLinkId)
+            : null;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButtonFormField<String>(
+              value: isValidValue ? selectedValue : null,
+              decoration: InputDecoration(
+                labelText: 'Sélectionner un établissement',
+                prefixIcon: const Icon(Iconsax.home),
+                filled: isAdminView,
+                suffixIcon: hasPendingLink && pendingEstablishment != null
+                    ? Container(
+                        margin: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade100,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          'Nouveau: ${pendingEstablishment.name}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.blue.shade700,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    : null,
+              ),
+              items: establishments.map((establishment) {
+                return DropdownMenuItem(
+                  value: establishment.id!,
+                  child: Text(establishment.name),
+                );
+              }).toList(),
+              onChanged: isAdminView
+                  ? null
+                  : (value) {
+                      controller.selectedLinkId.value = value ?? '';
+                    },
+            ),
+            if (hasPendingLink && pendingEstablishment != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Iconsax.info_circle, size: 16, color: Colors.blue.shade700),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Nouvel établissement sélectionné: ${pendingEstablishment.name}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
         );
       }
 
       return const SizedBox.shrink();
     });
+  }
+
+  void _showApproveDialog(
+    BuildContext context,
+    BannerModel banner,
+    BannerController controller,
+  ) {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Iconsax.tick_circle, color: Colors.green.shade600),
+            const SizedBox(width: 8),
+            const Text("Approuver les modifications"),
+          ],
+        ),
+        content: Text("Approuver les modifications pour la bannière \"${banner.name}\" ?"),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Annuler"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              await controller.approvePendingChanges(banner.id);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade600,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text("Approuver"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showRejectDialog(
+    BuildContext context,
+    BannerModel banner,
+    BannerController controller,
+  ) {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Iconsax.close_circle, color: Colors.red.shade600),
+            const SizedBox(width: 8),
+            const Text("Refuser les modifications"),
+          ],
+        ),
+        content: Text("Refuser les modifications pour la bannière \"${banner.name}\" ?"),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Annuler"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              await controller.rejectPendingChanges(banner.id);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade600,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text("Refuser"),
+          ),
+        ],
+      ),
+    );
   }
 }
