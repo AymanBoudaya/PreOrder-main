@@ -40,17 +40,21 @@ class EditBannerScreen extends StatelessWidget {
       try {
         // Si gérant, charger uniquement son établissement
         if (userController.userRole == 'Gérant') {
-          final gerantEtablissement = await etablissementController.getEtablissementUtilisateurConnecte();
+          final gerantEtablissement = await etablissementController
+              .getEtablissementUtilisateurConnecte();
           if (gerantEtablissement != null) {
             bannerController.establishments.assignAll([gerantEtablissement]);
             // Si le type de lien est "establishment" et qu'aucun lien n'est sélectionné, utiliser l'établissement du gérant
-            if (banner.linkType == 'establishment' && (banner.link == null || banner.link!.isEmpty)) {
-              bannerController.selectedLinkId.value = gerantEtablissement.id ?? '';
+            if (banner.linkType == 'establishment' &&
+                (banner.link == null || banner.link!.isEmpty)) {
+              bannerController.selectedLinkId.value =
+                  gerantEtablissement.id ?? '';
             }
           }
         } else {
           // Pour admin, charger tous les établissements
-          final establishments = await etablissementController.getTousEtablissements();
+          final establishments =
+              await etablissementController.getTousEtablissements();
           bannerController.establishments.assignAll(establishments);
         }
       } catch (e) {
@@ -115,8 +119,10 @@ class EditBannerScreen extends StatelessWidget {
                         filled: isAdminView,
                       ),
                       items: const [
-                        DropdownMenuItem(value: null, child: Text('Aucun lien')),
-                        DropdownMenuItem(value: 'product', child: Text('Produit')),
+                        DropdownMenuItem(
+                            value: null, child: Text('Aucun lien')),
+                        DropdownMenuItem(
+                            value: 'product', child: Text('Produit')),
                         DropdownMenuItem(
                           value: 'establishment',
                           child: Text('Établissement'),
@@ -131,10 +137,15 @@ class EditBannerScreen extends StatelessWidget {
                                     ''; // Reset selection
                               }
                               // Si gérant sélectionne "établissement", définir automatiquement son établissement
-                              if (isGerant && value == 'establishment' && controller.establishments.isNotEmpty) {
-                                final gerantEtablissement = controller.establishments.firstWhereOrNull((e) => e.id != null);
+                              if (isGerant &&
+                                  value == 'establishment' &&
+                                  controller.establishments.isNotEmpty) {
+                                final gerantEtablissement = controller
+                                    .establishments
+                                    .firstWhereOrNull((e) => e.id != null);
                                 if (gerantEtablissement != null) {
-                                  controller.selectedLinkId.value = gerantEtablissement.id ?? '';
+                                  controller.selectedLinkId.value =
+                                      gerantEtablissement.id ?? '';
                                 }
                               }
                             },
@@ -151,7 +162,8 @@ class EditBannerScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
+                            Icon(Iconsax.edit,
+                                size: 16, color: Colors.blue.shade700),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Column(
@@ -284,7 +296,9 @@ class EditBannerScreen extends StatelessWidget {
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Boutons d'action
-              if (isAdminView && banner.status == 'publiee' && banner.pendingChanges != null) ...[
+              if (isAdminView &&
+                  banner.status == 'publiee' &&
+                  banner.pendingChanges != null) ...[
                 // Boutons pour approuver/refuser les modifications (Admin)
                 Row(
                   children: [
@@ -292,7 +306,8 @@ class EditBannerScreen extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: controller.isLoading.value
                             ? null
-                            : () => _showApproveDialog(context, banner, controller),
+                            : () =>
+                                _showApproveDialog(context, banner, controller),
                         icon: const Icon(Iconsax.tick_circle),
                         label: const Text('Approuver'),
                         style: ElevatedButton.styleFrom(
@@ -307,7 +322,8 @@ class EditBannerScreen extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: controller.isLoading.value
                             ? null
-                            : () => _showRejectDialog(context, banner, controller),
+                            : () =>
+                                _showRejectDialog(context, banner, controller),
                         icon: const Icon(Iconsax.close_circle),
                         label: const Text('Refuser'),
                         style: ElevatedButton.styleFrom(
@@ -344,15 +360,14 @@ class EditBannerScreen extends StatelessWidget {
     );
   }
 
-
   Widget _buildNameField(
     BuildContext context,
     BannerController controller,
     bool isAdminView,
     BannerModel banner,
   ) {
-    final hasPendingName = banner.pendingChanges != null &&
-        banner.pendingChanges!['name'] != null;
+    final hasPendingName =
+        banner.pendingChanges != null && banner.pendingChanges!['name'] != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -710,7 +725,8 @@ class EditBannerScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Iconsax.arrow_down_2, size: 16, color: Colors.blue.shade700),
+                Icon(Iconsax.arrow_down_2,
+                    size: 16, color: Colors.blue.shade700),
                 const SizedBox(width: 4),
                 Text(
                   'Nouvelle image',
@@ -765,7 +781,7 @@ class EditBannerScreen extends StatelessWidget {
           ? banner.pendingChanges!['link_type']?.toString()
           : null;
       final linkType = pendingLinkType ?? controller.selectedLinkType.value;
-      
+
       if (linkType.isEmpty) return const SizedBox.shrink();
 
       if (linkType == 'product') {
@@ -786,10 +802,12 @@ class EditBannerScreen extends StatelessWidget {
         // Soit le type de lien a changé vers 'product', soit le produit a changé (même type)
         final hasPendingLink = banner.pendingChanges != null &&
             (banner.pendingChanges!['link_type'] == 'product' ||
-                (banner.pendingChanges!['link'] != null && linkType == 'product'));
-        final pendingLinkId = hasPendingLink && banner.pendingChanges!['link'] != null
-            ? banner.pendingChanges!['link']?.toString()
-            : null;
+                (banner.pendingChanges!['link'] != null &&
+                    linkType == 'product'));
+        final pendingLinkId =
+            hasPendingLink && banner.pendingChanges!['link'] != null
+                ? banner.pendingChanges!['link']?.toString()
+                : null;
         final pendingProduct = pendingLinkId != null && pendingLinkId.isNotEmpty
             ? products.firstWhereOrNull((p) => p.id == pendingLinkId)
             : null;
@@ -862,7 +880,7 @@ class EditBannerScreen extends StatelessWidget {
       } else if (linkType == 'establishment') {
         final userController = Get.find<UserController>();
         final isGerant = userController.userRole == 'Gérant';
-        
+
         final establishments =
             controller.establishments.where((e) => e.id != null).toList();
         if (establishments.isEmpty) {
@@ -891,13 +909,16 @@ class EditBannerScreen extends StatelessWidget {
         // Soit le type de lien a changé vers 'establishment', soit l'établissement a changé (même type)
         final hasPendingLink = banner.pendingChanges != null &&
             (banner.pendingChanges!['link_type'] == 'establishment' ||
-                (banner.pendingChanges!['link'] != null && linkType == 'establishment'));
-        final pendingLinkId = hasPendingLink && banner.pendingChanges!['link'] != null
-            ? banner.pendingChanges!['link']?.toString()
-            : null;
-        final pendingEstablishment = pendingLinkId != null && pendingLinkId.isNotEmpty
-            ? establishments.firstWhereOrNull((e) => e.id == pendingLinkId)
-            : null;
+                (banner.pendingChanges!['link'] != null &&
+                    linkType == 'establishment'));
+        final pendingLinkId =
+            hasPendingLink && banner.pendingChanges!['link'] != null
+                ? banner.pendingChanges!['link']?.toString()
+                : null;
+        final pendingEstablishment =
+            pendingLinkId != null && pendingLinkId.isNotEmpty
+                ? establishments.firstWhereOrNull((e) => e.id == pendingLinkId)
+                : null;
 
         // Déterminer l'établissement actuel à afficher
         final currentEstablishment = isValidValue
@@ -1034,7 +1055,8 @@ class EditBannerScreen extends StatelessWidget {
             const Text("Approuver les modifications"),
           ],
         ),
-        content: Text("Approuver les modifications pour la bannière \"${banner.name}\" ?"),
+        content: Text(
+            "Approuver les modifications pour la bannière \"${banner.name}\" ?"),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
@@ -1042,6 +1064,7 @@ class EditBannerScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
+              Get.back();
               Get.back();
               await controller.approvePendingChanges(banner.id);
             },
@@ -1071,7 +1094,8 @@ class EditBannerScreen extends StatelessWidget {
             const Text("Refuser les modifications"),
           ],
         ),
-        content: Text("Refuser les modifications pour la bannière \"${banner.name}\" ?"),
+        content: Text(
+            "Refuser les modifications pour la bannière \"${banner.name}\" ?"),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
@@ -1079,6 +1103,7 @@ class EditBannerScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
+              Get.back();
               Get.back();
               await controller.rejectPendingChanges(banner.id);
             },
