@@ -1,3 +1,5 @@
+import 'package:caferesto/features/profil/screens/gestion_bannieres/widgets/build_tabs.dart';
+import 'package:caferesto/features/profil/screens/gestion_bannieres/widgets/search_bar.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
 import 'package:caferesto/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import '../../../../common/widgets/loading/loading_screen.dart';
 import '../../viewmodels/banner_management_viewmodel.dart';
 import 'add_banner_screen.dart';
 import 'edit_banner_screen.dart';
+import 'widgets/build_empty_state.dart';
 
 class BannerManagementScreen extends StatelessWidget {
   const BannerManagementScreen({super.key});
@@ -27,115 +30,14 @@ class BannerManagementScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          _buildTabs(context, viewModel),
-          _buildSearchBar(context, viewModel),
+          BuildTabs(viewModel: viewModel),
+          BuildSearchBar(viewModel: viewModel),
           Expanded(child: _buildBody(context, viewModel)),
         ],
       ),
-      floatingActionButton: viewModel.canManageBanners ? _buildFloatingActionButton() : null,
+      floatingActionButton:
+          viewModel.canManageBanners ? _buildFloatingActionButton() : null,
     );
-  }
-
-  Widget _buildTabs(BuildContext context, BannerManagementViewModel viewModel) {
-    final dark = THelperFunctions.isDarkMode(context);
-
-    return Obx(() => Container(
-      decoration: BoxDecoration(
-        color: dark ? TColors.darkContainer : Colors.white,
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey.withValues(alpha: 0.2),
-            width: 1,
-          ),
-        ),
-      ),
-      child: TabBar(
-        controller: viewModel.tabController,
-        tabs: [
-          Tab(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Iconsax.clock, size: 16),
-                const SizedBox(width: 8),
-                const Text('En attente'),
-                const SizedBox(width: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    '${viewModel.enAttenteCount}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.orange.shade700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Tab(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Iconsax.tick_circle, size: 16),
-                const SizedBox(width: 8),
-                const Text('Publiée'),
-                const SizedBox(width: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    '${viewModel.publieeCount}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green.shade700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Tab(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Iconsax.close_circle, size: 16),
-                const SizedBox(width: 8),
-                const Text('Refusée'),
-                const SizedBox(width: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    '${viewModel.refuseeCount}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red.shade700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-        labelColor: Colors.blue.shade600,
-        unselectedLabelColor: Colors.grey,
-        indicatorColor: Colors.blue.shade600,
-      ),
-    ));
   }
 
   Widget _buildBody(BuildContext context, BannerManagementViewModel viewModel) {
@@ -147,36 +49,17 @@ class BannerManagementScreen extends StatelessWidget {
       }
 
       final banners = viewModel.filteredBanners;
-      
+
       if (banners.isEmpty) {
-        return _buildEmptyState(viewModel);
+        return BuildEmptyState(viewModel: viewModel);
       }
 
       return _buildBannerList(context, banners, viewModel);
     });
   }
 
-  Widget _buildEmptyState(BannerManagementViewModel viewModel) {
-    return Obx(() => Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Iconsax.image, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
-          Text(
-            "Aucune bannière ${viewModel.getTabName(viewModel.selectedTabIndex.value).toLowerCase()}",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
-    ));
-  }
-
-  Widget _buildBannerList(BuildContext context, List<BannerModel> banners, BannerManagementViewModel viewModel) {
+  Widget _buildBannerList(BuildContext context, List<BannerModel> banners,
+      BannerManagementViewModel viewModel) {
     return RefreshIndicator(
       onRefresh: viewModel.refreshBanners,
       child: ListView.builder(
@@ -187,7 +70,8 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBannerCard(BannerModel banner, BuildContext context, BannerManagementViewModel viewModel) {
+  Widget _buildBannerCard(BannerModel banner, BuildContext context,
+      BannerManagementViewModel viewModel) {
     final dark = THelperFunctions.isDarkMode(context);
 
     return Container(
@@ -230,14 +114,16 @@ class BannerManagementScreen extends StatelessWidget {
             : viewModel.isGerant
                 ? IconButton(
                     icon: const Icon(Iconsax.more),
-                    onPressed: () => _showBannerOptions(context, banner, viewModel),
+                    onPressed: () =>
+                        _showBannerOptions(context, banner, viewModel),
                   )
                 : null,
         onTap: viewModel.isAdmin
             ? () {
                 // Admin peut cliquer pour voir les détails et changer le statut
                 viewModel.loadBannerForEditing(banner);
-                Get.to(() => EditBannerScreen(banner: banner, isAdminView: true));
+                Get.to(
+                    () => EditBannerScreen(banner: banner, isAdminView: true));
               }
             : viewModel.isGerant
                 ? () => _showBannerOptions(context, banner, viewModel)
@@ -246,10 +132,11 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(BannerModel banner, BannerManagementViewModel viewModel) {
+  Widget _buildStatusChip(
+      BannerModel banner, BannerManagementViewModel viewModel) {
     final statusColor = viewModel.getStatusColor(banner.status);
     final statusLabel = viewModel.getStatusLabel(banner.status);
-    
+
     IconData statusIcon;
     switch (banner.status) {
       case 'publiee':
@@ -272,7 +159,8 @@ class BannerManagementScreen extends StatelessWidget {
           color: statusColor.shade50,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: viewModel.isAdmin ? statusColor.shade300 : statusColor.shade200,
+            color:
+                viewModel.isAdmin ? statusColor.shade300 : statusColor.shade200,
             width: viewModel.isAdmin ? 1.5 : 1,
           ),
         ),
@@ -303,9 +191,10 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  void _showStatusChangeDialog(BannerModel banner, BannerManagementViewModel viewModel) {
+  void _showStatusChangeDialog(
+      BannerModel banner, BannerManagementViewModel viewModel) {
     final currentStatus = banner.status;
-    
+
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -317,11 +206,14 @@ class BannerManagementScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const Text("Sélectionner le nouveau statut:"),
             const SizedBox(height: 16),
-            _buildStatusOption('en_attente', 'En attente', Colors.orange, Iconsax.clock, currentStatus, banner, viewModel),
+            _buildStatusOption('en_attente', 'En attente', Colors.orange,
+                Iconsax.clock, currentStatus, banner, viewModel),
             const SizedBox(height: 8),
-            _buildStatusOption('publiee', 'Publiée', Colors.green, Iconsax.tick_circle, currentStatus, banner, viewModel),
+            _buildStatusOption('publiee', 'Publiée', Colors.green,
+                Iconsax.tick_circle, currentStatus, banner, viewModel),
             const SizedBox(height: 8),
-            _buildStatusOption('refusee', 'Refusée', Colors.red, Iconsax.close_circle, currentStatus, banner, viewModel),
+            _buildStatusOption('refusee', 'Refusée', Colors.red,
+                Iconsax.close_circle, currentStatus, banner, viewModel),
           ],
         ),
         actions: [
@@ -344,7 +236,7 @@ class BannerManagementScreen extends StatelessWidget {
     BannerManagementViewModel viewModel,
   ) {
     final isSelected = status == currentStatus;
-    
+
     return InkWell(
       onTap: isSelected
           ? null
@@ -443,7 +335,8 @@ class BannerManagementScreen extends StatelessWidget {
         child: const Icon(Iconsax.additem, size: 28),
       );
 
-  void _showBannerOptions(BuildContext context, BannerModel banner, BannerManagementViewModel viewModel) {
+  void _showBannerOptions(BuildContext context, BannerModel banner,
+      BannerManagementViewModel viewModel) {
     if (!viewModel.isGerant) return;
 
     showModalBottomSheet(
@@ -454,7 +347,8 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomSheetContent(BuildContext context, BannerModel banner, BannerManagementViewModel viewModel) {
+  Widget _buildBottomSheetContent(BuildContext context, BannerModel banner,
+      BannerManagementViewModel viewModel) {
     final dark = THelperFunctions.isDarkMode(context);
 
     return Container(
@@ -496,7 +390,8 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomSheetHeader(BannerModel banner, BannerManagementViewModel viewModel) {
+  Widget _buildBottomSheetHeader(
+      BannerModel banner, BannerManagementViewModel viewModel) {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -526,7 +421,8 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, BannerModel banner, BannerManagementViewModel viewModel) {
+  Widget _buildActionButtons(BuildContext context, BannerModel banner,
+      BannerManagementViewModel viewModel) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -571,7 +467,8 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, BannerModel banner, BannerManagementViewModel viewModel) {
+  void _showDeleteDialog(BuildContext context, BannerModel banner,
+      BannerManagementViewModel viewModel) {
     Navigator.pop(context);
     Get.dialog(
       AlertDialog(
@@ -623,7 +520,8 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   /// Widget pour afficher l'indicateur de modifications en attente
-  Widget _buildPendingChangesIndicator(BannerModel banner, BannerManagementViewModel viewModel) {
+  Widget _buildPendingChangesIndicator(
+      BannerModel banner, BannerManagementViewModel viewModel) {
     return InkWell(
       onTap: () => _showPendingChangesDetails(banner, viewModel),
       child: Container(
@@ -655,7 +553,8 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   /// Widget pour les boutons d'action sur les modifications en attente (Admin)
-  Widget _buildPendingChangesActions(BannerModel banner, BannerManagementViewModel viewModel) {
+  Widget _buildPendingChangesActions(
+      BannerModel banner, BannerManagementViewModel viewModel) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -679,7 +578,8 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   /// Dialog pour afficher les détails des modifications en attente
-  void _showPendingChangesDetails(BannerModel banner, BannerManagementViewModel viewModel) {
+  void _showPendingChangesDetails(
+      BannerModel banner, BannerManagementViewModel viewModel) {
     if (banner.pendingChanges == null) return;
 
     final pendingChanges = banner.pendingChanges!;
@@ -702,7 +602,8 @@ class BannerManagementScreen extends StatelessWidget {
             children: [
               Text(
                 "Bannière: ${banner.name}",
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               const SizedBox(height: 16),
               const Divider(),
@@ -717,7 +618,8 @@ class BannerManagementScreen extends StatelessWidget {
                 currentBanner.imageUrl,
                 pendingChanges['image_url']?.toString(),
               ),
-              if (pendingChanges['link'] != null || pendingChanges['link_type'] != null) ...[
+              if (pendingChanges['link'] != null ||
+                  pendingChanges['link_type'] != null) ...[
                 const SizedBox(height: 12),
                 _buildChangeComparison(
                   "Lien",
@@ -801,12 +703,14 @@ class BannerManagementScreen extends StatelessWidget {
                   children: [
                     Text(
                       "Nouveau:",
-                      style: TextStyle(fontSize: 11, color: Colors.blue.shade600),
+                      style:
+                          TextStyle(fontSize: 11, color: Colors.blue.shade600),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       pending,
-                      style: TextStyle(fontSize: 13, color: Colors.blue.shade700),
+                      style:
+                          TextStyle(fontSize: 13, color: Colors.blue.shade700),
                     ),
                   ],
                 ),
@@ -818,7 +722,8 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildImageComparison(String currentImageUrl, String? pendingImageUrl) {
+  Widget _buildImageComparison(
+      String currentImageUrl, String? pendingImageUrl) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -849,7 +754,8 @@ class BannerManagementScreen extends StatelessWidget {
                       child: Image.network(
                         currentImageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Icon(Iconsax.image, color: Colors.grey[400]),
+                        errorBuilder: (_, __, ___) =>
+                            Icon(Iconsax.image, color: Colors.grey[400]),
                       ),
                     ),
                   ),
@@ -880,12 +786,14 @@ class BannerManagementScreen extends StatelessWidget {
                           ? Image.network(
                               pendingImageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Icon(Iconsax.image, color: Colors.grey[400]),
+                              errorBuilder: (_, __, ___) =>
+                                  Icon(Iconsax.image, color: Colors.grey[400]),
                             )
                           : Center(
                               child: Text(
                                 "Aucun changement",
-                                style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                                style: TextStyle(
+                                    fontSize: 11, color: Colors.grey[600]),
                               ),
                             ),
                     ),
@@ -904,7 +812,8 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   /// Dialog pour confirmer l'approbation des modifications
-  void _showApprovePendingChangesDialog(BannerModel banner, BannerManagementViewModel viewModel) {
+  void _showApprovePendingChangesDialog(
+      BannerModel banner, BannerManagementViewModel viewModel) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -919,7 +828,8 @@ class BannerManagementScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Approuver les modifications pour la bannière \"${banner.name}\" ?"),
+            Text(
+                "Approuver les modifications pour la bannière \"${banner.name}\" ?"),
             const SizedBox(height: 8),
             Text(
               "Les modifications seront appliquées immédiatement.",
@@ -949,7 +859,8 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   /// Dialog pour confirmer le refus des modifications
-  void _showRejectPendingChangesDialog(BannerModel banner, BannerManagementViewModel viewModel) {
+  void _showRejectPendingChangesDialog(
+      BannerModel banner, BannerManagementViewModel viewModel) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -964,7 +875,8 @@ class BannerManagementScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Refuser les modifications pour la bannière \"${banner.name}\" ?"),
+            Text(
+                "Refuser les modifications pour la bannière \"${banner.name}\" ?"),
             const SizedBox(height: 8),
             Text(
               "Les modifications en attente seront supprimées.",
@@ -993,32 +905,5 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar(BuildContext context, BannerManagementViewModel viewModel) {
-    final dark = THelperFunctions.isDarkMode(context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.defaultSpace),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              onChanged: viewModel.updateSearch,
-              decoration: InputDecoration(
-                hintText: "Rechercher une bannière...",
-                prefixIcon: const Icon(Iconsax.search_normal_1, size: 20),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                filled: true,
-                fillColor: dark ? TColors.eerieBlack : Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 }

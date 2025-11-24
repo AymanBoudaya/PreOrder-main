@@ -1,0 +1,64 @@
+import 'package:caferesto/utils/helpers/helper_functions.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+
+import '../../../../../utils/constants/colors.dart';
+import '../../../viewmodels/banner_management_viewmodel.dart';
+import 'adaptive_tab_label.dart';
+
+class BuildTabs extends StatelessWidget {
+  final BannerManagementViewModel viewModel;
+  const BuildTabs({super.key, required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = THelperFunctions.isDarkMode(context);
+    return Obx(() => Container(
+          decoration: BoxDecoration(
+            color: dark ? TColors.darkContainer : Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.grey.withValues(alpha: 0.2),
+                width: 1,
+              ),
+            ),
+          ),
+          child: TabBar(
+            controller: viewModel.tabController,
+            tabs: [
+              Tab(
+                child: AdaptiveTabLabel(
+                  icon: Iconsax.clock,
+                  label: 'En attente',
+                  count: viewModel.enAttenteCount,
+                  badgeColor: Colors.orange.shade100,
+                  badgeTextColor: Colors.orange.shade700,
+                ),
+              ),
+              Tab(
+                child: AdaptiveTabLabel(
+                  icon: Iconsax.tick_circle,
+                  label: 'Publiée',
+                  count: viewModel.publieeCount,
+                  badgeColor: Colors.green.shade100,
+                  badgeTextColor: Colors.green.shade700,
+                ),
+              ),
+              Tab(
+                child: AdaptiveTabLabel(
+                  icon: Iconsax.close_circle,
+                  label: 'Refusée',
+                  count: viewModel.refuseeCount,
+                  badgeColor: Colors.red.shade100,
+                  badgeTextColor: Colors.red.shade700,
+                ),
+              ),
+            ],
+            labelColor: Colors.blue.shade600,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Colors.blue.shade600,
+          ),
+        ));
+  }
+}
