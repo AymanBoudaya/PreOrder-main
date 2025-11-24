@@ -70,11 +70,6 @@ class EditBannerScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Afficher les modifications en attente si admin et bannière publiée
-              if (isAdminView && banner.status == 'publiee' && banner.pendingChanges != null) ...[
-                _buildPendingChangesSection(context, banner, controller),
-                const SizedBox(height: AppSizes.spaceBtwSections),
-              ],
               // Section Image
               _buildImageSection(context, controller, isMobile, banner),
               const SizedBox(height: AppSizes.spaceBtwSections),
@@ -86,30 +81,86 @@ class EditBannerScreen extends StatelessWidget {
               // Type de lien
               Obx(() {
                 final currentValue = controller.selectedLinkType.value;
-                return DropdownButtonFormField<String?>(
-                  value: currentValue.isEmpty ? null : currentValue,
-                  decoration: InputDecoration(
-                    labelText: 'Type de lien',
-                    prefixIcon: const Icon(Iconsax.link),
-                    filled: isAdminView,
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: null, child: Text('Aucun lien')),
-                    DropdownMenuItem(value: 'product', child: Text('Produit')),
-                    DropdownMenuItem(
-                      value: 'establishment',
-                      child: Text('Établissement'),
+                final hasPendingLinkType = banner.pendingChanges != null &&
+                    banner.pendingChanges!['link_type'] != null;
+                final pendingLinkType = hasPendingLinkType
+                    ? banner.pendingChanges!['link_type'].toString()
+                    : null;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownButtonFormField<String?>(
+                      value: currentValue.isEmpty ? null : currentValue,
+                      decoration: InputDecoration(
+                        labelText: 'Type de lien',
+                        prefixIcon: const Icon(Iconsax.link),
+                        filled: isAdminView,
+                      ),
+                      items: const [
+                        DropdownMenuItem(value: null, child: Text('Aucun lien')),
+                        DropdownMenuItem(value: 'product', child: Text('Produit')),
+                        DropdownMenuItem(
+                          value: 'establishment',
+                          child: Text('Établissement'),
+                        ),
+                      ],
+                      onChanged: isAdminView
+                          ? null
+                          : (value) {
+                              controller.selectedLinkType.value = value ?? '';
+                              if (value != banner.linkType) {
+                                controller.selectedLinkId.value =
+                                    ''; // Reset selection
+                              }
+                            },
                     ),
+                    // Afficher le type de lien modifié sous le dropdown
+                    if (hasPendingLinkType && pendingLinkType != null) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.blue.shade200),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Nouveau type de lien:',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    pendingLinkType == 'product'
+                                        ? 'Produit'
+                                        : pendingLinkType == 'establishment'
+                                            ? 'Établissement'
+                                            : 'Aucun lien',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.blue.shade700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
-                  onChanged: isAdminView
-                      ? null
-                      : (value) {
-                          controller.selectedLinkType.value = value ?? '';
-                          if (value != banner.linkType) {
-                            controller.selectedLinkId.value =
-                                ''; // Reset selection
-                          }
-                        },
                 );
               }),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
@@ -269,181 +320,6 @@ class EditBannerScreen extends StatelessWidget {
     );
   }
 
-  /// Section pour afficher les modifications en attente
-  Widget _buildPendingChangesSection(
-    BuildContext context,
-    BannerModel banner,
-    BannerController controller,
-  ) {
-    final pendingChanges = banner.pendingChanges!;
-
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-        border: Border.all(color: Colors.blue.shade300, width: 2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Iconsax.edit, color: Colors.blue.shade700),
-              const SizedBox(width: 8),
-              Text(
-                'Modifications en attente',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade700,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          if (pendingChanges['name'] != null) ...[
-            _buildPendingChangeItem(
-              'Nom',
-              banner.name,
-              pendingChanges['name'].toString(),
-            ),
-            const SizedBox(height: 12),
-          ],
-          if (pendingChanges['image_url'] != null) ...[
-            _buildPendingChangeItem(
-              'Image',
-              'Image actuelle',
-              'Nouvelle image',
-            ),
-            const SizedBox(height: 12),
-          ],
-          if (pendingChanges['link'] != null || pendingChanges['link_type'] != null) ...[
-            _buildPendingLinkChange(
-              banner,
-              pendingChanges,
-              controller,
-            ),
-            const SizedBox(height: 12),
-          ],
-          if (banner.pendingChangesRequestedAt != null) ...[
-            const Divider(),
-            const SizedBox(height: 8),
-            Text(
-              'Demandé le: ${_formatDate(banner.pendingChangesRequestedAt!)}',
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPendingChangeItem(String label, String current, String pending) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Actuel:",
-                      style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      current,
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Icon(Iconsax.arrow_right_3, size: 16, color: Colors.grey[600]),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue.shade300),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Nouveau:",
-                      style: TextStyle(fontSize: 11, color: Colors.blue.shade700),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      pending,
-                      style: TextStyle(fontSize: 13, color: Colors.blue.shade800),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPendingLinkChange(
-    BannerModel banner,
-    Map<String, dynamic> pendingChanges,
-    BannerController controller,
-  ) {
-    final currentLinkType = banner.linkType ?? 'Aucun';
-    final currentLinkId = banner.link ?? 'Aucun';
-    final pendingLinkType = pendingChanges['link_type']?.toString() ?? currentLinkType;
-    final pendingLinkId = pendingChanges['link']?.toString() ?? currentLinkId;
-
-    // Récupérer les labels
-    String currentLabel = _getLinkLabel(currentLinkType, currentLinkId, controller);
-    String pendingLabel = _getLinkLabel(pendingLinkType, pendingLinkId, controller);
-
-    return _buildPendingChangeItem('Lien', currentLabel, pendingLabel);
-  }
-
-  String _getLinkLabel(String linkType, String linkId, BannerController controller) {
-    if (linkType == 'Aucun' || linkId == 'Aucun' || linkId.isEmpty) {
-      return 'Aucun lien';
-    }
-
-    if (linkType == 'product') {
-      final product = controller.products.firstWhereOrNull((p) => p.id == linkId);
-      return product != null ? 'Produit: ${product.name}' : 'Produit (ID: $linkId)';
-    } else if (linkType == 'establishment') {
-      final establishment = controller.establishments.firstWhereOrNull((e) => e.id == linkId);
-      return establishment != null
-          ? 'Établissement: ${establishment.name}'
-          : 'Établissement (ID: $linkId)';
-    }
-
-    return '$linkType (ID: $linkId)';
-  }
-
-  String _formatDate(DateTime date) {
-    return "${date.day}/${date.month}/${date.year} à ${date.hour}:${date.minute.toString().padLeft(2, '0')}";
-  }
 
   Widget _buildNameField(
     BuildContext context,
@@ -464,24 +340,6 @@ class EditBannerScreen extends StatelessWidget {
             labelText: 'Nom de la bannière',
             prefixIcon: const Icon(Iconsax.text),
             filled: isAdminView,
-            suffixIcon: hasPendingName
-                ? Container(
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade100,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      'Nouveau: ${banner.pendingChanges!['name']}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.blue.shade700,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  )
-                : null,
           ),
           validator: (value) {
             if (!isAdminView && (value == null || value.isEmpty)) {
@@ -490,6 +348,47 @@ class EditBannerScreen extends StatelessWidget {
             return null;
           },
         ),
+        // Afficher le nom modifié sous le TextField
+        if (hasPendingName) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.blue.shade200),
+            ),
+            child: Row(
+              children: [
+                Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Nouveau nom:',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        banner.pendingChanges!['name'].toString(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -874,24 +773,6 @@ class EditBannerScreen extends StatelessWidget {
                 labelText: 'Sélectionner un produit',
                 prefixIcon: const Icon(Iconsax.shop),
                 filled: isAdminView,
-                suffixIcon: hasPendingLink && pendingProduct != null
-                    ? Container(
-                        margin: const EdgeInsets.all(8),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade100,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          'Nouveau: ${pendingProduct.name}',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.blue.shade700,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      )
-                    : null,
               ),
               items: products.map((product) {
                 return DropdownMenuItem(
@@ -905,6 +786,7 @@ class EditBannerScreen extends StatelessWidget {
                       controller.selectedLinkId.value = value ?? '';
                     },
             ),
+            // Afficher le nouveau produit sélectionné sous le dropdown
             if (hasPendingLink && pendingProduct != null) ...[
               const SizedBox(height: 8),
               Container(
@@ -916,15 +798,29 @@ class EditBannerScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Iconsax.info_circle, size: 16, color: Colors.blue.shade700),
+                    Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        'Nouveau produit sélectionné: ${pendingProduct.name}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue.shade700,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nouveau produit sélectionné:',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            pendingProduct.name,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue.shade700,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -968,24 +864,6 @@ class EditBannerScreen extends StatelessWidget {
                 labelText: 'Sélectionner un établissement',
                 prefixIcon: const Icon(Iconsax.home),
                 filled: isAdminView,
-                suffixIcon: hasPendingLink && pendingEstablishment != null
-                    ? Container(
-                        margin: const EdgeInsets.all(8),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade100,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          'Nouveau: ${pendingEstablishment.name}',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.blue.shade700,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      )
-                    : null,
               ),
               items: establishments.map((establishment) {
                 return DropdownMenuItem(
@@ -999,6 +877,7 @@ class EditBannerScreen extends StatelessWidget {
                       controller.selectedLinkId.value = value ?? '';
                     },
             ),
+            // Afficher le nouvel établissement sélectionné sous le dropdown
             if (hasPendingLink && pendingEstablishment != null) ...[
               const SizedBox(height: 8),
               Container(
@@ -1010,15 +889,29 @@ class EditBannerScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Iconsax.info_circle, size: 16, color: Colors.blue.shade700),
+                    Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        'Nouvel établissement sélectionné: ${pendingEstablishment.name}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue.shade700,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nouvel établissement sélectionné:',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            pendingEstablishment.name,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue.shade700,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
