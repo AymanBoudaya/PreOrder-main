@@ -6,7 +6,6 @@ import '../../../controllers/dashboard_controller.dart';
 import 'main_stats_card.dart';
 import 'orders_bar_chart.dart';
 import 'orders_by_day.dart';
-import 'orders_by_status_chart.dart';
 import 'period_filter.dart';
 import 'pickup_hours.dart';
 import 'revenue_line_chart.dart';
@@ -19,9 +18,13 @@ import 'top_users.dart';
 class DashboardContent extends StatelessWidget {
   final DashboardController controller;
   final bool dark;
+  final bool isAdmin;
 
   const DashboardContent(
-      {super.key, required this.controller, required this.dark});
+      {super.key,
+      required this.controller,
+      required this.dark,
+      required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class DashboardContent extends StatelessWidget {
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Cartes de statistiques principales
-              MainStatsCard(stats: stats, dark: dark, isAdmin: true),
+              MainStatsCard(stats: stats, dark: dark, isAdmin: isAdmin),
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Graphiques et statistiques détaillées
@@ -58,8 +61,10 @@ class DashboardContent extends StatelessWidget {
                     future: controller.getTopEtablissements(5),
                     builder: (context, topEtablissementsSnapshot) {
                       final dailyRevenue = dailyRevenueSnapshot.data ?? [];
-                      final topEtablissements = topEtablissementsSnapshot.data ?? [];
-                      final ordersByDayForChart = controller.getOrdersByDayForChart(stats.ordersByDay);
+                      final topEtablissements =
+                          topEtablissementsSnapshot.data ?? [];
+                      final ordersByDayForChart =
+                          controller.getOrdersByDayForChart(stats.ordersByDay);
 
                       return LayoutBuilder(
                         builder: (context, constraints) {
@@ -78,7 +83,8 @@ class DashboardContent extends StatelessWidget {
                                         dark: dark,
                                       ),
                                     ),
-                                    const SizedBox(width: AppSizes.spaceBtwItems),
+                                    const SizedBox(
+                                        width: AppSizes.spaceBtwItems),
                                     Expanded(
                                       child: StatusPieChart(
                                         ordersByStatus: stats.ordersByStatus,
@@ -87,7 +93,8 @@ class DashboardContent extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                const SizedBox(
+                                    height: AppSizes.spaceBtwSections),
                                 // Deuxième ligne : Orders Bar Chart et Top Etablissements
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,26 +105,34 @@ class DashboardContent extends StatelessWidget {
                                         dark: dark,
                                       ),
                                     ),
-                                    const SizedBox(width: AppSizes.spaceBtwItems),
-                                    Expanded(
-                                      child: TopEtablissementsChart(
-                                        topEtablissements: topEtablissements,
-                                        dark: dark,
-                                      ),
-                                    ),
+                                    const SizedBox(
+                                        width: AppSizes.spaceBtwItems),
+                                    isAdmin
+                                        ? Expanded(
+                                            child: TopEtablissementsChart(
+                                              topEtablissements:
+                                                  topEtablissements,
+                                              dark: dark,
+                                            ),
+                                          )
+                                        : const SizedBox.shrink(),
                                   ],
                                 ),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                const SizedBox(
+                                    height: AppSizes.spaceBtwSections),
                                 // Troisième ligne : Top Products et System Stats
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
-                                      child: TopProductsWidget(stats: stats, dark: dark),
+                                      child: TopProductsWidget(
+                                          stats: stats, dark: dark),
                                     ),
-                                    const SizedBox(width: AppSizes.spaceBtwItems),
+                                    const SizedBox(
+                                        width: AppSizes.spaceBtwItems),
                                     Expanded(
-                                      child: SystemStats(stats: stats, dark: dark),
+                                      child:
+                                          SystemStats(stats: stats, dark: dark),
                                     ),
                                   ],
                                 ),
@@ -131,24 +146,33 @@ class DashboardContent extends StatelessWidget {
                                   dailyRevenue: dailyRevenue,
                                   dark: dark,
                                 ),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                const SizedBox(
+                                    height: AppSizes.spaceBtwSections),
                                 StatusPieChart(
                                   ordersByStatus: stats.ordersByStatus,
                                   dark: dark,
                                 ),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                const SizedBox(
+                                    height: AppSizes.spaceBtwSections),
                                 OrdersBarChart(
                                   ordersByDay: ordersByDayForChart,
                                   dark: dark,
                                 ),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
-                                TopEtablissementsChart(
-                                  topEtablissements: topEtablissements,
-                                  dark: dark,
-                                ),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                const SizedBox(
+                                    height: AppSizes.spaceBtwSections),
+                                isAdmin
+                                    ? Expanded(
+                                        child: TopEtablissementsChart(
+                                          topEtablissements: topEtablissements,
+                                          dark: dark,
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                                const SizedBox(
+                                    height: AppSizes.spaceBtwSections),
                                 TopProductsWidget(stats: stats, dark: dark),
-                                const SizedBox(height: AppSizes.spaceBtwSections),
+                                const SizedBox(
+                                    height: AppSizes.spaceBtwSections),
                                 SystemStats(stats: stats, dark: dark),
                               ],
                             );

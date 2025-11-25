@@ -14,8 +14,7 @@ import '../gestion_etablissement/liste_etablissement/mon_etablissement_screen.da
 import '../gestion_utilisateur/admin_user_management_screen.dart';
 import '../gestion_bannieres/banner_management_screen.dart';
 import '../../../../utils/popups/loaders.dart';
-import 'admin_dashboard_screen.dart';
-import 'gerant_dashboard_screen.dart';
+import 'dashboard_screen.dart';
 
 /// Menu latéral pour les dashboards Admin et Gérant
 class DashboardSideMenu extends StatelessWidget {
@@ -100,9 +99,9 @@ class DashboardSideMenu extends StatelessWidget {
                   isSelected: currentRoute == 'dashboard',
                   onTap: () {
                     if (isAdmin) {
-                      Get.offAll(() => AdminDashboardScreen());
+                      Get.offAll(() => DashboardScreen(isAdmin: true,));
                     } else {
-                      Get.offAll(() => GerantDashboardScreen());
+                      Get.offAll(() => DashboardScreen(isAdmin: false,));  
                     }
                   },
                   dark: dark,

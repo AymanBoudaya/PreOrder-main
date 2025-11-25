@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:caferesto/features/profil/models/dashboard_stats_model.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
-import '../../../controllers/gerant_dashboard_controller.dart';
 
 class TopUsers extends StatelessWidget {
   final DashboardStats stats;

@@ -8,8 +8,9 @@ import 'dashboard_side_menu.dart';
 import 'widgets/dashboard_content.dart';
 
 
-class GerantDashboardScreen extends StatelessWidget {
-  const GerantDashboardScreen({super.key});
+class DashboardScreen extends StatelessWidget {
+  final bool isAdmin;
+  const DashboardScreen({super.key, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class GerantDashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: TAppBar(
-        title: const Text('Dashboard Gérant'),
+        title: Text(isAdmin ? 'Dashboard Admin' : 'Dashboard Gérant'),
         actions: [
           IconButton(
             icon: const Icon(Iconsax.refresh),
@@ -31,7 +32,7 @@ class GerantDashboardScreen extends StatelessWidget {
         builder: (context, constraints) {
           // Sur mobile, masquer le menu latéral
           if (constraints.maxWidth < 900) {
-            return DashboardContent(controller: controller, dark: dark);
+            return DashboardContent(controller: controller, dark: dark, isAdmin: isAdmin);
           }
 
           // Sur desktop, afficher le menu latéral
@@ -39,13 +40,13 @@ class GerantDashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Menu latéral
-              const DashboardSideMenu(
+              DashboardSideMenu(
                 currentRoute: 'dashboard',
-                isAdmin: false,
+                isAdmin: isAdmin,
               ),
               // Contenu du dashboard
               Expanded(
-                child: DashboardContent(controller: controller, dark: dark),
+                child: DashboardContent(controller: controller, dark: dark, isAdmin: isAdmin),
               ),
             ],
           );
