@@ -10,7 +10,13 @@ import '../../../../../utils/popups/loaders.dart';
 class PeriodFilter extends StatelessWidget {
   final bool dark;
   final DashboardController controller;
-  const PeriodFilter({super.key, required this.controller, required this.dark});
+  final bool isAdmin;
+  const PeriodFilter({
+    super.key,
+    required this.controller,
+    required this.dark,
+    this.isAdmin = false,
+  });
 
   bool _isDateRangeValid(DateTime? start, DateTime? end) {
     if (start == null || end == null) return false;
@@ -48,6 +54,72 @@ class PeriodFilter extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSizes.md),
+          // Filtre par établissement (Admin uniquement)
+          if (isAdmin) ...[
+            Obx(() {
+              final etablissements = controller.etablissements;
+              final selectedId = controller.selectedEtablissementId.value;
+              
+              return Wrap(
+                spacing: AppSizes.sm,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  const Text('Établissement: '),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blue.shade400.withValues(alpha: 0.3),
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: DropdownButton<String?>(
+                      value: selectedId,
+                      underline: const SizedBox(),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      icon: Icon(
+                        Iconsax.arrow_down_1,
+                        size: 16,
+                        color: Colors.blue.shade400,
+                      ),
+                      hint: const Text('Tous les établissements'),
+                      items: [
+                        const DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text('Tous les établissements'),
+                        ),
+                        ...etablissements.map((etab) {
+                          final id = etab['id'] as String? ?? '';
+                          return DropdownMenuItem<String?>(
+                            value: id.isEmpty ? null : id,
+                            child: Text(
+                              etab['name'] as String? ?? 'Inconnu',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }),
+                      ],
+                      onChanged: (value) {
+                        controller.updateEtablissementFilter(value);
+                      },
+                    ),
+                  ),
+                  if (selectedId != null)
+                    IconButton(
+                      icon: Icon(
+                        Iconsax.close_circle,
+                        color: Colors.grey[600],
+                        size: 18,
+                      ),
+                      onPressed: () => controller.clearEtablissementFilter(),
+                      tooltip: 'Effacer le filtre',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                ],
+              );
+            }),
+            const SizedBox(height: AppSizes.md),
+          ],
           // Options de période rapide
           Wrap(
             spacing: AppSizes.sm,

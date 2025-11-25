@@ -29,11 +29,37 @@ class DashboardController extends GetxController {
       false.obs; // Utiliser une plage de dates personnalisée
   final startDate = Rxn<DateTime>();
   final endDate = Rxn<DateTime>();
+  final selectedEtablissementId = Rxn<String>(); // ID de l'établissement sélectionné pour le filtre (Admin uniquement)
+  final etablissements = <Map<String, dynamic>>[].obs; // Liste des établissements pour le filtre
 
   @override
   void onInit() {
     super.onInit();
+    // Charger la liste des établissements si admin
+    if (userController.userRole == 'Admin') {
+      _loadEtablissements();
+    }
     loadDashboardStats();
+  }
+
+  /// Charge la liste des établissements pour le filtre (Admin uniquement)
+  Future<void> _loadEtablissements() async {
+    try {
+      final etablissementsResponse = await _db
+          .from('etablissements')
+          .select('id, name')
+          .order('name', ascending: true);
+      
+      etablissements.value = (etablissementsResponse as List)
+          .map((e) => {
+                'id': e['id']?.toString() ?? '',
+                'name': e['name']?.toString() ?? 'Inconnu',
+              })
+          .toList();
+    } catch (e) {
+      debugPrint('Erreur chargement établissements pour filtre: $e');
+      etablissements.value = [];
+    }
   }
 
   Future<void> loadDashboardStats() async {
@@ -61,6 +87,9 @@ class DashboardController extends GetxController {
       final now = DateTime.now();
       final todayStart = DateTime(now.year, now.month, now.day);
       final monthStart = DateTime(now.year, now.month, 1);
+      
+      // Récupérer l'ID de l'établissement sélectionné pour le filtre
+      final etablissementIdFilter = selectedEtablissementId.value;
 
       // Déterminer la plage de dates pour le filtre
       List allOrders;
@@ -82,38 +111,56 @@ class DashboardController extends GetxController {
         );
 
         // Toutes les commandes avec filtre de dates
-        final allOrdersResponse = await _db
+        var allOrdersQuery = _db
             .from('orders')
             .select('*, etablissement:etablissement_id(*)')
             .gte('created_at', filterStartDate.toIso8601String())
-            .lte('created_at', filterEndDate.toIso8601String())
-            .order('created_at', ascending: false);
-
+            .lte('created_at', filterEndDate.toIso8601String());
+        
+        // Ajouter le filtre par établissement si sélectionné
+        if (etablissementIdFilter != null && etablissementIdFilter.isNotEmpty) {
+          allOrdersQuery = allOrdersQuery.eq('etablissement_id', etablissementIdFilter);
+        }
+        
+        final allOrdersResponse = await allOrdersQuery.order('created_at', ascending: false);
         allOrders = allOrdersResponse as List;
       } else {
         // Toutes les commandes sans filtre de dates personnalisé
-        final allOrdersResponse = await _db
+        var allOrdersQuery = _db
             .from('orders')
-            .select('*, etablissement:etablissement_id(*)')
-            .order('created_at', ascending: false);
-
+            .select('*, etablissement:etablissement_id(*)');
+        
+        // Ajouter le filtre par établissement si sélectionné
+        if (etablissementIdFilter != null && etablissementIdFilter.isNotEmpty) {
+          allOrdersQuery = allOrdersQuery.eq('etablissement_id', etablissementIdFilter);
+        }
+        
+        final allOrdersResponse = await allOrdersQuery.order('created_at', ascending: false);
         allOrders = allOrdersResponse as List;
       }
 
       // Commandes du jour (basées sur created_at pour le comptage)
-      final todayOrdersResponse = await _db
+      var todayOrdersQuery = _db
           .from('orders')
           .select('*')
           .gte('created_at', todayStart.toIso8601String());
+      if (etablissementIdFilter != null && etablissementIdFilter.isNotEmpty) {
+        todayOrdersQuery = todayOrdersQuery.eq('etablissement_id', etablissementIdFilter);
+      }
+      final todayOrdersResponse = await todayOrdersQuery;
 
       // Commandes du mois (basées sur created_at pour le comptage)
-      final monthOrdersResponse = await _db
+      var monthOrdersQuery = _db
           .from('orders')
           .select('*')
           .gte('created_at', monthStart.toIso8601String());
+      if (etablissementIdFilter != null && etablissementIdFilter.isNotEmpty) {
+        monthOrdersQuery = monthOrdersQuery.eq('etablissement_id', etablissementIdFilter);
+      }
+      final monthOrdersResponse = await monthOrdersQuery;
 
       // Commandes livrées aujourd'hui (basées sur delivery_date pour le revenu)
-      final todayDeliveredOrdersResponse = await _db
+      var todayDeliveredOrdersQuery = _db
           .from('orders')
           .select('*')
           .eq('status', 'delivered')
@@ -123,6 +170,10 @@ class DashboardController extends GetxController {
               'delivery_date',
               DateTime(now.year, now.month, now.day, 23, 59, 59)
                   .toIso8601String());
+      if (etablissementIdFilter != null && etablissementIdFilter.isNotEmpty) {
+        todayDeliveredOrdersQuery = todayDeliveredOrdersQuery.eq('etablissement_id', etablissementIdFilter);
+      }
+      final todayDeliveredOrdersResponse = await todayDeliveredOrdersQuery;
 
       final todayOrders = todayOrdersResponse as List;
       final monthOrders = monthOrdersResponse as List;
@@ -161,15 +212,19 @@ class DashboardController extends GetxController {
       final averageOrderValue =
           completedOrders > 0 ? totalRevenue / completedOrders : 0.0;
 
-      // Statistiques des établissements
+      // Statistiques des établissements (toujours global, pas de filtre)
       final etablissementsResponse =
           await _db.from('etablissements').select('id');
       final totalEtablissements = (etablissementsResponse as List).length;
 
-      // Statistiques des produits
-      final productsResponse = await _db
+      // Statistiques des produits (filtrer par établissement si sélectionné)
+      var productsQuery = _db
           .from('produits')
           .select('id, quantite_stock, est_stockable');
+      if (etablissementIdFilter != null && etablissementIdFilter.isNotEmpty) {
+        productsQuery = productsQuery.eq('etablissement_id', etablissementIdFilter);
+      }
+      final productsResponse = await productsQuery;
       final products = productsResponse as List;
       final totalProducts = products.length;
       final lowStockProducts = products.where((p) {
@@ -182,12 +237,38 @@ class DashboardController extends GetxController {
       final usersResponse = await _db.from('users').select('id');
       final totalUsers = (usersResponse as List).length;
 
-      // Produits les plus commandés
+      // Produits les plus commandés (filtrer par établissement si sélectionné)
+      // Note: getMostOrderedProducts ne supporte pas encore le filtre par établissement
+      // On devra filtrer manuellement après récupération
       final topProductsRaw = await orderRepository.getMostOrderedProducts(
-          days: int.parse(selectedPeriod.value), limit: 5);
+          days: int.parse(selectedPeriod.value), limit: 20); // Récupérer plus pour filtrer
+      
+      // Filtrer par établissement si nécessaire
+      List<Map<String, dynamic>> filteredTopProductsRaw = topProductsRaw;
+      if (etablissementIdFilter != null && etablissementIdFilter.isNotEmpty) {
+        // Récupérer les produits de l'établissement
+        final etabProductsResponse = await _db
+            .from('produits')
+            .select('id')
+            .eq('etablissement_id', etablissementIdFilter);
+        final etabProductIds = (etabProductsResponse as List)
+            .map((p) => p['id']?.toString() ?? '')
+            .where((id) => id.isNotEmpty)
+            .toSet();
+        
+        filteredTopProductsRaw = topProductsRaw
+            .where((p) {
+              final productId = p['productId']?.toString() ?? '';
+              return etabProductIds.contains(productId);
+            })
+            .take(5)
+            .toList();
+      } else {
+        filteredTopProductsRaw = topProductsRaw.take(5).toList();
+      }
 
       // Enrichir avec les informations des produits (nom et catégorie)
-      final topProducts = await _enrichTopProducts(topProductsRaw);
+      final topProducts = await _enrichTopProducts(filteredTopProductsRaw);
 
       // Commandes récentes
       final recentOrders = allOrders
@@ -497,6 +578,18 @@ class DashboardController extends GetxController {
     loadDashboardStats();
   }
 
+  /// Met à jour le filtre d'établissement (Admin uniquement)
+  void updateEtablissementFilter(String? etablissementId) {
+    selectedEtablissementId.value = etablissementId;
+    loadDashboardStats();
+  }
+
+  /// Efface le filtre d'établissement
+  void clearEtablissementFilter() {
+    selectedEtablissementId.value = null;
+    loadDashboardStats();
+  }
+
   /// Enrichit les produits les plus vendus avec leurs noms et catégories
   Future<List<Map<String, dynamic>>> _enrichTopProducts(
       List<Map<String, dynamic>> topProductsRaw) async {
@@ -798,6 +891,9 @@ class DashboardController extends GetxController {
         if (etab != null) {
           etablissementId = etab.id.toString();
         }
+      } else if (userRole == 'Admin') {
+        // Pour l'admin, utiliser le filtre d'établissement sélectionné s'il existe
+        etablissementId = selectedEtablissementId.value;
       }
 
       for (int i = days - 1; i >= 0; i--) {
@@ -813,8 +909,8 @@ class DashboardController extends GetxController {
             .gte('delivery_date', startOfDay.toIso8601String())
             .lte('delivery_date', endOfDay.toIso8601String());
 
-        // Filtrer par établissement si c'est un gérant
-        if (etablissementId != null) {
+        // Filtrer par établissement si nécessaire (gérant ou admin avec filtre)
+        if (etablissementId != null && etablissementId.isNotEmpty) {
           query = query.eq('etablissement_id', etablissementId);
         }
 
