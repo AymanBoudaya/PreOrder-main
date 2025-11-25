@@ -161,11 +161,9 @@ class DashboardContent extends StatelessWidget {
                                 const SizedBox(
                                     height: AppSizes.spaceBtwSections),
                                 isAdmin
-                                    ? Expanded(
-                                        child: TopEtablissementsChart(
-                                          topEtablissements: topEtablissements,
-                                          dark: dark,
-                                        ),
+                                    ? TopEtablissementsChart(
+                                        topEtablissements: topEtablissements,
+                                        dark: dark,
                                       )
                                     : const SizedBox.shrink(),
                                 const SizedBox(
