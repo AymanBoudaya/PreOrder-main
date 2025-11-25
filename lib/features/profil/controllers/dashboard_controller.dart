@@ -31,6 +31,7 @@ class DashboardController extends GetxController {
   final endDate = Rxn<DateTime>();
   final selectedEtablissementId = Rxn<String>(); // ID de l'établissement sélectionné pour le filtre (Admin uniquement)
   final etablissements = <Map<String, dynamic>>[].obs; // Liste des établissements pour le filtre
+  final revenuePeriodFilter = '7days'.obs; // Filtre de période pour les revenus: '7days', 'month', '3months', 'year', 'all'
 
   @override
   void onInit() {
@@ -590,6 +591,11 @@ class DashboardController extends GetxController {
     loadDashboardStats();
   }
 
+  /// Met à jour le filtre de période pour les revenus
+  void updateRevenuePeriodFilter(String period) {
+    revenuePeriodFilter.value = period;
+  }
+
   /// Enrichit les produits les plus vendus avec leurs noms et catégories
   Future<List<Map<String, dynamic>>> _enrichTopProducts(
       List<Map<String, dynamic>> topProductsRaw) async {
@@ -875,11 +881,11 @@ class DashboardController extends GetxController {
 
   // ==================== MÉTHODES POUR LES GRAPHIQUES ====================
 
-  /// Récupère les revenus quotidiens pour les 7 derniers jours
-  Future<List<Map<String, dynamic>>> getDailyRevenue(int days) async {
+  /// Récupère les revenus cumulatifs selon la période sélectionnée
+  Future<List<Map<String, dynamic>>> getDailyRevenue() async {
     try {
       final now = DateTime.now();
-      final List<Map<String, dynamic>> dailyRevenue = [];
+      final List<Map<String, dynamic>> revenueData = [];
 
       // Vérifier le rôle de l'utilisateur pour filtrer par établissement si nécessaire
       final userRole = userController.userRole;
@@ -896,36 +902,132 @@ class DashboardController extends GetxController {
         etablissementId = selectedEtablissementId.value;
       }
 
-      for (int i = days - 1; i >= 0; i--) {
-        final date = now.subtract(Duration(days: i));
-        final startOfDay = DateTime(date.year, date.month, date.day);
-        final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+      final period = revenuePeriodFilter.value;
+      DateTime startDate;
+      bool isMonthly = false; // Pour l'affichage mensuel vs quotidien
 
-        var query = _db
-            .from('orders')
-            .select('total_amount, status, delivery_date')
-            .eq('status', 'delivered')
-            .not('delivery_date', 'is', null)
-            .gte('delivery_date', startOfDay.toIso8601String())
-            .lte('delivery_date', endOfDay.toIso8601String());
-
-        // Filtrer par établissement si nécessaire (gérant ou admin avec filtre)
-        if (etablissementId != null && etablissementId.isNotEmpty) {
-          query = query.eq('etablissement_id', etablissementId);
-        }
-
-        final orders = await query;
-        final revenue = (orders as List).fold<double>(0.0,
-            (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
-
-        dailyRevenue.add({
-          'date':
-              '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
-          'revenue': revenue,
-        });
+      // Déterminer la période de début selon le filtre
+      switch (period) {
+        case '7days':
+          startDate = now.subtract(const Duration(days: 7));
+          break;
+        case 'month':
+          startDate = DateTime(now.year, now.month, 1);
+          break;
+        case '3months':
+          if (now.month <= 2) {
+            startDate = DateTime(now.year - 1, 12 + now.month - 2, 1);
+          } else {
+            startDate = DateTime(now.year, now.month - 2, 1);
+          }
+          break;
+        case 'year':
+          startDate = DateTime(now.year, 1, 1);
+          isMonthly = true; // Afficher par mois pour l'année
+          break;
+        case 'all':
+          // Récupérer la date de la première commande
+          var firstOrderQuery = _db
+              .from('orders')
+              .select('delivery_date')
+              .eq('status', 'delivered')
+              .not('delivery_date', 'is', null);
+          if (etablissementId != null && etablissementId.isNotEmpty) {
+            firstOrderQuery = firstOrderQuery.eq('etablissement_id', etablissementId);
+          }
+          final firstOrderResponse = await firstOrderQuery
+              .order('delivery_date', ascending: true)
+              .limit(1);
+          if (firstOrderResponse.isNotEmpty) {
+            try {
+              startDate = DateTime.parse(firstOrderResponse[0]['delivery_date']);
+            } catch (e) {
+              startDate = DateTime(now.year - 1, 1, 1); // Par défaut, 1 an en arrière
+            }
+          } else {
+            startDate = DateTime(now.year - 1, 1, 1);
+          }
+          isMonthly = true; // Afficher par mois pour toutes périodes
+          break;
+        default:
+          startDate = now.subtract(const Duration(days: 7));
       }
 
-      return dailyRevenue;
+      double cumulativeRevenue = 0.0;
+
+      if (isMonthly) {
+        // Calcul par mois (pour année et toutes périodes)
+        final currentMonth = DateTime(now.year, now.month, 1);
+        DateTime monthStart = DateTime(startDate.year, startDate.month, 1);
+        
+        while (monthStart.isBefore(currentMonth) || monthStart.isAtSameMomentAs(currentMonth)) {
+          final monthEnd = DateTime(monthStart.year, monthStart.month + 1, 1).subtract(const Duration(days: 1));
+          final endOfMonth = DateTime(monthEnd.year, monthEnd.month, monthEnd.day, 23, 59, 59);
+          
+          var query = _db
+              .from('orders')
+              .select('total_amount, status, delivery_date')
+              .eq('status', 'delivered')
+              .not('delivery_date', 'is', null)
+              .gte('delivery_date', monthStart.toIso8601String())
+              .lte('delivery_date', endOfMonth.toIso8601String());
+
+          if (etablissementId != null && etablissementId.isNotEmpty) {
+            query = query.eq('etablissement_id', etablissementId);
+          }
+
+          final orders = await query;
+          final monthRevenue = (orders as List).fold<double>(0.0,
+              (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
+          
+          cumulativeRevenue += monthRevenue;
+
+          revenueData.add({
+            'date': '${monthStart.year}-${monthStart.month.toString().padLeft(2, '0')}',
+            'revenue': cumulativeRevenue,
+            'periodRevenue': monthRevenue, // Revenu de la période (non cumulatif)
+          });
+
+          // Passer au mois suivant
+          monthStart = DateTime(monthStart.year, monthStart.month + 1, 1);
+        }
+      } else {
+        // Calcul par jour (pour 7 jours, mois, 3 mois)
+        final daysDiff = now.difference(startDate).inDays;
+        
+        for (int i = daysDiff; i >= 0; i--) {
+          final date = now.subtract(Duration(days: i));
+          final startOfDay = DateTime(date.year, date.month, date.day);
+          final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+
+          var query = _db
+              .from('orders')
+              .select('total_amount, status, delivery_date')
+              .eq('status', 'delivered')
+              .not('delivery_date', 'is', null)
+              .gte('delivery_date', startOfDay.toIso8601String())
+              .lte('delivery_date', endOfDay.toIso8601String());
+
+          if (etablissementId != null && etablissementId.isNotEmpty) {
+            query = query.eq('etablissement_id', etablissementId);
+          }
+
+          final orders = await query;
+          final dayRevenue = (orders as List).fold<double>(0.0,
+              (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
+          
+          cumulativeRevenue += dayRevenue;
+
+          revenueData.add({
+            'date':
+                '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
+            'revenue': cumulativeRevenue,
+            'periodRevenue': dayRevenue, // Revenu de la période (non cumulatif)
+          });
+        }
+      }
+
+      return revenueData;
     } catch (e) {
       debugPrint('Erreur getDailyRevenue: $e');
       return [];

@@ -54,8 +54,10 @@ class DashboardContent extends StatelessWidget {
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Graphiques et statistiques détaillées
-              FutureBuilder<List<Map<String, dynamic>>>(
-                future: controller.getDailyRevenue(7),
+              Obx(() => FutureBuilder<List<Map<String, dynamic>>>(
+                // Utiliser revenuePeriodFilter pour forcer le rechargement
+                key: ValueKey(controller.revenuePeriodFilter.value),
+                future: controller.getDailyRevenue(),
                 builder: (context, dailyRevenueSnapshot) {
                   return FutureBuilder<List<Map<String, dynamic>>>(
                     future: controller.getTopEtablissements(5),
@@ -81,6 +83,7 @@ class DashboardContent extends StatelessWidget {
                                       child: RevenueLineChart(
                                         dailyRevenue: dailyRevenue,
                                         dark: dark,
+                                        controller: controller,
                                       ),
                                     ),
                                     const SizedBox(
@@ -146,6 +149,7 @@ class DashboardContent extends StatelessWidget {
                                 RevenueLineChart(
                                   dailyRevenue: dailyRevenue,
                                   dark: dark,
+                                  controller: controller,
                                 ),
                                 const SizedBox(
                                     height: AppSizes.spaceBtwSections),
@@ -181,7 +185,7 @@ class DashboardContent extends StatelessWidget {
                     },
                   );
                 },
-              ),
+              )),
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Statistiques par jour et heures de pickup
