@@ -132,7 +132,7 @@ class DashboardContent extends StatelessWidget {
                                         width: AppSizes.spaceBtwItems),
                                     Expanded(
                                       child:
-                                          SystemStats(stats: stats, dark: dark),
+                                          SystemStats(stats: stats, dark: dark, isAdmin: isAdmin),
                                     ),
                                   ],
                                 ),
@@ -141,6 +141,7 @@ class DashboardContent extends StatelessWidget {
                           } else {
                             // Mobile layout
                             return Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 RevenueLineChart(
                                   dailyRevenue: dailyRevenue,
@@ -171,7 +172,7 @@ class DashboardContent extends StatelessWidget {
                                 TopProductsWidget(stats: stats, dark: dark),
                                 const SizedBox(
                                     height: AppSizes.spaceBtwSections),
-                                SystemStats(stats: stats, dark: dark),
+                                SystemStats(stats: stats, dark: dark, isAdmin: isAdmin),
                               ],
                             );
                           }

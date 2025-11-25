@@ -788,12 +788,24 @@ class DashboardController extends GetxController {
       final now = DateTime.now();
       final List<Map<String, dynamic>> dailyRevenue = [];
 
+      // Vérifier le rôle de l'utilisateur pour filtrer par établissement si nécessaire
+      final userRole = userController.userRole;
+      String? etablissementId;
+
+      // Si c'est un gérant, récupérer son établissement
+      if (userRole == 'Gérant') {
+        final etab = await etablissementController.getEtablissementUtilisateurConnecte();
+        if (etab != null) {
+          etablissementId = etab.id.toString();
+        }
+      }
+
       for (int i = days - 1; i >= 0; i--) {
         final date = now.subtract(Duration(days: i));
         final startOfDay = DateTime(date.year, date.month, date.day);
         final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
-        final orders = await _db
+        var query = _db
             .from('orders')
             .select('total_amount, status, delivery_date')
             .eq('status', 'delivered')
@@ -801,6 +813,12 @@ class DashboardController extends GetxController {
             .gte('delivery_date', startOfDay.toIso8601String())
             .lte('delivery_date', endOfDay.toIso8601String());
 
+        // Filtrer par établissement si c'est un gérant
+        if (etablissementId != null) {
+          query = query.eq('etablissement_id', etablissementId);
+        }
+
+        final orders = await query;
         final revenue = (orders as List).fold<double>(0.0,
             (sum, o) => sum + ((o['total_amount'] as num?)?.toDouble() ?? 0.0));
 
