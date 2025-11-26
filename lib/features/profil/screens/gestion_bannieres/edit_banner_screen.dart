@@ -84,6 +84,7 @@ class EditBannerScreen extends StatelessWidget {
   Widget _buildBody(BuildContext context, BannerController controller) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 768;
+    final dark = THelperFunctions.isDarkMode(context);
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -126,11 +127,17 @@ class EditBannerScreen extends StatelessWidget {
                         prefixIcon: const Icon(Iconsax.link),
                         filled: isAdminView,
                       ),
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                             value: null, child: Text('Aucun lien')),
                         DropdownMenuItem(
-                            value: 'product', child: Text('Produit')),
+                            value: 'product',
+                            child: Text(
+                              'Produit',
+                              style: TextStyle(
+                                  color:
+                                      dark ? Colors.white : TColors.eerieBlack),
+                            )),
                         DropdownMenuItem(
                           value: 'establishment',
                           child: Text('Établissement'),
@@ -398,10 +405,8 @@ class EditBannerScreen extends StatelessWidget {
             // Si admin et modifications en attente, afficher les deux images
             if (isAdminView && hasPendingImage) {
               return ImageComparison(
-                currentImageUrl:
-                controller.imageUrl.value,
-                pendingImageUrl:
-                banner.pendingChanges!['image_url'].toString(),
+                currentImageUrl: controller.imageUrl.value,
+                pendingImageUrl: banner.pendingChanges!['image_url'].toString(),
               );
             }
 

@@ -10,7 +10,6 @@ import '../models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserController extends GetxController {
-
   String get userRole => user.value.role;
   String? get currentEtablissementId => user.value.establishmentId;
   bool get hasEtablissement =>
@@ -19,7 +18,7 @@ class UserController extends GetxController {
 
   final profileLoading = false.obs;
   Rx<UserModel> user = UserModel.empty().obs;
-  
+
   AuthenticationRepository get authRepo => Get.find<AuthenticationRepository>();
 
   // Lazy access to UserRepository to avoid initialization issues
@@ -95,7 +94,6 @@ class UserController extends GetxController {
 
         // Mettre à jour avec les données de la base de données
         user(userData);
-
       } else {
         // Si l'utilisateur n'existe pas en base, ne pas écraser avec un utilisateur vide
         // Garder l'utilisateur actuel si disponible
@@ -304,5 +302,20 @@ class UserController extends GetxController {
       debugPrint('Erreur lors de la récupération du nom utilisateur: $e');
       return null;
     }
+  }
+
+  bool isAdminOnly() {
+    final role = user.value.role;
+    return role == 'Admin';
+  }
+
+  bool isGerantOnly() {
+    final role = user.value.role;
+    return role == 'Gérant';
+  }
+
+  bool isAdminGerant() {
+    final role = user.value.role;
+    return role == 'Gérant' || role == 'Admin';
   }
 }

@@ -11,3 +11,9 @@ Commande ken majech hazha client twali annuler automatiquement E5er wa9t 5edma
 
 changer tout les navigator.pop(context) par get.back
 changer tout les modal bottom sheet par get.bottomsheet
+
+
+ajouter bouton dans gestion des bannieres pour permettre a admin de supprimer une bannière
+bannière en attente , type de lien ne se voit pas dans mode clair
+produit sélectionnable
+bannière affiché, pour admin ajouter nom de letablissement et nom de son gerant

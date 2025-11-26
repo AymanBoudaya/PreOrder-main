@@ -34,21 +34,6 @@ class SettingsScreen extends StatelessWidget {
     final userController = Get.find<UserController>();
     final etablissementController = Get.find<ListeEtablissementController>();
 
-    bool isAdminOnly() {
-      final role = userController.user.value.role;
-      return role == 'Admin';
-    }
-
-    bool isGerantOnly() {
-      final role = userController.user.value.role;
-      return role == 'Gérant';
-    }
-
-    bool isAdminGerant() {
-      final role = userController.user.value.role;
-      return role == 'Gérant' || role == 'Admin';
-    }
-
     return Scaffold(
       body: Obx(() {
         // Attendre que les données utilisateur soient chargées
@@ -112,22 +97,23 @@ class SettingsScreen extends StatelessWidget {
                     showActionButton: false,
                   ),
                   SizedBox(height: AppSizes.spaceBtwItems),
-
                   TSettingsMenuTile(
                       title: "Mes Adresses",
                       subTitle: "Mes adresses de livraison",
                       icon: Iconsax.safe_home,
                       onTap: () => Get.to(() => const UserAddressScreen())),
-                  TSettingsMenuTile(
-                      title: "Mon Panier",
-                      subTitle: "Consulter les articles dans votre panier",
-                      icon: Iconsax.shopping_cart,
-                      onTap: () => Get.to(() => const CartScreen())),
-                  TSettingsMenuTile(
-                      title: "Mes Commandes",
-                      subTitle: "Commandes passées et en cours",
-                      icon: Iconsax.bag_tick,
-                      onTap: () => Get.to(() => const OrderScreen())),
+                  if (!userController.isAdminGerant())
+                    TSettingsMenuTile(
+                        title: "Mon Panier",
+                        subTitle: "Consulter les articles dans votre panier",
+                        icon: Iconsax.shopping_cart,
+                        onTap: () => Get.to(() => const CartScreen())),
+                  if (!userController.isAdminGerant())
+                    TSettingsMenuTile(
+                        title: "Mes Commandes",
+                        subTitle: "Commandes passées et en cours",
+                        icon: Iconsax.bag_tick,
+                        onTap: () => Get.to(() => const OrderScreen())),
                   TSettingsMenuTile(
                       title: "Notifications",
                       subTitle: "Notifications de l'application",
@@ -135,29 +121,33 @@ class SettingsScreen extends StatelessWidget {
                       onTap: () => Get.to(() => const NotificationsScreen())),
 
                   /// Développeur , upload
-                  if (isAdminGerant()) ...[
+                  if (userController.isAdminGerant()) ...[
                     SizedBox(height: AppSizes.spaceBtwSections),
                     TSectionHeading(title: "Gestion", showActionButton: false),
                     SizedBox(height: AppSizes.spaceBtwItems),
                   ],
 
                   // Dashboard
-                  if (isAdminOnly())
+                  if (userController.isAdminOnly())
                     TSettingsMenuTile(
                       icon: Iconsax.chart_2,
                       title: "Dashboard Admin",
                       subTitle: "Statistiques et analyses détaillées",
-                      onTap: () => Get.to(() => const DashboardScreen(isAdmin: true,)),
+                      onTap: () => Get.to(() => const DashboardScreen(
+                            isAdmin: true,
+                          )),
                     ),
-                  if (isGerantOnly())
+                  if (userController.isGerantOnly())
                     TSettingsMenuTile(
                       icon: Iconsax.chart_2,
                       title: "Dashboard Gérant",
                       subTitle: "Statistiques de mon établissement",
-                      onTap: () => Get.to(() => const DashboardScreen(isAdmin: false,)),
+                      onTap: () => Get.to(() => const DashboardScreen(
+                            isAdmin: false,
+                          )),
                     ),
 
-                  if (isGerantOnly())
+                  if (userController.isGerantOnly())
                     TSettingsMenuTile(
                       icon: Iconsax.category,
                       title: "Gérer commandes",
@@ -179,7 +169,7 @@ class SettingsScreen extends StatelessWidget {
                         }
                       },
                     ),
-                  if (isAdminOnly())
+                  if (userController.isAdminOnly())
                     TSettingsMenuTile(
                       icon: Iconsax.category,
                       title: "Gérer catégorie",
@@ -194,7 +184,7 @@ class SettingsScreen extends StatelessWidget {
                         }
                       },
                     ),
-                  if (isAdminGerant())
+                  if (userController.isAdminGerant())
                     TSettingsMenuTile(
                       icon: Iconsax.picture_frame,
                       title: "Gérer bannières",
@@ -209,11 +199,11 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                   SizedBox(height: AppSizes.spaceBtwItems),
-                  if (isAdminGerant())
+                  if (userController.isAdminGerant())
                     TSettingsMenuTile(
                       icon: Iconsax.home,
                       title: "Gérer  établissement",
-                      subTitle: isAdminOnly()
+                      subTitle: userController.isAdminOnly()
                           ? "Consulter, modifier ou supprimer des établissements"
                           : "Consulter, ajouter, modifier ou supprimer mon établissement",
                       onTap: () => Get.to(() => MonEtablissementScreen()),
@@ -222,7 +212,7 @@ class SettingsScreen extends StatelessWidget {
                     height: AppSizes.spaceBtwItems,
                   ),
 
-                  if (isAdminGerant())
+                  if (userController.isAdminGerant())
                     TSettingsMenuTile(
                       icon: Iconsax.bag_tick_2,
                       title: "Gérer produit",
