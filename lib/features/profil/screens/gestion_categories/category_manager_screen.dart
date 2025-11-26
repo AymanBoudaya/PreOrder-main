@@ -6,11 +6,13 @@ import 'package:caferesto/features/shop/models/category_model.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/enums.dart';
 import '../../../shop/controllers/category_controller.dart';
 import '../../../../common/widgets/loading/loading_screen.dart';
 import 'add_category_screen.dart';
 import 'edit_category_screen.dart';
+import 'widgets/elegant_tabs.dart';
+import 'widgets/empty_state.dart';
+import 'widgets/search_and_filter_bar.dart';
 
 class CategoryManagementPage extends StatelessWidget {
   CategoryManagementPage({super.key});
@@ -23,7 +25,7 @@ class CategoryManagementPage extends StatelessWidget {
       appBar: _buildAppBar(context),
       body: Column(
         children: [
-          _buildSearchAndFilterBar(context),
+          SearchAndFilterBar(controller: controller),
           Expanded(child: _buildBody(context)),
         ],
       ),
@@ -37,7 +39,7 @@ class CategoryManagementPage extends StatelessWidget {
       doubleAppBarHeight: true,
       bottomWidget: PreferredSize(
         preferredSize: const Size.fromHeight(50),
-        child: _buildElegantTabs(context),
+        child: ElegantTabs(controller: controller),
       ),
     );
   }
@@ -50,7 +52,7 @@ class CategoryManagementPage extends StatelessWidget {
         );
       }
       if (controller.allCategories.isEmpty) {
-        return _buildEmptyState();
+        return const EmptyState();
       }
 
       return TabBarView(
@@ -63,36 +65,7 @@ class CategoryManagementPage extends StatelessWidget {
     });
   }
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.category_outlined, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
-          Text("Aucune catégorie trouvée",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey[600])),
-          const SizedBox(height: 8),
-          Text("Commencez par ajouter votre première catégorie",
-              style: TextStyle(fontSize: 14, color: Colors.grey[500])),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () => Get.to(() => AddCategoryScreen()),
-            icon: const Icon(Iconsax.add),
-            label: const Text("Ajouter une catégorie"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade600,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 
   Widget _buildCategoryList(BuildContext context, bool isSubcategory) {
     final categories = controller.getFilteredCategories(isSubcategory);
@@ -114,49 +87,6 @@ class CategoryManagementPage extends StatelessWidget {
         padding: const EdgeInsets.all(AppSizes.defaultSpace),
         itemCount: categories.length,
         itemBuilder: (_, i) => _buildCategoryCard(categories[i], context),
-      ),
-    );
-  }
-
-  Widget _buildEmptyTabState(bool isSubcategory, BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: controller.refreshCategories,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.7,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  isSubcategory
-                      ? Icons.subdirectory_arrow_right
-                      : Icons.category,
-                  size: 60,
-                  color: Colors.grey[300],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  isSubcategory
-                      ? "Aucune sous-catégorie"
-                      : "Aucune catégorie principale",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[600]),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  isSubcategory
-                      ? "Les sous-catégories apparaîtront ici"
-                      : "Les catégories principales apparaîtront ici",
-                  style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -418,134 +348,6 @@ class CategoryManagementPage extends StatelessWidget {
             ),
             child: const Text("Supprimer"),
           )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildElegantTabs(BuildContext context) {
-    final selectedIndex = controller.tabController.index.obs;
-    final dark = THelperFunctions.isDarkMode(context);
-
-    controller.tabController.addListener(() {
-      selectedIndex.value = controller.tabController.index;
-    });
-
-    final tabs = ["Catégories", "Sous-catégories"];
-
-    return Obx(() {
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: dark ? TColors.eerieBlack : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Row(
-          children: List.generate(tabs.length, (i) {
-            final isSelected = selectedIndex.value == i;
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => controller.tabController.animateTo(i),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 100),
-                  curve: Curves.easeInOut,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected ? Colors.blue.shade600 : Colors.transparent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Center(
-                    child: Text(
-                      tabs[i],
-                      style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.grey[700],
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      );
-    });
-  }
-
-  // --- Search + Filter Bar ---
-  Widget _buildSearchAndFilterBar(BuildContext context) {
-    final dark = THelperFunctions.isDarkMode(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.defaultSpace),
-      child: Row(
-        children: [
-          // Search Field
-          Expanded(
-            child: TextField(
-              onChanged: controller.updateSearch,
-              decoration: InputDecoration(
-                hintText: "Rechercher une catégorie...",
-                prefixIcon: const Icon(Iconsax.search_normal_1, size: 20),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                filled: true,
-                fillColor: dark ? TColors.eerieBlack : Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-
-          // Filter Button
-          Obx(() {
-            final isFeatured =
-                controller.selectedFilter.value == CategoryFilter.featured;
-            return GestureDetector(
-              onTap: () {
-                controller.updateFilter(
-                    isFeatured ? CategoryFilter.all : CategoryFilter.featured);
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                  color:
-                      isFeatured ? Colors.amber.shade100 : Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.star,
-                      color: isFeatured
-                          ? Colors.amber.shade800
-                          : Colors.grey.shade600,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      isFeatured ? "Vedettes" : "Toutes",
-                      style: TextStyle(
-                        color: isFeatured
-                            ? Colors.amber.shade800
-                            : Colors.grey.shade700,
-                        fontWeight:
-                            isFeatured ? FontWeight.bold : FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
         ],
       ),
     );
