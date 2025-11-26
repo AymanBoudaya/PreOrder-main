@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -13,6 +12,7 @@ import '../../../../data/repositories/product/produit_repository.dart';
 import '../../../shop/models/etablissement_model.dart';
 import '../../controllers/liste_etablissement_controller.dart';
 import '../../controllers/user_controller.dart';
+import 'widgets/image_preview.dart';
 
 class AddBannerScreen extends StatelessWidget {
   const AddBannerScreen({super.key});
@@ -220,8 +220,8 @@ class AddBannerScreen extends StatelessWidget {
             if (pickedImage != null) {
               return _buildLocalImagePreview(context, pickedImage);
             } else if (controller.imageUrl.value.isNotEmpty) {
-              return _buildNetworkImagePreview(
-                  context, controller.imageUrl.value);
+              return ImagePreview(
+                  imageUrl : controller.imageUrl.value);
             } else {
               return _buildImagePlaceholder(context, controller, isMobile);
             }
@@ -232,7 +232,7 @@ class AddBannerScreen extends StatelessWidget {
             icon: const Icon(Iconsax.image),
             label: Text(isMobile
                 ? 'Sélectionner une image (Mobile)'
-                : 'Sélectionner une image (PC)'),
+                : 'Sélectionner une image'),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
             ),
@@ -277,26 +277,7 @@ class AddBannerScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNetworkImagePreview(BuildContext context, String imageUrl) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        width: double.infinity,
-        height: 200,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        errorWidget: (context, url, error) => Container(
-          width: double.infinity,
-          height: 200,
-          color: Colors.grey[300],
-          child: const Icon(Icons.error, size: 40),
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildImagePlaceholder(
     BuildContext context,

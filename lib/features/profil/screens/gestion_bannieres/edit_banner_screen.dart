@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +13,9 @@ import '../../../shop/models/banner_model.dart';
 import '../../../shop/models/etablissement_model.dart';
 import '../../controllers/liste_etablissement_controller.dart';
 import '../../controllers/user_controller.dart';
+import 'widgets/image_placeholder.dart';
+import 'widgets/image_preview.dart';
+import 'widgets/local_image_preview.dart';
 
 class EditBannerScreen extends StatelessWidget {
   final BannerModel banner;
@@ -470,12 +472,12 @@ class EditBannerScreen extends StatelessWidget {
 
             // Sinon, affichage normal
             if (pickedImage != null) {
-              return _buildLocalImagePreview(context, pickedImage);
+              return LocalImagePreview(imageFile : pickedImage);
             } else if (controller.imageUrl.value.isNotEmpty) {
-              return _buildNetworkImagePreview(
-                  context, controller.imageUrl.value);
+              return ImagePreview(imageUrl: controller.imageUrl.value);
             } else {
-              return _buildImagePlaceholder(context, controller, isMobile);
+              return ImagePlaceholder(
+                  controller: controller, isMobile: isMobile);
             }
           }),
           const SizedBox(height: AppSizes.spaceBtwItems),
@@ -485,7 +487,7 @@ class EditBannerScreen extends StatelessWidget {
               icon: const Icon(Iconsax.image),
               label: Text(isMobile
                   ? 'Changer l\'image (Mobile)'
-                  : 'Changer l\'image (PC)'),
+                  : 'Changer l\'image'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
               ),
@@ -495,102 +497,7 @@ class EditBannerScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLocalImagePreview(BuildContext context, XFile imageFile) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-      child: FutureBuilder<Uint8List?>(
-        future: imageFile.readAsBytes(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Image.memory(
-              snapshot.data!,
-              width: double.infinity,
-              height: 200,
-              fit: BoxFit.cover,
-            );
-          } else if (snapshot.hasError) {
-            return Container(
-              width: double.infinity,
-              height: 200,
-              color: Colors.grey[300],
-              child: const Icon(Icons.error, size: 40),
-            );
-          } else {
-            return Container(
-              width: double.infinity,
-              height: 200,
-              color: Colors.grey[200],
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildNetworkImagePreview(BuildContext context, String imageUrl) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        width: double.infinity,
-        height: 200,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        errorWidget: (context, url, error) => Container(
-          width: double.infinity,
-          height: 200,
-          color: Colors.grey[300],
-          child: const Icon(Icons.error, size: 40),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImagePlaceholder(
-    BuildContext context,
-    BannerController controller,
-    bool isMobile,
-  ) {
-    final dark = THelperFunctions.isDarkMode(context);
-
-    return Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        color: dark ? TColors.dark : Colors.grey[200],
-        borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-        border: Border.all(
-          color: dark ? Colors.grey[700]! : Colors.grey[300]!,
-          width: 2,
-          style: BorderStyle.solid,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Iconsax.image,
-            size: 64,
-            color: dark ? Colors.grey[600] : Colors.grey[400],
-          ),
-          const SizedBox(height: AppSizes.spaceBtwItems),
-          Text(
-            isMobile
-                ? 'Taille recommandée: 1200x800px (Mobile)'
-                : 'Taille recommandée: 1920x1080px (PC)',
-            style: TextStyle(
-              color: dark ? Colors.grey[400] : Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  
 
   void _showStatusChangeDialog(
       BuildContext context, BannerModel banner, BannerController controller) {
