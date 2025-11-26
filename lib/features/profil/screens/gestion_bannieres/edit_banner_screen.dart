@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
@@ -10,11 +8,16 @@ import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/controllers/banner_controller.dart';
 import '../../../../data/repositories/product/produit_repository.dart';
 import '../../../shop/models/banner_model.dart';
-import '../../../shop/models/etablissement_model.dart';
 import '../../controllers/liste_etablissement_controller.dart';
 import '../../controllers/user_controller.dart';
+import 'edit_banner_widget/image_comparison.dart';
+import 'edit_banner_widget/name_field.dart';
+import 'edit_banner_widget/show_approve_dialog.dart';
+import 'edit_banner_widget/show_reject_dialog.dart';
+import 'edit_banner_widget/status_change_dialog.dart';
 import 'widgets/image_placeholder.dart';
 import 'widgets/image_preview.dart';
+import 'widgets/link_selector.dart';
 import 'widgets/local_image_preview.dart';
 
 class EditBannerScreen extends StatelessWidget {
@@ -96,7 +99,10 @@ class EditBannerScreen extends StatelessWidget {
               const SizedBox(height: AppSizes.spaceBtwSections),
 
               // Nom de la bannière
-              _buildNameField(context, controller, isAdminView, banner),
+              NameField(
+                  controller: controller,
+                  isAdminView: isAdminView,
+                  banner: banner),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
 
               // Type de lien
@@ -205,7 +211,7 @@ class EditBannerScreen extends StatelessWidget {
 
               // Sélection du lien selon le type
               if (controller.selectedLinkType.value.isNotEmpty)
-                _buildLinkSelector(context, controller, isAdminView, banner),
+                LinkSelector(controller: controller),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
 
               // État actuel - modifiable par l'admin
@@ -235,7 +241,7 @@ class EditBannerScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: isAdminView
                       ? () =>
-                          _showStatusChangeDialog(context, banner, controller)
+                          showStatusChangeDialog(context, banner, controller)
                       : null,
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -309,7 +315,7 @@ class EditBannerScreen extends StatelessWidget {
                         onPressed: controller.isLoading.value
                             ? null
                             : () =>
-                                _showApproveDialog(context, banner, controller),
+                                showApproveDialog(context, banner, controller),
                         icon: const Icon(Iconsax.tick_circle),
                         label: const Text('Approuver'),
                         style: ElevatedButton.styleFrom(
@@ -325,7 +331,7 @@ class EditBannerScreen extends StatelessWidget {
                         onPressed: controller.isLoading.value
                             ? null
                             : () =>
-                                _showRejectDialog(context, banner, controller),
+                                showRejectDialog(context, banner, controller),
                         icon: const Icon(Iconsax.close_circle),
                         label: const Text('Refuser'),
                         style: ElevatedButton.styleFrom(
@@ -362,78 +368,6 @@ class EditBannerScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNameField(
-    BuildContext context,
-    BannerController controller,
-    bool isAdminView,
-    BannerModel banner,
-  ) {
-    final hasPendingName =
-        banner.pendingChanges != null && banner.pendingChanges!['name'] != null;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFormField(
-          controller: controller.nameController,
-          readOnly: isAdminView,
-          decoration: InputDecoration(
-            labelText: 'Nom de la bannière',
-            prefixIcon: const Icon(Iconsax.text),
-            filled: isAdminView,
-          ),
-          validator: (value) {
-            if (!isAdminView && (value == null || value.isEmpty)) {
-              return 'Veuillez entrer un nom';
-            }
-            return null;
-          },
-        ),
-        // Afficher le nom modifié sous le TextField
-        if (hasPendingName) ...[
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blue.shade200),
-            ),
-            child: Row(
-              children: [
-                Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Nouveau nom:',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        banner.pendingChanges!['name'].toString(),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.blue.shade700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
   Widget _buildImageSection(
     BuildContext context,
     BannerController controller,
@@ -463,16 +397,17 @@ class EditBannerScreen extends StatelessWidget {
 
             // Si admin et modifications en attente, afficher les deux images
             if (isAdminView && hasPendingImage) {
-              return _buildImageComparison(
-                context,
+              return ImageComparison(
+                currentImageUrl:
                 controller.imageUrl.value,
+                pendingImageUrl:
                 banner.pendingChanges!['image_url'].toString(),
               );
             }
 
             // Sinon, affichage normal
             if (pickedImage != null) {
-              return LocalImagePreview(imageFile : pickedImage);
+              return LocalImagePreview(imageFile: pickedImage);
             } else if (controller.imageUrl.value.isNotEmpty) {
               return ImagePreview(imageUrl: controller.imageUrl.value);
             } else {
@@ -485,541 +420,12 @@ class EditBannerScreen extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () => controller.pickImage(isMobile: isMobile),
               icon: const Icon(Iconsax.image),
-              label: Text(isMobile
-                  ? 'Changer l\'image (Mobile)'
-                  : 'Changer l\'image'),
+              label: Text(
+                  isMobile ? 'Changer l\'image (Mobile)' : 'Changer l\'image'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
               ),
             ),
-        ],
-      ),
-    );
-  }
-
-  
-
-  void _showStatusChangeDialog(
-      BuildContext context, BannerModel banner, BannerController controller) {
-    final currentStatus = banner.status;
-
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Changer le statut"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Bannière: ${banner.name}"),
-            const SizedBox(height: 16),
-            const Text("Sélectionner le nouveau statut:"),
-            const SizedBox(height: 16),
-            _buildStatusOption('en_attente', 'En attente', Colors.orange,
-                Iconsax.clock, currentStatus, banner, controller),
-            const SizedBox(height: 8),
-            _buildStatusOption('publiee', 'Publiée', Colors.green,
-                Iconsax.tick_circle, currentStatus, banner, controller),
-            const SizedBox(height: 8),
-            _buildStatusOption('refusee', 'Refusée', Colors.red,
-                Iconsax.close_circle, currentStatus, banner, controller),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text("Annuler"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusOption(
-    String status,
-    String label,
-    MaterialColor color,
-    IconData icon,
-    String currentStatus,
-    BannerModel banner,
-    BannerController controller,
-  ) {
-    final isSelected = status == currentStatus;
-
-    return InkWell(
-      onTap: isSelected
-          ? null
-          : () {
-              Get.back();
-              controller.updateBannerStatus(banner.id, status);
-            },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isSelected ? color.shade100 : color.shade50,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? color.shade300 : color.shade200,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: color.shade700, size: 20),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  color: color.shade700,
-                ),
-              ),
-            ),
-            if (isSelected)
-              Icon(Iconsax.tick_circle, color: color.shade700, size: 20),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Widget pour afficher la comparaison des images (ancienne vs nouvelle)
-  Widget _buildImageComparison(
-    BuildContext context,
-    String currentImageUrl,
-    String pendingImageUrl,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Image actuelle
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Image actuelle',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
-              ),
-            ),
-            const SizedBox(height: 8),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-              child: CachedNetworkImage(
-                imageUrl: currentImageUrl,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  width: double.infinity,
-                  height: 200,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.error, size: 40),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        // Nouvelle image
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Iconsax.arrow_down_2,
-                    size: 16, color: Colors.blue.shade700),
-                const SizedBox(width: 4),
-                Text(
-                  'Nouvelle image',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blue.shade700,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-                border: Border.all(color: Colors.blue.shade300, width: 2),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-                child: CachedNetworkImage(
-                  imageUrl: pendingImageUrl,
-                  width: double.infinity,
-                  height: 200,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    width: double.infinity,
-                    height: 200,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.error, size: 40),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLinkSelector(
-    BuildContext context,
-    BannerController controller,
-    bool isAdminView,
-    BannerModel banner,
-  ) {
-    return Obx(() {
-      // Déterminer le type de lien à afficher : priorité au type dans pendingChanges si présent
-      final pendingLinkType = banner.pendingChanges != null
-          ? banner.pendingChanges!['link_type']?.toString()
-          : null;
-      final linkType = pendingLinkType ?? controller.selectedLinkType.value;
-
-      if (linkType.isEmpty) return const SizedBox.shrink();
-
-      if (linkType == 'product') {
-        final products = controller.products;
-        if (products.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Aucun produit disponible',
-                style: TextStyle(color: Colors.grey)),
-          );
-        }
-
-        final selectedValue = controller.selectedLinkId.value;
-        final isValidValue = selectedValue.isNotEmpty &&
-            products.any((p) => p.id == selectedValue);
-
-        // Vérifier si une modification est en attente pour un produit
-        // Soit le type de lien a changé vers 'product', soit le produit a changé (même type)
-        final hasPendingLink = banner.pendingChanges != null &&
-            (banner.pendingChanges!['link_type'] == 'product' ||
-                (banner.pendingChanges!['link'] != null &&
-                    linkType == 'product'));
-        final pendingLinkId =
-            hasPendingLink && banner.pendingChanges!['link'] != null
-                ? banner.pendingChanges!['link']?.toString()
-                : null;
-        final pendingProduct = pendingLinkId != null && pendingLinkId.isNotEmpty
-            ? products.firstWhereOrNull((p) => p.id == pendingLinkId)
-            : null;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DropdownButtonFormField<String>(
-              value: isValidValue ? selectedValue : null,
-              decoration: InputDecoration(
-                labelText: 'Sélectionner un produit',
-                prefixIcon: const Icon(Iconsax.shop),
-                filled: isAdminView,
-              ),
-              items: products.map((product) {
-                return DropdownMenuItem(
-                  value: product.id,
-                  child: Text(product.name),
-                );
-              }).toList(),
-              onChanged: isAdminView
-                  ? null
-                  : (value) {
-                      controller.selectedLinkId.value = value ?? '';
-                    },
-            ),
-            // Afficher le nouveau produit sélectionné sous le dropdown
-            if (hasPendingLink && pendingProduct != null) ...[
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue.shade200),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Nouveau produit sélectionné:',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            pendingProduct.name,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.blue.shade700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ],
-        );
-      } else if (linkType == 'establishment') {
-        final userController = Get.find<UserController>();
-        final isGerant = userController.userRole == 'Gérant';
-
-        final establishments =
-            controller.establishments.where((e) => e.id != null).toList();
-        if (establishments.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Aucun établissement disponible',
-                style: TextStyle(color: Colors.grey)),
-          );
-        }
-
-        // Pour le gérant, récupérer son établissement par défaut
-        Etablissement? gerantEtablissement;
-        if (isGerant && establishments.isNotEmpty) {
-          gerantEtablissement = establishments.first;
-          // Définir automatiquement l'établissement du gérant si pas encore défini
-          if (controller.selectedLinkId.value.isEmpty && !isAdminView) {
-            controller.selectedLinkId.value = gerantEtablissement.id ?? '';
-          }
-        }
-
-        final selectedValue = controller.selectedLinkId.value;
-        final isValidValue = selectedValue.isNotEmpty &&
-            establishments.any((e) => e.id == selectedValue);
-
-        // Vérifier si une modification est en attente pour un établissement
-        // Soit le type de lien a changé vers 'establishment', soit l'établissement a changé (même type)
-        final hasPendingLink = banner.pendingChanges != null &&
-            (banner.pendingChanges!['link_type'] == 'establishment' ||
-                (banner.pendingChanges!['link'] != null &&
-                    linkType == 'establishment'));
-        final pendingLinkId =
-            hasPendingLink && banner.pendingChanges!['link'] != null
-                ? banner.pendingChanges!['link']?.toString()
-                : null;
-        final pendingEstablishment =
-            pendingLinkId != null && pendingLinkId.isNotEmpty
-                ? establishments.firstWhereOrNull((e) => e.id == pendingLinkId)
-                : null;
-
-        // Déterminer l'établissement actuel à afficher
-        final currentEstablishment = isValidValue
-            ? establishments.firstWhere((e) => e.id == selectedValue)
-            : gerantEtablissement;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Ne pas afficher le dropdown pour le gérant, afficher directement l'établissement
-            if (isGerant && !isAdminView) ...[
-              if (currentEstablishment != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Iconsax.home, color: Colors.grey.shade700),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Établissement',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              currentEstablishment.name,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey[900],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ] else ...[
-              // Pour l'admin, afficher le dropdown
-              DropdownButtonFormField<String>(
-                value: isValidValue ? selectedValue : null,
-                decoration: InputDecoration(
-                  labelText: 'Sélectionner un établissement',
-                  prefixIcon: const Icon(Iconsax.home),
-                  filled: isAdminView,
-                ),
-                items: establishments.map((establishment) {
-                  return DropdownMenuItem(
-                    value: establishment.id!,
-                    child: Text(establishment.name),
-                  );
-                }).toList(),
-                onChanged: isAdminView
-                    ? null
-                    : (value) {
-                        controller.selectedLinkId.value = value ?? '';
-                      },
-              ),
-            ],
-            // Afficher le nouvel établissement sélectionné sous le dropdown/champ
-            if (hasPendingLink && pendingEstablishment != null) ...[
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue.shade200),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Iconsax.edit, size: 16, color: Colors.blue.shade700),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Nouvel établissement sélectionné:',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            pendingEstablishment.name,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.blue.shade700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ],
-        );
-      }
-
-      return const SizedBox.shrink();
-    });
-  }
-
-  void _showApproveDialog(
-    BuildContext context,
-    BannerModel banner,
-    BannerController controller,
-  ) {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Iconsax.tick_circle, color: Colors.green.shade600),
-            const SizedBox(width: 8),
-            const Text("Approuver les modifications"),
-          ],
-        ),
-        content: Text(
-            "Approuver les modifications pour la bannière \"${banner.name}\" ?"),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text("Annuler"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Get.back();
-              Get.back();
-              await controller.approvePendingChanges(banner.id);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green.shade600,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text("Approuver"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showRejectDialog(
-    BuildContext context,
-    BannerModel banner,
-    BannerController controller,
-  ) {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Iconsax.close_circle, color: Colors.red.shade600),
-            const SizedBox(width: 8),
-            const Text("Refuser les modifications"),
-          ],
-        ),
-        content: Text(
-            "Refuser les modifications pour la bannière \"${banner.name}\" ?"),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text("Annuler"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Get.back();
-              Get.back();
-              await controller.rejectPendingChanges(banner.id);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade600,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text("Refuser"),
-          ),
         ],
       ),
     );
