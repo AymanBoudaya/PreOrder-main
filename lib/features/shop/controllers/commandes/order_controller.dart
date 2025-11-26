@@ -1002,12 +1002,12 @@ class OrderController extends GetxController {
         // Récupérer le produit pour vérifier s'il est stockable
         final productResponse = await _db
             .from('produits')
-            .select('est_stockable, quantite_stock, name')
+            .select('est_stockable, quantite_stock, nom')
             .eq('id', item.productId)
             .single();
 
         final isStockable = productResponse['est_stockable'] as bool? ?? false;
-        productName = productResponse['name'] as String? ?? 'Produit inconnu';
+        productName = productResponse['nom'] as String? ?? 'Produit inconnu';
 
         if (!isStockable) {
           continue; // Produit non stockable, passer au suivant
