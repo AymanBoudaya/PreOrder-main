@@ -4,9 +4,10 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
-import '../../../viewmodels/banner_management_viewmodel.dart';
+import '../../../controllers/banner_management_controller.dart';
+
 class BuildSearchBar extends StatelessWidget {
-  final BannerManagementViewModel viewModel;
+  final BannerManagementController viewModel;
 
   const BuildSearchBar({super.key, required this.viewModel});
   @override

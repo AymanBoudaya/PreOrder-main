@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../shop/controllers/banner_controller.dart';
-import '../controllers/user_controller.dart';
+import 'user_controller.dart';
 import '../../shop/models/banner_model.dart';
 
-class BannerManagementViewModel extends GetxController with GetSingleTickerProviderStateMixin {
+class BannerManagementController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final BannerController bannerController = Get.find<BannerController>();
   final UserController userController = Get.find<UserController>();
 
@@ -44,10 +45,12 @@ class BannerManagementViewModel extends GetxController with GetSingleTickerProvi
 
   // Getters pour les données
   bool get isLoading => bannerController.isLoading.value;
-  List<BannerModel> get filteredBanners => bannerController.getFilteredBannersByTab();
-  
+  List<BannerModel> get filteredBanners =>
+      bannerController.getFilteredBannersByTab();
+
   // Getters pour les compteurs par statut
-  int get enAttenteCount => bannerController.getBannersByStatus('en_attente').length;
+  int get enAttenteCount =>
+      bannerController.getBannersByStatus('en_attente').length;
   int get publieeCount => bannerController.getBannersByStatus('publiee').length;
   int get refuseeCount => bannerController.getBannersByStatus('refusee').length;
 
@@ -119,4 +122,3 @@ class BannerManagementViewModel extends GetxController with GetSingleTickerProvi
     }
   }
 }
-

@@ -24,46 +24,12 @@ class EditBannerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bannerController = Get.find<BannerController>();
-    final produitRepository = Get.find<ProduitRepository>();
-    final etablissementController = Get.find<ListeEtablissementController>();
-    final userController = Get.find<UserController>();
 
     // Charger les données pour les dropdowns
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        final products = await produitRepository.getAllProducts();
-        bannerController.products.assignAll(products);
-      } catch (e) {
-        debugPrint('Erreur chargement produits: $e');
-      }
-      try {
-        // Si gérant, charger uniquement son établissement
-        if (userController.userRole == 'Gérant') {
-          final gerantEtablissement = await etablissementController
-              .getEtablissementUtilisateurConnecte();
-          if (gerantEtablissement != null) {
-            bannerController.establishments.assignAll([gerantEtablissement]);
-            // Si le type de lien est "establishment" et qu'aucun lien n'est sélectionné, utiliser l'établissement du gérant
-            if (banner.linkType == 'establishment' &&
-                (banner.link == null || banner.link!.isEmpty)) {
-              bannerController.selectedLinkId.value =
-                  gerantEtablissement.id ?? '';
-            }
-          }
-        } else {
-          // Pour admin, charger tous les établissements
-          final establishments =
-              await etablissementController.getTousEtablissements();
-          bannerController.establishments.assignAll(establishments);
-        }
-      } catch (e) {
-        debugPrint('Erreur chargement établissements: $e');
-      }
-    });
+      bannerController.loadInitialData(isAdminView, banner);
 
-    // Charger la bannière pour édition
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      bannerController.loadBannerForEditing(banner);
+      
     });
 
     return Scaffold(

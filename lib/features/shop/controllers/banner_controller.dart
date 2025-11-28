@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/repositories/banner/banner_repository.dart';
+import '../../../data/repositories/product/produit_repository.dart';
 import '../../../utils/popups/loaders.dart';
+import '../../profil/controllers/liste_etablissement_controller.dart';
 import '../models/banner_model.dart';
 import '../models/etablissement_model.dart';
 import '../models/produit_model.dart';
@@ -13,7 +15,10 @@ import '../../profil/controllers/user_controller.dart';
 class BannerController extends GetxController {
   // Repository
   final _bannerRepository = Get.find<BannerRepository>();
+  final produitRepository = Get.find<ProduitRepository>();
+
   final _userController = Get.find<UserController>();
+  final etablissementController = Get.find<ListeEtablissementController>();
   final _db = Supabase.instance.client;
 
   // Realtime channel
@@ -58,6 +63,46 @@ class BannerController extends GetxController {
     _unsubscribeFromRealtimeBanners();
     _expirationCheckTimer?.cancel();
     super.onClose();
+  }
+
+  Future<void> loadInitialData(bool isAdminView, BannerModel banner) async {
+    await loadProducts();
+    await loadEstablishments(isAdminView, banner);
+    loadBannerForEditing(banner);
+  }
+
+  Future<void> loadProducts() async {
+    try {
+      final products = await produitRepository.getAllProducts();
+      products.assignAll(products);
+    } catch (e) {
+      debugPrint('Erreur chargement produits: $e');
+    }
+  }
+
+  Future<void> loadEstablishments(bool isAdminView, BannerModel banner) async {
+    try {
+      // Si gérant, charger uniquement son établissement
+      if (_userController.userRole == 'Gérant') {
+        final gerantEtablissement =
+            await etablissementController.getEtablissementUtilisateurConnecte();
+        if (gerantEtablissement != null) {
+          establishments.assignAll([gerantEtablissement]);
+          // Si le type de lien est "establishment" et qu'aucun lien n'est sélectionné, utiliser l'établissement du gérant
+          if (banner.linkType == 'establishment' &&
+              (banner.link == null || banner.link!.isEmpty)) {
+            selectedLinkId.value = gerantEtablissement.id ?? '';
+          }
+        }
+      } else {
+        // Pour admin, charger tous les établissements
+        final establishments =
+            await etablissementController.getTousEtablissements();
+        establishments.assignAll(establishments);
+      }
+    } catch (e) {
+      debugPrint('Erreur chargement établissements: $e');
+    }
   }
 
   /// Fetch all banners

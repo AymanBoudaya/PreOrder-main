@@ -10,7 +10,7 @@ import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../shop/controllers/banner_controller.dart';
 import '../../../../common/widgets/loading/loading_screen.dart';
-import '../../viewmodels/banner_management_viewmodel.dart';
+import '../../controllers/banner_management_controller.dart';
 import 'add_banner_screen.dart';
 import 'edit_banner_screen.dart';
 import 'widgets/build_empty_state.dart';
@@ -22,7 +22,7 @@ class BannerManagementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Initialiser les controllers
     Get.put(BannerController());
-    final viewModel = Get.put(BannerManagementViewModel());
+    final viewModel = Get.put(BannerManagementController());
 
     return Scaffold(
       appBar: TAppBar(
@@ -40,7 +40,8 @@ class BannerManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, BannerManagementViewModel viewModel) {
+  Widget _buildBody(
+      BuildContext context, BannerManagementController viewModel) {
     return Obx(() {
       if (viewModel.isLoading) {
         return LoadingScreen(
@@ -59,7 +60,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   Widget _buildBannerList(BuildContext context, List<BannerModel> banners,
-      BannerManagementViewModel viewModel) {
+      BannerManagementController viewModel) {
     return RefreshIndicator(
       onRefresh: viewModel.refreshBanners,
       child: ListView.builder(
@@ -71,7 +72,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   Widget _buildBannerCard(BannerModel banner, BuildContext context,
-      BannerManagementViewModel viewModel) {
+      BannerManagementController viewModel) {
     final dark = THelperFunctions.isDarkMode(context);
 
     return Container(
@@ -137,7 +138,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   Widget _buildStatusChip(
-      BannerModel banner, BannerManagementViewModel viewModel) {
+      BannerModel banner, BannerManagementController viewModel) {
     final statusColor = viewModel.getStatusColor(banner.status);
     final statusLabel = viewModel.getStatusLabel(banner.status);
 
@@ -200,7 +201,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   void _showStatusChangeDialog(
-      BannerModel banner, BannerManagementViewModel viewModel) {
+      BannerModel banner, BannerManagementController viewModel) {
     final currentStatus = banner.status;
 
     Get.dialog(
@@ -241,7 +242,7 @@ class BannerManagementScreen extends StatelessWidget {
     IconData icon,
     String currentStatus,
     BannerModel banner,
-    BannerManagementViewModel viewModel,
+    BannerManagementController viewModel,
   ) {
     final isSelected = status == currentStatus;
 
@@ -344,7 +345,7 @@ class BannerManagementScreen extends StatelessWidget {
       );
 
   void _showBannerOptions(BuildContext context, BannerModel banner,
-      BannerManagementViewModel viewModel) {
+      BannerManagementController viewModel) {
     if (!viewModel.isGerant) return;
 
     Get.bottomSheet(
@@ -355,7 +356,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   Widget _buildBottomSheetContent(BuildContext context, BannerModel banner,
-      BannerManagementViewModel viewModel) {
+      BannerManagementController viewModel) {
     final dark = THelperFunctions.isDarkMode(context);
 
     return Container(
@@ -398,7 +399,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   Widget _buildBottomSheetHeader(
-      BannerModel banner, BannerManagementViewModel viewModel) {
+      BannerModel banner, BannerManagementController viewModel) {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -429,7 +430,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   Widget _buildActionButtons(BuildContext context, BannerModel banner,
-      BannerManagementViewModel viewModel) {
+      BannerManagementController viewModel) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -475,7 +476,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context, BannerModel banner,
-      BannerManagementViewModel viewModel) {
+      BannerManagementController viewModel) {
     Get.back();
     Get.dialog(
       AlertDialog(
@@ -528,7 +529,7 @@ class BannerManagementScreen extends StatelessWidget {
 
   /// Widget pour afficher l'indicateur de modifications en attente
   Widget _buildPendingChangesIndicator(
-      BannerModel banner, BannerManagementViewModel viewModel) {
+      BannerModel banner, BannerManagementController viewModel) {
     return InkWell(
       onTap: () {
         viewModel.loadBannerForEditing(banner);
@@ -564,7 +565,7 @@ class BannerManagementScreen extends StatelessWidget {
 
   /// Widget pour les boutons d'action sur les modifications en attente (Admin)
   Widget _buildPendingChangesActions(
-      BannerModel banner, BannerManagementViewModel viewModel) {
+      BannerModel banner, BannerManagementController viewModel) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -592,7 +593,7 @@ class BannerManagementScreen extends StatelessWidget {
 
   /// Dialog pour confirmer l'approbation des modifications
   void _showApprovePendingChangesDialog(
-      BannerModel banner, BannerManagementViewModel viewModel) {
+      BannerModel banner, BannerManagementController viewModel) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -639,7 +640,7 @@ class BannerManagementScreen extends StatelessWidget {
 
   /// Dialog pour confirmer le refus des modifications
   void _showRejectPendingChangesDialog(
-      BannerModel banner, BannerManagementViewModel viewModel) {
+      BannerModel banner, BannerManagementController viewModel) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

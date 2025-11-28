@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../../utils/constants/colors.dart';
-import '../../../viewmodels/banner_management_viewmodel.dart';
+import '../../../controllers/banner_management_controller.dart';
 import 'adaptive_tab_label.dart';
 
 class BuildTabs extends StatelessWidget {
-  final BannerManagementViewModel viewModel;
+  final BannerManagementController viewModel;
   const BuildTabs({super.key, required this.viewModel});
 
   @override

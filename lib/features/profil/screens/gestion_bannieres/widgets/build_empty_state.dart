@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../viewmodels/banner_management_viewmodel.dart';
+import '../../../controllers/banner_management_controller.dart';
+
 class BuildEmptyState extends StatelessWidget {
   const BuildEmptyState({super.key, required this.viewModel});
 
-  final BannerManagementViewModel viewModel;
+  final BannerManagementController viewModel;
 
   @override
   Widget build(BuildContext context) {
