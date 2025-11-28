@@ -18,9 +18,7 @@ class BuildActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isAdminView &&
-        banner.status == 'publiee' &&
-        banner.pendingChanges != null) {
+    if (controller.canApprove(banner)) {
       // Boutons pour approuver/refuser les modifications (Admin)
       return Row(
         children: [
@@ -55,7 +53,7 @@ class BuildActionButtons extends StatelessWidget {
           ),
         ],
       );
-    } else if (!isAdminView) {
+    } else if (controller.isGerant) {
       // Bouton Modifier (seulement pour Gérant)
       return SizedBox(
         width: double.infinity,

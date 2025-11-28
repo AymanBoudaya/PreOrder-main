@@ -65,6 +65,16 @@ class BannerController extends GetxController {
     super.onClose();
   }
 
+  bool canApprove(BannerModel banner) {
+    return isAdmin &&
+        banner.status == 'publiee' &&
+        banner.pendingChanges != null;
+  }
+
+  bool canEdit(BannerModel banner) {
+    return isGerant;
+  }
+
   Future<void> loadInitialData(bool isAdminView, BannerModel banner) async {
     await loadProducts();
     await loadEstablishments(isAdminView, banner);
