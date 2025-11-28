@@ -113,7 +113,7 @@ class HomeScreen extends StatelessWidget {
 
                   /// Popular products avec GridLayout responsive
                   Obx(() {
-                    if (controller.isLoading.value) {
+                    if (controller.isLoading) {
                       return const TVerticalProductShimmer();
                     }
                     if (controller.featuredProducts.isEmpty) {

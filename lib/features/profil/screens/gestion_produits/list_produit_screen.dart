@@ -126,7 +126,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
 
   Widget _buildBody() {
     return Obx(() {
-      if (controller.isLoading.value && controller.allProducts.isEmpty) {
+      if (controller.isLoading && controller.allProducts.isEmpty) {
         return _buildLoadingState();
       }
 

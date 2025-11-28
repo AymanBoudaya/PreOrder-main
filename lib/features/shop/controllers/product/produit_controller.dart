@@ -12,7 +12,6 @@ import '../../../../utils/constants/enums.dart';
 import '../../../../utils/popups/loaders.dart';
 
 class ProduitController extends GetxController {
-
   final isStockable = false.obs;
   final ImagePicker _picker = ImagePicker();
   final pickedImage = Rx<XFile?>(null);
@@ -25,13 +24,13 @@ class ProduitController extends GetxController {
   RealtimeChannel? _featuredProductsChannel;
 
   // --- ÉTATS ET LISTES ---
-  final isLoading = false.obs;
+  final _isLoading = false.obs;
   RxList<ProduitModel> allProducts = <ProduitModel>[].obs;
   RxList<ProduitModel> filteredProducts = <ProduitModel>[].obs;
   final Rx<ProduitFilter> selectedFilter = ProduitFilter.all.obs;
   final RxString searchQuery = ''.obs;
   RxList<ProduitModel> featuredProducts = <ProduitModel>[].obs;
-
+  bool get isLoading => _isLoading.value;
   @override
   void onInit() {
     super.onInit();
@@ -116,7 +115,7 @@ class ProduitController extends GetxController {
 // --- CHARGEMENT DES PRODUITS PAR RÔLE ---
   Future<void> loadProductsByRole() async {
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
 
       final userRole = userController.user.value.role;
 
@@ -149,14 +148,14 @@ class ProduitController extends GetxController {
       allProducts.clear();
       filteredProducts.clear();
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
   // --- CHARGEMENT DES PRODUITS ---
   Future<void> fetchProducts() async {
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       final productsList = await produitRepository.getAllProducts();
 
       // Optimisation: Charger tous les établissements manquants en batch
@@ -168,7 +167,7 @@ class ProduitController extends GetxController {
       TLoaders.errorSnackBar(
           message: 'Erreur lors du chargement des produits: $e');
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -187,7 +186,7 @@ class ProduitController extends GetxController {
               .select('*')
               .eq('id', etablissementId)
               .maybeSingle();
-          
+
           if (etabResponse != null) {
             etablissement = Etablissement.fromJson(etabResponse);
           }
@@ -260,7 +259,7 @@ class ProduitController extends GetxController {
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       final newProduct = await produitRepository.addProduct(produit);
       featuredProducts.add(newProduct);
       fetchFeaturedProducts();
@@ -273,7 +272,7 @@ class ProduitController extends GetxController {
       TLoaders.errorSnackBar(message: "Erreur lors de l'ajout: $e");
       return false;
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -291,7 +290,7 @@ class ProduitController extends GetxController {
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
 
       // Si l'utilisateur est Admin, préserver l'établissement original du produit
       final userRole = userController.user.value.role;
@@ -317,7 +316,7 @@ class ProduitController extends GetxController {
       TLoaders.errorSnackBar(message: "Erreur lors de la modification: $e");
       return false;
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -325,7 +324,7 @@ class ProduitController extends GetxController {
   void fetchFeaturedProducts() async {
     try {
       // Show loader while loading products
-      isLoading.value = true;
+      _isLoading.value = true;
 
       // Fetch most ordered products instead of featured products (top 10 des 30 derniers jours)
       final products =
@@ -336,7 +335,7 @@ class ProduitController extends GetxController {
 
       if (products.isEmpty) {
         featuredProducts.clear();
-        isLoading.value = false;
+        _isLoading.value = false;
         return;
       }
 
@@ -367,7 +366,7 @@ class ProduitController extends GetxController {
       featuredProducts.clear();
     } finally {
       // Hide loader after loading products
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -379,14 +378,14 @@ class ProduitController extends GetxController {
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       await produitRepository.deleteProduct(productId);
       await loadProductsByRole();
       TLoaders.successSnackBar(message: 'Produit supprimé avec succès');
     } catch (e) {
       TLoaders.errorSnackBar(message: "Erreur lors de la suppression: $e");
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -400,7 +399,7 @@ class ProduitController extends GetxController {
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       await produitRepository.setProductStock(productId, newStock);
       await loadProductsByRole(); // Recharger les produits pour mettre à jour l'affichage
       TLoaders.successSnackBar(message: 'Stock mis à jour avec succès');
@@ -410,7 +409,7 @@ class ProduitController extends GetxController {
           message: "Erreur lors de la mise à jour du stock: $e");
       return false;
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -451,10 +450,8 @@ class ProduitController extends GetxController {
     }
 
     // Récupérer tous les IDs d'établissements uniques
-    final etablissementIds = produitsNeedingEtab
-        .map((p) => p.etablissementId)
-        .toSet()
-        .toList();
+    final etablissementIds =
+        produitsNeedingEtab.map((p) => p.etablissementId).toSet().toList();
 
     if (etablissementIds.isEmpty) {
       return produits;
