@@ -46,9 +46,11 @@ class LinkSelector extends StatelessWidget {
               child: Text(product.name),
             );
           }).toList(),
-          onChanged: (value) {
-            controller.selectedLinkId.value = value ?? '';
-          },
+          onChanged: isAdminView
+              ? null
+              : (value) {
+                  controller.selectedLinkId.value = value ?? '';
+                },
           validator: (value) {
             if (linkType.isNotEmpty && (value == null || value.isEmpty)) {
               return 'Veuillez sélectionner un produit';
@@ -130,7 +132,7 @@ class LinkSelector extends StatelessWidget {
           );
         }
 
-        // Pour l'admin, afficher le dropdown
+        // Pour l'admin, ne pas permettre la sélection
         return DropdownButtonFormField<String>(
           initialValue: isValidValue ? selectedValue : null,
           decoration: const InputDecoration(
@@ -143,9 +145,11 @@ class LinkSelector extends StatelessWidget {
               child: Text(establishment.name),
             );
           }).toList(),
-          onChanged: (value) {
-            controller.selectedLinkId.value = value ?? '';
-          },
+          onChanged: isAdminView
+              ? null
+              : (value) {
+                  controller.selectedLinkId.value = value ?? '';
+                },
           validator: (value) {
             if (linkType.isNotEmpty && (value == null || value.isEmpty)) {
               return 'Veuillez sélectionner un établissement';

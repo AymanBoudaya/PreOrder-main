@@ -77,11 +77,12 @@ class EditBannerScreen extends StatelessWidget {
         title: Text(
             isAdminView ? "Détails de la bannière" : "Modifier la bannière"),
       ),
-      body: Obx(() => _buildBody(context, bannerController)),
+      body: Obx(() => _buildBody(context, bannerController, isAdminView)),
     );
   }
 
-  Widget _buildBody(BuildContext context, BannerController controller) {
+  Widget _buildBody(
+      BuildContext context, BannerController controller, bool isAdminView) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 768;
     final dark = THelperFunctions.isDarkMode(context);
