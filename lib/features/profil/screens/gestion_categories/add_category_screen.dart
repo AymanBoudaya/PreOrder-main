@@ -65,7 +65,7 @@ class AddCategoryScreen extends StatelessWidget {
 
               // Bouton Ajouter
               Obx(() => CategorySubmitButton(
-                    isLoading: _categoryController.isLoading.value,
+                    isLoading: _categoryController.isLoading,
                     onPressed: () async {
                       await _categoryController.addCategory();
                     },

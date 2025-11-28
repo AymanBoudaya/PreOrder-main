@@ -16,7 +16,7 @@ class THomeCategories extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoryController = Get.put(CategoryController());
     return Obx(() {
-      if (categoryController.isLoading.value) {
+      if (categoryController.isLoading) {
         return const TCategoryShimmer();
       }
       if (categoryController.allCategories.isEmpty) {

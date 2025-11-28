@@ -114,13 +114,13 @@ class _CategoryFilterBar extends StatelessWidget {
 
     // Ensure categories are loaded
     if (categoryController.allCategories.isEmpty &&
-        !categoryController.isLoading.value) {
+        !categoryController.isLoading) {
       categoryController.fetchCategories();
     }
 
     return Obx(() {
       // Wait for categories to be loaded if they're still loading
-      if (categoryController.isLoading.value &&
+      if (categoryController.isLoading &&
           categoryController.allCategories.isEmpty) {
         return const SizedBox.shrink();
       }

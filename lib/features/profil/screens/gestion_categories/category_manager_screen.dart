@@ -46,7 +46,7 @@ class CategoryManagementPage extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     return Obx(() {
-      if (controller.isLoading.value) {
+      if (controller.isLoading) {
         return LoadingScreen(
           screenName: 'Catégories',
         );

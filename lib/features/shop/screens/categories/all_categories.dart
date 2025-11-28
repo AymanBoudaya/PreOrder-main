@@ -71,7 +71,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
               /// Grid de toutes les catégories
               Obx(() {
                 // Afficher le shimmer pendant le chargement
-                if (categoryController.isLoading.value) {
+                if (categoryController.isLoading) {
                   return const StoreShimmer();
                 }
 

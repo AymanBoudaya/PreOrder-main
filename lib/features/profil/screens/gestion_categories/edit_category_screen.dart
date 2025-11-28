@@ -68,7 +68,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen>
   }
 
   Widget _buildBody() {
-    if (categoryController.isLoading.value) {
+    if (categoryController.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -126,7 +126,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen>
 
               // Bouton Sauvegarder
               Obx(() => CategorySubmitButton(
-                    isLoading: categoryController.isLoading.value,
+                    isLoading: categoryController.isLoading,
                     onPressed: _saveCategory,
                     text: "Enregistrer les modifications",
                     icon: Icons.check_circle_outline,

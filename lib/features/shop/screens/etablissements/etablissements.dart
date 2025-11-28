@@ -34,7 +34,7 @@ class StoreScreen extends StatelessWidget {
         ],
       ),
       body: Obx(() {
-        if (etablissementController.isLoading.value &&
+        if (etablissementController.isLoading &&
             etablissementController.etablissements.isEmpty) {
           return const StoreShimmer();
         }

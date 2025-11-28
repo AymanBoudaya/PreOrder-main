@@ -16,7 +16,6 @@ import '../models/produit_model.dart';
 
 class CategoryController extends GetxController
     with GetTickerProviderStateMixin {
-
   final ProduitRepository produitRepository = Get.find<ProduitRepository>();
 
   final formKey = GlobalKey<FormState>();
@@ -34,7 +33,7 @@ class CategoryController extends GetxController
 
   final UserController userController = Get.find<UserController>();
 
-  final isLoading = true.obs;
+  final _isLoading = true.obs;
   final _categoryRepository = Get.put(CategoryRepository());
   RxList<CategoryModel> allCategories = <CategoryModel>[].obs;
   RxList<CategoryModel> featuredCategories = <CategoryModel>[].obs;
@@ -42,6 +41,8 @@ class CategoryController extends GetxController
   late TabController tabController;
   final RxString searchQuery = ''.obs;
   final Rx<CategoryFilter> selectedFilter = CategoryFilter.all.obs;
+
+  bool get isLoading => _isLoading.value;
 
   @override
   void onReady() {
@@ -53,7 +54,7 @@ class CategoryController extends GetxController
 
   Future<void> _initializeData() async {
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       await Future.delayed(Duration.zero);
       await fetchCategories();
     } catch (e) {
@@ -133,19 +134,19 @@ class CategoryController extends GetxController
 
   Future<void> fetchCategories() async {
     try {
-      if (!isLoading.value) isLoading.value = true;
+      if (!_isLoading.value) _isLoading.value = true;
       final categories = await _categoryRepository.getAllCategories();
       allCategories.assignAll(categories);
       featuredCategories.assignAll(
         categories.where((cat) => cat.isFeatured).take(8).toList(),
       );
-      
+
       // Charger les top catégories par ventes en arrière-plan
       _loadTopCategoriesBySales();
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Erreur!', message: e.toString());
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -164,7 +165,7 @@ class CategoryController extends GetxController
   }
 
   Future<void> refreshCategories() async {
-    isLoading.value = true;
+    _isLoading.value = true;
     await fetchCategories();
     // Recharger aussi les top catégories par ventes
     await _loadTopCategoriesBySales();
@@ -184,8 +185,8 @@ class CategoryController extends GetxController
     int limit = 4,
   }) async {
     try {
-      return await produitRepository
-          .getProductsForCategory(categoryId: categoryId, limit: limit);
+      return await produitRepository.getProductsForCategory(
+          categoryId: categoryId, limit: limit);
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Erreur', message: e.toString());
       return [];
@@ -204,7 +205,7 @@ class CategoryController extends GetxController
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       String imageUrl = TImages.pasdimage;
 
       // Upload image Web/Mobile
@@ -226,7 +227,8 @@ class CategoryController extends GetxController
       try {
         categoryName = nameController.text.trim();
       } catch (e) {
-        TLoaders.errorSnackBar(message: "Erreur lors de la lecture du nom de la catégorie");
+        TLoaders.errorSnackBar(
+            message: "Erreur lors de la lecture du nom de la catégorie");
         return;
       }
 
@@ -249,7 +251,7 @@ class CategoryController extends GetxController
     } catch (e) {
       TLoaders.errorSnackBar(message: e.toString());
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -264,7 +266,7 @@ class CategoryController extends GetxController
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       String imageUrl = originalCategory.image;
 
       // Upload image Web/Mobile
@@ -310,7 +312,7 @@ class CategoryController extends GetxController
       TLoaders.errorSnackBar(message: e.toString());
       return false;
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -324,14 +326,14 @@ class CategoryController extends GetxController
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       await _categoryRepository.deleteCategory(categoryId);
       await fetchCategories();
       TLoaders.successSnackBar(message: "Catégorie supprimée avec succès");
     } catch (e) {
       TLoaders.errorSnackBar(message: e.toString());
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
