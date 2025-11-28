@@ -22,7 +22,7 @@ class DashboardController extends GetxController {
     }
   }
 
-  final isLoading = false.obs;
+  final _isLoading = false.obs;
   final stats = Rxn<DashboardStats>();
   final selectedPeriod = '30'.obs; // 7, 30, 90 jours
   final useCustomDateRange =
@@ -32,6 +32,8 @@ class DashboardController extends GetxController {
   final selectedEtablissementId = Rxn<String>(); // ID de l'établissement sélectionné pour le filtre (Admin uniquement)
   final etablissements = <Map<String, dynamic>>[].obs; // Liste des établissements pour le filtre
   final revenuePeriodFilter = '7days'.obs; // Filtre de période pour les revenus: '7days', 'month', '3months', 'year', 'all'
+
+  bool get isLoading => _isLoading.value;
 
   @override
   void onInit() {
@@ -65,7 +67,7 @@ class DashboardController extends GetxController {
 
   Future<void> loadDashboardStats() async {
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       final userRole = userController.userRole;
       final userId = userController.user.value.id;
 
@@ -78,7 +80,7 @@ class DashboardController extends GetxController {
       TLoaders.errorSnackBar(
           message: 'Erreur lors du chargement des statistiques: $e');
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 

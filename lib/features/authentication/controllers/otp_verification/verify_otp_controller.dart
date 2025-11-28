@@ -6,8 +6,8 @@ import '../../../../data/repositories/authentication/authentication_repository.d
 import '../../../../utils/popups/loaders.dart';
 
 class OTPVerificationController extends GetxController {
-
-  final AuthenticationRepository _authRepo = Get.find<AuthenticationRepository>();
+  final AuthenticationRepository _authRepo =
+      Get.find<AuthenticationRepository>();
 
   /// Champs liés à l’OTP
   final emailController = TextEditingController();
@@ -21,9 +21,12 @@ class OTPVerificationController extends GetxController {
   final isResendAvailable = false.obs;
   Timer? _timer;
 
-  final isLoading = false.obs;
-  final RxBool isSignupFlow = true.obs;
+  final _isLoading = false.obs;
+  final RxBool _isSignupFlow = true.obs;
   Map<String, dynamic> userData = {};
+
+  bool get isLoading => _isLoading.value;
+  bool get isSignupFlow => _isSignupFlow.value;
 
   @override
   void onInit() {
@@ -70,14 +73,14 @@ class OTPVerificationController extends GetxController {
   }
 
   void initializeFlow(bool isSignup, Map<String, dynamic> data) {
-    isSignupFlow.value = isSignup;
+    _isSignupFlow.value = isSignup;
     userData = data;
   }
 
   /// Vérification de l’OTP
   Future<void> verifyOTP() async {
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
 
       final email = emailController.text.trim();
       final otp = singleOtpController.text.trim();
@@ -97,7 +100,7 @@ class OTPVerificationController extends GetxController {
       // Ne pas afficher de snackbar si l'erreur est liée à un utilisateur banni
       // car le snackbar est déjà affiché dans AuthenticationRepository
       final errorMessage = e.toString();
-      if (!errorMessage.contains('BannedUserException') && 
+      if (!errorMessage.contains('BannedUserException') &&
           !errorMessage.contains('banni')) {
         TLoaders.errorSnackBar(
           title: "Erreur",
@@ -105,7 +108,7 @@ class OTPVerificationController extends GetxController {
         );
       }
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -123,7 +126,7 @@ class OTPVerificationController extends GetxController {
         return;
       }
 
-      isLoading.value = true;
+      _isLoading.value = true;
 
       await _authRepo.sendOtp(email);
 
@@ -139,7 +142,7 @@ class OTPVerificationController extends GetxController {
         message: e.toString(),
       );
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 }

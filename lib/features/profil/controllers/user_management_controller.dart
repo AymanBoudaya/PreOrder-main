@@ -5,17 +5,18 @@ import '../models/user_model.dart';
 import 'user_controller.dart';
 
 class UserManagementController extends GetxController {
-
   final UserRepository _userRepository = Get.find<UserRepository>();
   final UserController _userController = Get.find<UserController>();
 
   // États réactifs
-  final isLoading = false.obs;
+  final _isLoading = false.obs;
   final users = <UserModel>[].obs;
   final searchQuery = ''.obs;
   final selectedRole = Rx<String?>('Tous');
   final selectedBanStatus = Rx<String?>('Tous'); // Tous, Bannis, Non bannis
 
+  bool get isLoading => _isLoading.value;
+  bool setLoading(value) => _isLoading.value = value;
   @override
   void onInit() {
     super.onInit();
@@ -25,7 +26,7 @@ class UserManagementController extends GetxController {
   /// Charger tous les utilisateurs
   Future<void> loadAllUsers() async {
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       final usersList = await _userRepository.getAllUsers();
       users.assignAll(usersList);
     } catch (e) {
@@ -34,7 +35,7 @@ class UserManagementController extends GetxController {
         message: 'Impossible de charger les utilisateurs: $e',
       );
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -59,16 +60,16 @@ class UserManagementController extends GetxController {
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       final success = await _userRepository.banUser(userId);
-      
+
       if (success) {
         // Mettre à jour la liste locale
         final index = users.indexWhere((u) => u.id == userId);
         if (index != -1) {
           users[index] = users[index].copyWith(isBanned: true);
         }
-        
+
         TLoaders.successSnackBar(
           title: 'Succès',
           message: 'Utilisateur banni avec succès',
@@ -83,7 +84,7 @@ class UserManagementController extends GetxController {
       );
       return false;
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -99,16 +100,16 @@ class UserManagementController extends GetxController {
     }
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       final success = await _userRepository.unbanUser(userId);
-      
+
       if (success) {
         // Mettre à jour la liste locale
         final index = users.indexWhere((u) => u.id == userId);
         if (index != -1) {
           users[index] = users[index].copyWith(isBanned: false);
         }
-        
+
         TLoaders.successSnackBar(
           title: 'Succès',
           message: 'Utilisateur débanni avec succès',
@@ -123,7 +124,7 @@ class UserManagementController extends GetxController {
       );
       return false;
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -144,7 +145,8 @@ class UserManagementController extends GetxController {
 
     // Filtre par rôle
     if (selectedRole.value != null && selectedRole.value != 'Tous') {
-      filtered = filtered.where((user) => user.role == selectedRole.value).toList();
+      filtered =
+          filtered.where((user) => user.role == selectedRole.value).toList();
     }
 
     // Filtre par statut de bannissement

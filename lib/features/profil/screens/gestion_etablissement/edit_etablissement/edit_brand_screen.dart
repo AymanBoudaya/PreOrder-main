@@ -34,7 +34,7 @@ class EditEtablissementScreen extends StatelessWidget {
         actions: [
           Obx(() => IconButton(
                 icon: const Icon(Icons.save),
-                onPressed: controller.isLoading.value
+                onPressed: controller.isLoading
                     ? null
                     : controller.updateEtablissement,
                 tooltip: 'Enregistrer',
@@ -101,7 +101,7 @@ class EditEtablissementScreen extends StatelessWidget {
                                     Expanded(
                                       child: Obx(() => ElevatedButton.icon(
                                             onPressed:
-                                                controller.isLoading.value
+                                                controller.isLoading
                                                     ? null
                                                     : controller
                                                         .updateEtablissement,
@@ -156,7 +156,7 @@ class EditEtablissementScreen extends StatelessWidget {
                           _buildHorairesSection(context, width, controller),
                           const SizedBox(height: AppSizes.spaceBtwSections),
                           Obx(() => ElevatedButton.icon(
-                                onPressed: controller.isLoading.value
+                                onPressed: controller.isLoading
                                     ? null
                                     : controller.updateEtablissement,
                                 icon: const Icon(Iconsax.save_2),

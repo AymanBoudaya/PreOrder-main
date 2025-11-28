@@ -154,7 +154,7 @@ class OTPVerificationScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed:
-                  controller.isOtpValid.value && !controller.isLoading.value
+                  controller.isOtpValid.value && !controller.isLoading
                       ? () => controller.verifyOTP()
                       : null,
               style: ElevatedButton.styleFrom(
@@ -163,7 +163,7 @@ class OTPVerificationScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: controller.isLoading.value
+              child: controller.isLoading
                   ? const SizedBox(
                       width: 20,
                       height: 20,

@@ -18,7 +18,9 @@ class ListeEtablissementController extends GetxController {
   final SupabaseClient _supabase = Supabase.instance.client;
   RealtimeChannel? _channel;
   final selectedFilter = 'Récents'.obs;
+
   ListeEtablissementController(this.repo);
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -78,7 +80,8 @@ class ListeEtablissementController extends GetxController {
     );
     _channel!.subscribe();
   }
-/// pourquoi ne pas utiliser cette méthode?
+
+  /// pourquoi ne pas utiliser cette méthode?
   // void subscribeToRealtimeEtablissements() {
   //   _channel = _supabase.channel('etablissements_changes');
   //   _channel!.onPostgresChanges(
@@ -304,7 +307,6 @@ class ListeEtablissementController extends GetxController {
     }
   }
 
-  
   // Méthode pour changer le statut
   Future<bool> changeStatutEtablissement(
       String id, StatutEtablissement newStatut) async {
@@ -435,7 +437,6 @@ class ListeEtablissementController extends GetxController {
     }
   }
 
-  
   // Suppression améliorée
   Future<bool> deleteEtablissement(String id) async {
     try {
@@ -502,10 +503,6 @@ class ListeEtablissementController extends GetxController {
     final userRole = userController.userRole;
     return userRole == 'Admin';
   }
-
-  
-  
-
 
   // // Récupérer l'établissement de l'utilisateur connecté
   Future<Etablissement?> getEtablissementUtilisateurConnecte() async {

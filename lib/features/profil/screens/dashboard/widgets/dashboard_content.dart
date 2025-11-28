@@ -29,7 +29,7 @@ class DashboardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.isLoading.value && controller.stats.value == null) {
+      if (controller.isLoading && controller.stats.value == null) {
         return const Center(child: CircularProgressIndicator());
       }
 

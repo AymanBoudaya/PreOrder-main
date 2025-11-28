@@ -58,7 +58,7 @@ class AdminUserManagementScreen extends StatelessWidget {
         ],
       ),
       body: Obx(() {
-        if (controller.isLoading.value && controller.users.isEmpty) {
+        if (controller.isLoading && controller.users.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
 

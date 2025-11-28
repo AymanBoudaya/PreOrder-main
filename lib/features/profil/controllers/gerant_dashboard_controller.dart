@@ -13,7 +13,7 @@ class GerantDashboardController extends GetxController {
   final endDate = Rxn<DateTime>();
 
   // Getters pour les données
-  bool get isLoading => dashboardController.isLoading.value;
+  bool get isLoading => dashboardController.isLoading;
   DashboardStats? get stats => dashboardController.stats.value;
 
   @override

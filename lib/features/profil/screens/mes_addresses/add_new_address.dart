@@ -41,15 +41,15 @@ class AddNewAddressScreen extends StatelessWidget {
                       const Text("Sélectionner sur la carte",
                           style: TextStyle(fontWeight: FontWeight.w600)),
                       Switch(
-                        value: controller.useMap.value,
-                        onChanged: (v) => controller.useMap.value = v,
+                        value: controller.useMap,
+                        onChanged: (v) => controller.setUseMap(v),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
 
                   /// --- MAP MODE ---
-                  if (controller.useMap.value) ...[
+                  if (controller.useMap) ...[
                     Container(
                       height: 250,
                       decoration: BoxDecoration(
@@ -153,7 +153,7 @@ class AddNewAddressScreen extends StatelessWidget {
                             fontSize: 13,
                             color: dark ? Colors.white : Colors.black87),
                       ),
-                    if (controller.isLoadingAddress.value)
+                    if (controller.isLoadingAddress)
                       const Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Center(child: CircularProgressIndicator()),

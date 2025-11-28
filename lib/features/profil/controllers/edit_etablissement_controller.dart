@@ -10,9 +10,12 @@ import '../../shop/models/etablissement_model.dart';
 import '../screens/gestion_etablissement/edit_etablissement/widgets/gestion_horaires_screen.dart';
 import 'liste_etablissement_controller.dart';
 import 'user_controller.dart';
-class EditEtablissementController extends GetxController with GetSingleTickerProviderStateMixin {
+
+class EditEtablissementController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final Etablissement etablissement;
-  final ListeEtablissementController etablissementController = Get.find<ListeEtablissementController>();
+  final ListeEtablissementController etablissementController =
+      Get.find<ListeEtablissementController>();
   final UserController userController = Get.find<UserController>();
   late final HoraireController horaireController;
 
@@ -22,7 +25,7 @@ class EditEtablissementController extends GetxController with GetSingleTickerPro
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
 
-  final isLoading = false.obs;
+  final _isLoading = false.obs;
   final horairesLoaded = false.obs;
   final selectedStatut = StatutEtablissement.en_attente.obs;
   final selectedImage = Rx<XFile?>(null);
@@ -30,6 +33,8 @@ class EditEtablissementController extends GetxController with GetSingleTickerPro
 
   late AnimationController animationController;
   late Animation<double> fadeAnimation;
+
+  bool get isLoading => _isLoading.value;
 
   EditEtablissementController({required this.etablissement});
 
@@ -116,7 +121,8 @@ class EditEtablissementController extends GetxController with GetSingleTickerPro
         TLoaders.successSnackBar(message: 'Horaires mis à jour avec succès');
       }
     } catch (e) {
-      TLoaders.errorSnackBar(message: 'Impossible de modifier les horaires: $e');
+      TLoaders.errorSnackBar(
+          message: 'Impossible de modifier les horaires: $e');
     }
   }
 
@@ -125,7 +131,7 @@ class EditEtablissementController extends GetxController with GetSingleTickerPro
       return;
     }
 
-    isLoading.value = true;
+    _isLoading.value = true;
 
     try {
       String? imageUrl = currentImageUrl.value;
@@ -133,8 +139,9 @@ class EditEtablissementController extends GetxController with GetSingleTickerPro
         imageUrl = await etablissementController
             .uploadEtablissementImage(selectedImage.value!);
         if (imageUrl == null) {
-          TLoaders.errorSnackBar(message: 'Erreur lors de l\'upload de l\'image');
-          isLoading.value = false;
+          TLoaders.errorSnackBar(
+              message: 'Erreur lors de l\'upload de l\'image');
+          _isLoading.value = false;
           return;
         }
       }
@@ -162,7 +169,8 @@ class EditEtablissementController extends GetxController with GetSingleTickerPro
       );
 
       if (success) {
-        TLoaders.successSnackBar(message: 'Établissement mis à jour avec succès');
+        TLoaders.successSnackBar(
+            message: 'Établissement mis à jour avec succès');
         Get.back(result: true);
       } else {
         TLoaders.errorSnackBar(message: 'Échec de la mise à jour');
@@ -170,7 +178,7 @@ class EditEtablissementController extends GetxController with GetSingleTickerPro
     } catch (e) {
       TLoaders.errorSnackBar(message: 'Erreur: $e');
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 }

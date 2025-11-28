@@ -12,10 +12,11 @@ class NotificationController extends GetxController {
   final notificationRepository = Get.find<NotificationsRepository>();
 
   final notifications = <NotificationModel>[].obs;
-  final isLoading = false.obs;
+  final _isLoading = false.obs;
   RealtimeChannel? _channel;
 
   int get unreadCount => notifications.where((n) => !n.read).length;
+  bool get isLoading => _isLoading.value;
 
   @override
   void onInit() {
@@ -33,7 +34,7 @@ class NotificationController extends GetxController {
   }
 
   Future<void> _loadNotifications() async {
-    isLoading.value = true;
+    _isLoading.value = true;
     try {
       final fetchedNotifications =
           await notificationRepository.fechUserNotifications();
@@ -45,7 +46,7 @@ class NotificationController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 

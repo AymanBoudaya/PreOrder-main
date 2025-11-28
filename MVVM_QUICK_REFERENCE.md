@@ -142,7 +142,7 @@ class ProductViewModel extends GetxController {
   
   // Business Logic
   Future<void> loadProducts() async {
-    isLoading.value = true;
+    _isLoading.value = true;
     try {
       products.value = await repository.fetchProducts();
     } catch (e) {

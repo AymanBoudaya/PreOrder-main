@@ -22,7 +22,6 @@ import '../screens/mes_addresses/add_new_address.dart';
 import 'user_controller.dart';
 
 class AddressController extends GetxController {
-
   final userController = Get.find<UserController>();
   final NetworkManager networkManager = Get.find<NetworkManager>();
 
@@ -40,13 +39,17 @@ class AddressController extends GetxController {
   // Reactive state
   final refreshData = true.obs;
   final selectedAddress = AddressModel.empty().obs;
-  final useMap = true.obs;
+  final _useMap = true.obs;
   final selectedLocation = Rxn<LatLng>();
-  final isLoadingAddress = false.obs;
+  final _isLoadingAddress = false.obs;
 
   final MapController mapController = MapController();
 
   final addressRepository = Get.put(AddressRepository());
+
+  bool get isLoadingAddress => _isLoadingAddress.value;
+  bool get useMap => _useMap.value;
+  void setUseMap(bool value) => _useMap.value = value;
 
   @override
   void onInit() {
@@ -111,7 +114,7 @@ class AddressController extends GetxController {
   /// SET MAP ADDRESS (Reverse Geocoding)
   Future<void> setMapAddress(LatLng position) async {
     selectedLocation.value = position;
-    isLoadingAddress.value = true;
+    _isLoadingAddress.value = true;
 
     try {
       final url = Uri.parse(
@@ -139,7 +142,7 @@ class AddressController extends GetxController {
       TLoaders.errorSnackBar(
           title: 'Erreur', message: 'Impossible de récupérer l’adresse');
     } finally {
-      isLoadingAddress.value = false;
+      _isLoadingAddress.value = false;
     }
   }
 
@@ -216,11 +219,13 @@ class AddressController extends GetxController {
                   showActionButton: false,
                 ),
                 FutureBuilder(
-                  key: Key(refreshData.value.toString()), // Force refresh when refreshData changes
+                  key: Key(refreshData.value
+                      .toString()), // Force refresh when refreshData changes
                   future: getAllUserAddresses(),
                   builder: (_, snapshot) {
-                    final response = TCloudHelperFunctions.checkMultiRecordState(
-                        snapshot: snapshot);
+                    final response =
+                        TCloudHelperFunctions.checkMultiRecordState(
+                            snapshot: snapshot);
                     if (response != null) return response;
 
                     final addresses = snapshot.data!;

@@ -18,9 +18,12 @@ class LoginController extends GetxController {
 
   /// Variables
   final email = TextEditingController();
-  final rememberMe = false.obs;
-  final localStorage = GetStorage();
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
+  
+  final _rememberMe = false.obs;
+  final localStorage = GetStorage();
+
+  bool get rememberMe => _rememberMe.value;
 
   @override
   void onInit() {
@@ -49,7 +52,7 @@ class LoginController extends GetxController {
       }
 
       // Sauvegarder email si "Remember Me"
-      if (rememberMe.value) {
+      if (_rememberMe.value) {
         localStorage.write('REMEMBER_ME_EMAIL', email.text.trim());
       }
 
