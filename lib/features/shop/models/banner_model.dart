@@ -7,7 +7,8 @@ class BannerModel {
   String? linkType; // 'product', 'category', 'establishment'
   DateTime? createdAt;
   DateTime? updatedAt;
-  Map<String, dynamic>? pendingChanges; // Modifications en attente d'approbation (pour bannières publiées)
+  Map<String, dynamic>?
+      pendingChanges; // Modifications en attente d'approbation (pour bannières publiées)
   DateTime? pendingChangesRequestedAt; // Date de la demande de modification
 
   BannerModel({
@@ -43,7 +44,8 @@ class BannerModel {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'pending_changes': pendingChanges,
-      'pending_changes_requested_at': pendingChangesRequestedAt?.toIso8601String(),
+      'pending_changes_requested_at':
+          pendingChangesRequestedAt?.toIso8601String(),
     };
   }
 
