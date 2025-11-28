@@ -8,11 +8,13 @@ import '../../../controllers/user_controller.dart';
 
 class LinkSelector extends StatelessWidget {
   final BannerController controller;
-  const LinkSelector({super.key,required this.controller});
+  final bool isAdminView;
+
+  const LinkSelector(
+      {super.key, required this.controller, required this.isAdminView});
 
   @override
   Widget build(BuildContext context) {
-  
     return Obx(() {
       final linkType = controller.selectedLinkType.value;
       if (linkType.isEmpty) return const SizedBox.shrink();
@@ -33,9 +35,10 @@ class LinkSelector extends StatelessWidget {
 
         return DropdownButtonFormField<String>(
           initialValue: isValidValue ? selectedValue : null,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Sélectionner un produit',
             prefixIcon: Icon(Iconsax.shop),
+            filled: isAdminView,
           ),
           items: products.map((product) {
             return DropdownMenuItem(
@@ -56,7 +59,7 @@ class LinkSelector extends StatelessWidget {
       } else if (linkType == 'establishment') {
         final userController = Get.find<UserController>();
         final isGerant = userController.userRole == 'Gérant';
-        
+
         final establishments =
             controller.establishments.where((e) => e.id != null).toList();
         if (establishments.isEmpty) {

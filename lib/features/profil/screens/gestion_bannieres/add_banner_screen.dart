@@ -132,7 +132,7 @@ class AddBannerScreen extends StatelessWidget {
 
               // Sélection du lien selon le type
               if (controller.selectedLinkType.value.isNotEmpty)
-                LinkSelector(controller: controller),
+                LinkSelector(controller: controller, isAdminView: false,),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
 
               // État actuel (toujours en_attente pour les nouvelles bannières)

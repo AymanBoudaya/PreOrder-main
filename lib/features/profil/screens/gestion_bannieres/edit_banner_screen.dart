@@ -129,7 +129,13 @@ class EditBannerScreen extends StatelessWidget {
                       ),
                       items: [
                         DropdownMenuItem(
-                            value: null, child: Text('Aucun lien')),
+                            value: null,
+                            child: Text(
+                              'Aucun lien',
+                              style: TextStyle(
+                                  color:
+                                      dark ? Colors.white : TColors.eerieBlack),
+                            )),
                         DropdownMenuItem(
                             value: 'product',
                             child: Text(
@@ -140,7 +146,12 @@ class EditBannerScreen extends StatelessWidget {
                             )),
                         DropdownMenuItem(
                           value: 'establishment',
-                          child: Text('Établissement'),
+                          child: Text(
+                            'Établissement',
+                            style: TextStyle(
+                                color:
+                                    dark ? Colors.white : TColors.eerieBlack),
+                          ),
                         ),
                       ],
                       onChanged: isAdminView
@@ -218,7 +229,10 @@ class EditBannerScreen extends StatelessWidget {
 
               // Sélection du lien selon le type
               if (controller.selectedLinkType.value.isNotEmpty)
-                LinkSelector(controller: controller),
+                LinkSelector(
+                  controller: controller,
+                  isAdminView: isAdminView,
+                ),
               const SizedBox(height: AppSizes.spaceBtwInputFields),
 
               // État actuel - modifiable par l'admin
