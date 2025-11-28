@@ -37,10 +37,12 @@ class OrderController extends GetxController {
   final _arrivalTimeCalculator = ArrivalTimeCalculatorService();
 
   final orders = <OrderModel>[].obs;
-  final isLoading = false.obs;
+  final _isLoading = false.obs;
   final isUpdating = false.obs;
   RealtimeChannel? _ordersChannel;
   final Rxn<Map<String, dynamic>> selectedAddress = Rxn<Map<String, dynamic>>();
+
+  bool get isLoading => _isLoading.value;
 
   @override
   void onInit() {
@@ -93,7 +95,7 @@ class OrderController extends GetxController {
     if (userId.isEmpty) return;
 
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
 
       /// Écouter les changements dans la table `orders`
       /// Note: Les streams Supabase ne supportent pas les JOINs directement
@@ -115,14 +117,14 @@ class OrderController extends GetxController {
               orders.value =
                   data.map((row) => OrderModel.fromJson(row)).toList();
             }
-            isLoading.value = false;
+            _isLoading.value = false;
           }, onError: (error) {
             debugPrint('Erreur lors de l\'écoute des commandes: $error');
-            isLoading.value = false;
+            _isLoading.value = false;
           });
     } catch (e) {
       debugPrint('Erreur lors du démarrage de l\'écoute des commandes: $e');
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -130,7 +132,7 @@ class OrderController extends GetxController {
   Future<List<OrderModel>> recupererCommandesGerant(
       String etablissementId) async {
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
       debugPrint(' Chargement commandes gérant pour: $etablissementId');
 
       // Utiliser la méthode du repository
@@ -145,7 +147,7 @@ class OrderController extends GetxController {
       // Ne pas afficher de snackbar ici - laisser l'écran gérer l'erreur
       rethrow; // Relancer pour que l'appelant gère l'erreur
     } finally {
-      isLoading.value = false;
+      _isLoading.value = false;
     }
   }
 
@@ -517,7 +519,7 @@ class OrderController extends GetxController {
   /// Récupère les commandes de l'utilisateur connecté
   Future<List<OrderModel>> recupererCommandesUtilisateur() async {
     try {
-      isLoading.value = true;
+      _isLoading.value = true;
 
       final userOrders = await orderRepository.fetchUserOrders();
       return userOrders;

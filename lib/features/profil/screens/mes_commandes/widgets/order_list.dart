@@ -47,7 +47,7 @@ class TOrderListItems extends StatelessWidget {
         // Liste des commandes
         Expanded(
           child: Obx(() {
-            if (orderController.isLoading.value) {
+            if (orderController.isLoading) {
               return _buildShimmer();
             }
 

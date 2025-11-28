@@ -263,7 +263,7 @@ class _GerantOrderManagementScreenState
             child: RefreshIndicator(
               onRefresh: _loadGerantOrders,
               child: Obx(() {
-                if (orderController.isLoading.value) {
+                if (orderController.isLoading) {
                   return _buildShimmerLoader();
                 }
 
