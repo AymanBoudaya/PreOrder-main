@@ -59,37 +59,4 @@ class THomeAppBar extends StatelessWidget {
       ],
     );
   }
-
-  void _showNotificationSheet(
-      BuildContext context, NotificationController controller) {
-    Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Obx(() {
-          final notifs = controller.notifications;
-          if (notifs.isEmpty) {
-            return const Center(child: Text('Aucune notification.'));
-          }
-          return ListView.builder(
-            itemCount: notifs.length,
-            itemBuilder: (_, index) {
-              final notif = notifs[index];
-              return ListTile(
-                leading: const Icon(Iconsax.notification),
-                title: Text(notif.title),
-                subtitle: Text(notif.message),
-                trailing: notif.read
-                    ? null
-                    : const Icon(Icons.circle, size: 8, color: Colors.red),
-              );
-            },
-          );
-        }),
-      ),
-    );
-  }
 }

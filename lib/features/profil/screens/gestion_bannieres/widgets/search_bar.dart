@@ -7,9 +7,9 @@ import '../../../../../utils/constants/sizes.dart';
 import '../../../controllers/banner_management_controller.dart';
 
 class BuildSearchBar extends StatelessWidget {
-  final BannerManagementController viewModel;
+  final BannerManagementController controller;
 
-  const BuildSearchBar({super.key, required this.viewModel});
+  const BuildSearchBar({super.key, required this.controller});
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
@@ -20,7 +20,7 @@ class BuildSearchBar extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
-              onChanged: viewModel.updateSearch,
+              onChanged: controller.updateSearch,
               decoration: InputDecoration(
                 hintText: "Rechercher une bannière...",
                 prefixIcon: const Icon(Iconsax.search_normal_1, size: 20),

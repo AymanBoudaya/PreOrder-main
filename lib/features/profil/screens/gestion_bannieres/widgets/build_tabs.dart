@@ -8,8 +8,8 @@ import '../../../controllers/banner_management_controller.dart';
 import 'adaptive_tab_label.dart';
 
 class BuildTabs extends StatelessWidget {
-  final BannerManagementController viewModel;
-  const BuildTabs({super.key, required this.viewModel});
+  final BannerManagementController controller;
+  const BuildTabs({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +25,13 @@ class BuildTabs extends StatelessWidget {
             ),
           ),
           child: TabBar(
-            controller: viewModel.tabController,
+            controller: controller.tabController,
             tabs: [
               Tab(
                 child: AdaptiveTabLabel(
                   icon: Iconsax.clock,
                   label: 'En attente',
-                  count: viewModel.enAttenteCount,
+                  count: controller.enAttenteCount,
                   badgeColor: Colors.orange.shade100,
                   badgeTextColor: Colors.orange.shade700,
                 ),
@@ -40,7 +40,7 @@ class BuildTabs extends StatelessWidget {
                 child: AdaptiveTabLabel(
                   icon: Iconsax.tick_circle,
                   label: 'Publiée',
-                  count: viewModel.publieeCount,
+                  count: controller.publieeCount,
                   badgeColor: Colors.green.shade100,
                   badgeTextColor: Colors.green.shade700,
                 ),
@@ -49,7 +49,7 @@ class BuildTabs extends StatelessWidget {
                 child: AdaptiveTabLabel(
                   icon: Iconsax.close_circle,
                   label: 'Refusée',
-                  count: viewModel.refuseeCount,
+                  count: controller.refuseeCount,
                   badgeColor: Colors.red.shade100,
                   badgeTextColor: Colors.red.shade700,
                 ),

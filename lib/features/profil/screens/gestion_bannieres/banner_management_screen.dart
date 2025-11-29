@@ -22,7 +22,7 @@ class BannerManagementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Initialiser les controllers
     Get.put(BannerController());
-    final viewModel = Get.put(BannerManagementController());
+    final controller = Get.put(BannerManagementController());
 
     return Scaffold(
       appBar: TAppBar(
@@ -30,49 +30,49 @@ class BannerManagementScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          BuildTabs(viewModel: viewModel),
-          BuildSearchBar(viewModel: viewModel),
-          Expanded(child: _buildBody(context, viewModel)),
+          BuildTabs(controller: controller),
+          BuildSearchBar(controller: controller),
+          Expanded(child: _buildBody(context, controller)),
         ],
       ),
       floatingActionButton:
-          viewModel.canManageBanners ? _buildFloatingActionButton() : null,
+          controller.canManageBanners ? _buildFloatingActionButton() : null,
     );
   }
 
   Widget _buildBody(
-      BuildContext context, BannerManagementController viewModel) {
+      BuildContext context, BannerManagementController controller) {
     return Obx(() {
-      if (viewModel.isLoading) {
+      if (controller.isLoading) {
         return LoadingScreen(
           screenName: 'Bannières',
         );
       }
 
-      final banners = viewModel.filteredBanners;
+      final banners = controller.filteredBanners;
 
       if (banners.isEmpty) {
-        return BuildEmptyState(viewModel: viewModel);
+        return BuildEmptyState(controller: controller);
       }
 
-      return _buildBannerList(context, banners, viewModel);
+      return _buildBannerList(context, banners, controller);
     });
   }
 
   Widget _buildBannerList(BuildContext context, List<BannerModel> banners,
-      BannerManagementController viewModel) {
+      BannerManagementController controller) {
     return RefreshIndicator(
-      onRefresh: viewModel.refreshBanners,
+      onRefresh: controller.refreshBanners,
       child: ListView.builder(
         padding: const EdgeInsets.all(AppSizes.defaultSpace),
         itemCount: banners.length,
-        itemBuilder: (_, i) => _buildBannerCard(banners[i], context, viewModel),
+        itemBuilder: (_, i) => _buildBannerCard(banners[i], context, controller),
       ),
     );
   }
 
   Widget _buildBannerCard(BannerModel banner, BuildContext context,
-      BannerManagementController viewModel) {
+      BannerManagementController controller) {
     final dark = THelperFunctions.isDarkMode(context);
 
     return Container(
@@ -104,43 +104,43 @@ class BannerManagementScreen extends StatelessWidget {
           children: [
             _buildBannerSubtitle(banner),
             const SizedBox(height: 4),
-            _buildStatusChip(banner, viewModel),
+            _buildStatusChip(banner, controller),
             // Afficher les modifications en attente pour l'admin
-            if (viewModel.isAdmin && viewModel.hasPendingChanges(banner)) ...[
+            if (controller.isAdmin && controller.hasPendingChanges(banner)) ...[
               const SizedBox(height: 8),
-              _buildPendingChangesIndicator(banner, viewModel),
+              _buildPendingChangesIndicator(banner, controller),
             ],
           ],
         ),
-        trailing: viewModel.isAdmin
-            ? (viewModel.hasPendingChanges(banner)
-                ? _buildPendingChangesActions(banner, viewModel)
+        trailing: controller.isAdmin
+            ? (controller.hasPendingChanges(banner)
+                ? _buildPendingChangesActions(banner, controller)
                 : null)
-            : viewModel.isGerant
+            : controller.isGerant
                 ? IconButton(
                     icon: const Icon(Iconsax.more),
                     onPressed: () =>
-                        _showBannerOptions(context, banner, viewModel),
+                        _showBannerOptions(context, banner, controller),
                   )
                 : null,
-        onTap: viewModel.isAdmin
+        onTap: controller.isAdmin
             ? () {
                 // Admin peut cliquer pour voir les détails et changer le statut
-                viewModel.loadBannerForEditing(banner);
+                controller.loadBannerForEditing(banner);
                 Get.to(
                     () => EditBannerScreen(banner: banner, isAdminView: true));
               }
-            : viewModel.isGerant
-                ? () => _showBannerOptions(context, banner, viewModel)
+            : controller.isGerant
+                ? () => _showBannerOptions(context, banner, controller)
                 : null,
       ),
     );
   }
 
   Widget _buildStatusChip(
-      BannerModel banner, BannerManagementController viewModel) {
-    final statusColor = viewModel.getStatusColor(banner.status);
-    final statusLabel = viewModel.getStatusLabel(banner.status);
+      BannerModel banner, BannerManagementController controller) {
+    final statusColor = controller.getStatusColor(banner.status);
+    final statusLabel = controller.getStatusLabel(banner.status);
 
     IconData statusIcon;
     switch (banner.status) {
@@ -155,8 +155,8 @@ class BannerManagementScreen extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: viewModel.isAdmin
-          ? () => _showStatusChangeDialog(banner, viewModel)
+      onTap: controller.isAdmin
+          ? () => _showStatusChangeDialog(banner, controller)
           : null,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -165,8 +165,8 @@ class BannerManagementScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color:
-                viewModel.isAdmin ? statusColor.shade300 : statusColor.shade200,
-            width: viewModel.isAdmin ? 1.5 : 1,
+                controller.isAdmin ? statusColor.shade300 : statusColor.shade200,
+            width: controller.isAdmin ? 1.5 : 1,
           ),
         ),
         child: Row(
@@ -186,7 +186,7 @@ class BannerManagementScreen extends StatelessWidget {
                 ),
               ),
             ),
-            if (viewModel.isAdmin) ...[
+            if (controller.isAdmin) ...[
               const SizedBox(width: 4),
               Icon(
                 Iconsax.arrow_down_1,
@@ -201,7 +201,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   void _showStatusChangeDialog(
-      BannerModel banner, BannerManagementController viewModel) {
+      BannerModel banner, BannerManagementController controller) {
     final currentStatus = banner.status;
 
     Get.dialog(
@@ -216,13 +216,13 @@ class BannerManagementScreen extends StatelessWidget {
             const Text("Sélectionner le nouveau statut:"),
             const SizedBox(height: 16),
             _buildStatusOption('en_attente', 'En attente', Colors.orange,
-                Iconsax.clock, currentStatus, banner, viewModel),
+                Iconsax.clock, currentStatus, banner, controller),
             const SizedBox(height: 8),
             _buildStatusOption('publiee', 'Publiée', Colors.green,
-                Iconsax.tick_circle, currentStatus, banner, viewModel),
+                Iconsax.tick_circle, currentStatus, banner, controller),
             const SizedBox(height: 8),
             _buildStatusOption('refusee', 'Refusée', Colors.red,
-                Iconsax.close_circle, currentStatus, banner, viewModel),
+                Iconsax.close_circle, currentStatus, banner, controller),
           ],
         ),
         actions: [
@@ -242,7 +242,7 @@ class BannerManagementScreen extends StatelessWidget {
     IconData icon,
     String currentStatus,
     BannerModel banner,
-    BannerManagementController viewModel,
+    BannerManagementController controller,
   ) {
     final isSelected = status == currentStatus;
 
@@ -251,7 +251,7 @@ class BannerManagementScreen extends StatelessWidget {
           ? null
           : () {
               Get.back();
-              viewModel.updateBannerStatus(banner.id, status);
+              controller.updateBannerStatus(banner.id, status);
             },
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -345,18 +345,18 @@ class BannerManagementScreen extends StatelessWidget {
       );
 
   void _showBannerOptions(BuildContext context, BannerModel banner,
-      BannerManagementController viewModel) {
-    if (!viewModel.isGerant) return;
+      BannerManagementController controller) {
+    if (!controller.isGerant) return;
 
     Get.bottomSheet(
-      _buildBottomSheetContent(context, banner, viewModel),
+      _buildBottomSheetContent(context, banner, controller),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
   }
 
   Widget _buildBottomSheetContent(BuildContext context, BannerModel banner,
-      BannerManagementController viewModel) {
+      BannerManagementController controller) {
     final dark = THelperFunctions.isDarkMode(context);
 
     return Container(
@@ -375,9 +375,9 @@ class BannerManagementScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildBottomSheetHeader(banner, viewModel),
+          _buildBottomSheetHeader(banner, controller),
           const SizedBox(height: 16),
-          _buildActionButtons(context, banner, viewModel),
+          _buildActionButtons(context, banner, controller),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -399,7 +399,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   Widget _buildBottomSheetHeader(
-      BannerModel banner, BannerManagementController viewModel) {
+      BannerModel banner, BannerManagementController controller) {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -420,7 +420,7 @@ class BannerManagementScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 _buildBannerSubtitle(banner),
                 const SizedBox(height: 8),
-                _buildStatusChip(banner, viewModel),
+                _buildStatusChip(banner, controller),
               ],
             ),
           ),
@@ -430,7 +430,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   Widget _buildActionButtons(BuildContext context, BannerModel banner,
-      BannerManagementController viewModel) {
+      BannerManagementController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -439,7 +439,7 @@ class BannerManagementScreen extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () {
                 Get.back();
-                viewModel.loadBannerForEditing(banner);
+                controller.loadBannerForEditing(banner);
                 Get.to(() => EditBannerScreen(banner: banner));
               },
               icon: const Icon(Iconsax.edit, size: 20),
@@ -457,7 +457,7 @@ class BannerManagementScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: ElevatedButton.icon(
-              onPressed: () => _showDeleteDialog(context, banner, viewModel),
+              onPressed: () => _showDeleteDialog(context, banner, controller),
               icon: const Icon(Iconsax.trash, size: 20),
               label: const Text("Supprimer"),
               style: ElevatedButton.styleFrom(
@@ -476,7 +476,7 @@ class BannerManagementScreen extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context, BannerModel banner,
-      BannerManagementController viewModel) {
+      BannerManagementController controller) {
     Get.back();
     Get.dialog(
       AlertDialog(
@@ -513,7 +513,7 @@ class BannerManagementScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               Get.back(); // Fermer le dialog de confirmation
-              await viewModel.deleteBanner(banner.id);
+              await controller.deleteBanner(banner.id);
               // Le snackbar de succès sera affiché par le contrôleur
             },
             style: ElevatedButton.styleFrom(
@@ -529,10 +529,10 @@ class BannerManagementScreen extends StatelessWidget {
 
   /// Widget pour afficher l'indicateur de modifications en attente
   Widget _buildPendingChangesIndicator(
-      BannerModel banner, BannerManagementController viewModel) {
+      BannerModel banner, BannerManagementController controller) {
     return InkWell(
       onTap: () {
-        viewModel.loadBannerForEditing(banner);
+        controller.loadBannerForEditing(banner);
         Get.to(() => EditBannerScreen(banner: banner, isAdminView: true));
       },
       child: Container(
@@ -565,25 +565,25 @@ class BannerManagementScreen extends StatelessWidget {
 
   /// Widget pour les boutons d'action sur les modifications en attente (Admin)
   Widget _buildPendingChangesActions(
-      BannerModel banner, BannerManagementController viewModel) {
+      BannerModel banner, BannerManagementController controller) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
           icon: Icon(Iconsax.tick_circle, color: Colors.green.shade600),
           tooltip: 'Approuver les modifications',
-          onPressed: () => _showApprovePendingChangesDialog(banner, viewModel),
+          onPressed: () => _showApprovePendingChangesDialog(banner, controller),
         ),
         IconButton(
           icon: Icon(Iconsax.close_circle, color: Colors.red.shade600),
           tooltip: 'Refuser les modifications',
-          onPressed: () => _showRejectPendingChangesDialog(banner, viewModel),
+          onPressed: () => _showRejectPendingChangesDialog(banner, controller),
         ),
         IconButton(
           icon: const Icon(Iconsax.eye),
           tooltip: 'Voir les modifications',
           onPressed: () {
-            viewModel.loadBannerForEditing(banner);
+            controller.loadBannerForEditing(banner);
             Get.to(() => EditBannerScreen(banner: banner, isAdminView: true));
           },
         ),
@@ -593,7 +593,7 @@ class BannerManagementScreen extends StatelessWidget {
 
   /// Dialog pour confirmer l'approbation des modifications
   void _showApprovePendingChangesDialog(
-      BannerModel banner, BannerManagementController viewModel) {
+      BannerModel banner, BannerManagementController controller) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -625,7 +625,7 @@ class BannerManagementScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               Get.back();
-              await viewModel.approvePendingChanges(banner.id);
+              await controller.approvePendingChanges(banner.id);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green.shade600,
@@ -640,7 +640,7 @@ class BannerManagementScreen extends StatelessWidget {
 
   /// Dialog pour confirmer le refus des modifications
   void _showRejectPendingChangesDialog(
-      BannerModel banner, BannerManagementController viewModel) {
+      BannerModel banner, BannerManagementController controller) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -672,7 +672,7 @@ class BannerManagementScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               Get.back();
-              await viewModel.rejectPendingChanges(banner.id);
+              await controller.rejectPendingChanges(banner.id);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red.shade600,
