@@ -5,6 +5,7 @@ import 'package:caferesto/features/shop/controllers/product/all_products_control
 import 'package:caferesto/features/shop/models/etablissement_model.dart';
 import 'package:caferesto/features/shop/controllers/category_controller.dart';
 import 'package:caferesto/utils/constants/sizes.dart';
+import 'package:caferesto/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -148,6 +149,7 @@ class _CategoryFilterBar extends StatelessWidget {
       }
 
       final selected = productsController.selectedBrandCategoryId.value;
+      final dark = THelperFunctions.isDarkMode(context);
 
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -160,6 +162,12 @@ class _CategoryFilterBar extends StatelessWidget {
                 selected: selected.isEmpty,
                 onSelected: (_) =>
                     productsController.setBrandCategoryFilter(''),
+                labelStyle: TextStyle(
+                  color: selected.isEmpty
+                      ? Colors.white
+                      : (dark ? Colors.white : Colors.black),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             ...categoryIds.map((id) => Padding(
@@ -169,6 +177,12 @@ class _CategoryFilterBar extends StatelessWidget {
                     selected: selected == id,
                     onSelected: (_) =>
                         productsController.setBrandCategoryFilter(id),
+                    labelStyle: TextStyle(
+                      color: (selected == id)
+                          ? Colors.white
+                          : (dark ? Colors.white : Colors.black),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 )),
           ],
