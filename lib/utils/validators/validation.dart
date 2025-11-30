@@ -1,21 +1,20 @@
 class TValidator {
   static String? validateEmptyText(String? fildName, String? value) {
     if (value == null || value.isEmpty) {
-      return '$fildName is required.';
+      return '$fildName est requis.';
     }
     return null;
   }
 
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email is required.';
+      return 'L\'email est requis.';
     }
 
-    // Regular expression for email validation
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
     if (!emailRegExp.hasMatch(value)) {
-      return 'Invalid email address.';
+      return 'Addresse email invalide.';
     }
 
     return null;
@@ -23,27 +22,23 @@ class TValidator {
 
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required.';
+      return 'Mot de passe est requis.';
     }
 
-    // Check for minimum password length
     if (value.length < 6) {
-      return 'Password must be at least 6 characters long.';
+      return 'Mot de passe doit contenir au moins 6 caractères.';
     }
 
-    // Check for uppercase letters
     if (!value.contains(RegExp(r'[A-Z]'))) {
-      return 'Password must contain at least one uppercase letter.';
+      return 'Mot de passe doit contenir au moins une lettre majuscule.';
     }
 
-    // Check for numbers
     if (!value.contains(RegExp(r'[0-9]'))) {
-      return 'Password must contain at least one number.';
+      return 'Mot de passe doit contenir au moins un caractère numérique.';
     }
 
-    // Check for special characters
     if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      return 'Password must contain at least one special character.';
+      return 'Mot de passe doit contenir au moins un caractère spécial.';
     }
 
     return null;
@@ -51,18 +46,16 @@ class TValidator {
 
   static String? validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Phone number is required.';
+      return 'Numéro de téléphone requis.';
     }
 
-    // Regular expression for phone number validation (assuming a 8-digit TN phone number format)
     final phoneRegExp = RegExp(r'^\d{8}$');
 
     if (!phoneRegExp.hasMatch(value)) {
-      return 'Invalid phone number format (8 digits required).';
+      return 'Numéro de téléphone invalide (8 nombres requis).';
     }
 
     return null;
   }
 
-// Add more custom validators as needed for your specific requirements.
 }
