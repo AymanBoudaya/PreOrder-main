@@ -1,6 +1,4 @@
-import 'package:caferesto/features/shop/controllers/product/all_products_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/products/sortable/sortable_products.dart';
@@ -9,8 +7,8 @@ import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/cloud_helper_functions.dart';
 import '../../models/produit_model.dart';
 
-class AllProducts extends StatelessWidget {
-  const AllProducts(
+class ToutProduitsPopulaires extends StatelessWidget {
+  const ToutProduitsPopulaires(
       {super.key, required this.title, this.futureMethod});
 
   final String title;
@@ -18,7 +16,6 @@ class AllProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.find<AllProductsController>();
     return Scaffold(
       appBar: TAppBar(
         title: Text(title),

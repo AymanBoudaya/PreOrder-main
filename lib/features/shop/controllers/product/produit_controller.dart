@@ -30,6 +30,8 @@ class ProduitController extends GetxController {
   final Rx<ProduitFilter> selectedFilter = ProduitFilter.all.obs;
   final RxString searchQuery = ''.obs;
   RxList<ProduitModel> featuredProducts = <ProduitModel>[].obs;
+    /// Option de tri sélectionnée
+  final RxString selectedSortOption = 'Nom'.obs;
   bool get isLoading => _isLoading.value;
   @override
   void onInit() {
@@ -111,6 +113,45 @@ class ProduitController extends GetxController {
       return null;
     }
   }
+
+   void sortProducts(String sortOption) {
+    selectedSortOption.value = sortOption;
+
+    switch (sortOption) {
+      case 'Nom':
+        featuredProducts.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      case 'Prix croissant':
+        featuredProducts.sort((a, b) {
+          final priceA = a.salePrice > 0 ? a.salePrice : a.price;
+          final priceB = b.salePrice > 0 ? b.salePrice : b.price;
+          return priceA.compareTo(priceB);
+        });
+        break;
+      case 'Prix décroissant':
+        featuredProducts.sort((a, b) {
+          final priceA = a.salePrice > 0 ? a.salePrice : a.price;
+          final priceB = b.salePrice > 0 ? b.salePrice : b.price;
+          return priceB.compareTo(priceA);
+        });
+        break;
+      case 'Récent':
+        featuredProducts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        break;
+      case 'Ventes':
+        featuredProducts.sort((a, b) {
+          final salesA = a.salePrice;
+          final salesB = b.salePrice;
+          return salesB.compareTo(salesA);
+        });
+        break;
+      default:
+        featuredProducts.sort((a, b) => a.name.compareTo(b.name));
+    }
+
+    print('Produits triés par: $sortOption');
+  }
+
 
 // --- CHARGEMENT DES PRODUITS PAR RÔLE ---
   Future<void> loadProductsByRole() async {

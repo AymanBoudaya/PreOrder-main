@@ -12,7 +12,7 @@ import '../../../../common/widgets/custom_shapes/containers/primary_header_conta
 import 'widgets/home_categories.dart';
 import '../../controllers/product/produit_controller.dart';
 import '../../controllers/banner_controller.dart';
-import '../voir_tout_produits/all_products.dart';
+import '../voir_tout_produits/tout_produits_populaires.dart';
 import '../categories/all_categories.dart';
 import 'widgets/home_appbar.dart';
 import 'widgets/promo_slider.dart';
@@ -72,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                   /// -- PromoSlider avec cache - Ne se recharge pas à chaque rebuild
                   Obx(() {
                     final banners = bannerController.getPublishedBanners();
-                    
+
                     // Afficher un loader seulement si on charge initialement et qu'il n'y a pas de bannières
                     if (bannerController.isLoading.value && banners.isEmpty) {
                       return SizedBox(
@@ -104,9 +104,9 @@ class HomeScreen extends StatelessWidget {
                     title: 'Produits Populaires',
                     padding: EdgeInsets.all(0),
                     showActionButton: true,
-                    onPressed: () => Get.to(() => AllProducts(
+                    onPressed: () => Get.to(() => ToutProduitsPopulaires(
                           title: 'Tout les produits populaires',
-                          futureMethod: controller.fetchAllFeaturedProducts(),                  
+                          futureMethod: controller.fetchAllFeaturedProducts(),
                         )),
                   ),
                   const SizedBox(height: AppSizes.spaceBtwItems),

@@ -14,6 +14,7 @@ class AllProductsController extends GetxController {
 
   /// Liste complète des produits
   final RxList<ProduitModel> products = <ProduitModel>[].obs;
+  final RxList<ProduitModel> featuredProducts = <ProduitModel>[].obs;
 
   /// Liste temporaire / filtrée pour une marque spécifique
   final RxList<ProduitModel> brandProducts = <ProduitModel>[].obs;
