@@ -30,7 +30,8 @@ class ProduitController extends GetxController {
   final Rx<ProduitFilter> selectedFilter = ProduitFilter.all.obs;
   final RxString searchQuery = ''.obs;
   RxList<ProduitModel> featuredProducts = <ProduitModel>[].obs;
-    /// Option de tri sélectionnée
+
+  /// Option de tri sélectionnée
   final RxString selectedSortOption = 'Nom'.obs;
   bool get isLoading => _isLoading.value;
   @override
@@ -114,7 +115,7 @@ class ProduitController extends GetxController {
     }
   }
 
-   void sortProducts(String sortOption) {
+  void sortProducts(String sortOption) {
     selectedSortOption.value = sortOption;
 
     switch (sortOption) {
@@ -149,9 +150,8 @@ class ProduitController extends GetxController {
         featuredProducts.sort((a, b) => a.name.compareTo(b.name));
     }
 
-    print('Produits triés par: $sortOption');
+    debugPrint('Produits triés par: $sortOption');
   }
-
 
 // --- CHARGEMENT DES PRODUITS PAR RÔLE ---
   Future<void> loadProductsByRole() async {
@@ -232,7 +232,7 @@ class ProduitController extends GetxController {
             etablissement = Etablissement.fromJson(etabResponse);
           }
         } catch (e) {
-          print('Erreur chargement établissement: $e');
+          debugPrint('Erreur chargement établissement: $e');
         }
       }
 

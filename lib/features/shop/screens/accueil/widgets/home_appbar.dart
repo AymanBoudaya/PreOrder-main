@@ -8,7 +8,6 @@ import '../../../../../common/widgets/products/cart/cart_menu_icon.dart';
 import '../../../../../common/widgets/shimmer/shimmer_effect.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/text_strings.dart';
-import '../../../../notification/controllers/notification_controller.dart';
 import '../../../../notification/screens/show_notifications.dart';
 import 'search_overlay.dart';
 
@@ -18,7 +17,6 @@ class THomeAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userController = Get.find<UserController>();
-    final notifController = Get.put(NotificationController());
     return TAppBar(
       centerTitle: false,
       showBackArrow: false,

@@ -1,4 +1,5 @@
 import 'package:caferesto/utils/helpers/helper_functions.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../data/repositories/horaire/horaire_repository.dart';
 import '../../../../utils/constants/enums.dart';
@@ -28,10 +29,8 @@ class HoraireController extends GetxController {
       horaires.assignAll(horairesVides);
       hasHoraires.value = false;
       horaires.refresh();
-      print(
-          '${horaires.length} horaires initialisés pour l\'établissement $etablissementId');
     } catch (e) {
-      print('Erreur initialisation horaires: $e');
+      debugPrint('Erreur initialisation horaires: $e');
     }
   }
 
@@ -50,7 +49,6 @@ class HoraireController extends GetxController {
     horaires.assignAll(horairesVides);
     hasHoraires.value = false;
     horaires.refresh();
-    print('${horaires.length} horaires initialisés pour création');
   }
 
   // Créer les horaires pour un établissement
@@ -71,7 +69,7 @@ class HoraireController extends GetxController {
       hasHoraires.value = horairesAvecVraiId.any((h) => h.isValid);
       horaires.refresh();
 
-      print(
+      debugPrint(
           '${horairesAvecVraiId.length} horaires créés pour l\'établissement $etablissementId');
       return true;
     } catch (e) {
@@ -94,18 +92,18 @@ class HoraireController extends GetxController {
       hasHoraires.value = horairesList.any((h) => h.isValid);
       horaires.refresh();
 
-      print(
+      debugPrint(
           '${horairesList.length} horaires chargés pour l\'établissement $etablissementId');
 
       // Vérification
       if (horairesList.length != 7) {
-        print('Attention: ${horairesList.length}/7 jours trouvés');
+        debugPrint('Attention: ${horairesList.length}/7 jours trouvés');
       } else {
-        print('Tous les 7 jours sont présents !');
+        debugPrint('Tous les 7 jours sont présents !');
 
         // Debug: Afficher l'état de chaque jour
         for (final horaire in horairesList) {
-          print(
+          debugPrint(
               '${horaire.jour.valeur}: ${horaire.estOuvert ? "Ouvert" : "Fermé"} ${horaire.estOuvert ? "(${horaire.ouverture} - ${horaire.fermeture})" : ""}');
         }
       }
@@ -142,9 +140,10 @@ class HoraireController extends GetxController {
       // Sauvegarder en base si l'horaire a un ID
       if (horaire.id != null) {
         await repository.updateHoraire(horaire);
-        print('Horaire ${horaire.jour.valeur} mis à jour (ID: ${horaire.id})');
+        debugPrint(
+            'Horaire ${horaire.jour.valeur} mis à jour (ID: ${horaire.id})');
       } else {
-        print(
+        debugPrint(
             'Horaire ${horaire.jour.valeur} mis à jour localement (pas d\'ID)');
       }
 
@@ -247,7 +246,6 @@ class HoraireController extends GetxController {
     return "${joursOuverts.length} jour(s) ouvert(s) par semaine";
   }
 
-
   bool _isTimeBetween(String currentTime, String startTime, String endTime) {
     try {
       final current = _timeToMinutes(currentTime);
@@ -269,6 +267,6 @@ class HoraireController extends GetxController {
   }
 
   void _logError(String action, Object error) {
-    print('Erreur lors de la $action: $error');
+    debugPrint('Erreur lors de la $action: $error');
   }
 }

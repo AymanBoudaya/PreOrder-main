@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -45,7 +46,7 @@ class AddressRepository extends GetxController {
 
       return response['id'] as String;
     } catch (e, s) {
-      print('Supabase insert error: $e\n$s');
+      debugPrint('Supabase insert error: $e\n$s');
       rethrow;
     }
   }

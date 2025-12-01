@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:caferesto/features/authentication/screens/signup/otp_verification_screen.dart';
 import 'package:caferesto/utils/local_storage/storage_utility.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -125,9 +126,9 @@ final userController = Get.find<UserController>();
             ));
       }
     } else {
-      // print("🔵 No user → SplashScreen will redirect");
+      debugPrint("No user  SplashScreen will redirect");
     }
-    // print("🔵 [AuthRepo] screenRedirect() END\n");
+    debugPrint("[AuthRepo] screenRedirect() END\n");
   }
 
   /// --- Inscription avec OTP

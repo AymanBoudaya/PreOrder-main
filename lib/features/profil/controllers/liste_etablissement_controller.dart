@@ -41,7 +41,7 @@ class ListeEtablissementController extends GetxController {
       }
       // Pour les autres rôles, on ne charge rien
     } catch (e) {
-      print('Erreur chargement établissements selon rôle: $e');
+      debugPrint('Erreur chargement établissements selon rôle: $e');
     }
   }
 
@@ -192,7 +192,7 @@ class ListeEtablissementController extends GetxController {
               await _supabase.from('users').select('id').eq('role', 'Admin');
 
           if (adminUsers.isEmpty) {
-            print('⚠️ Aucun admin trouvé pour notifier');
+            debugPrint('⚠️ Aucun admin trouvé pour notifier');
           } else {
             for (final admin in adminUsers) {
               final response = await _supabase.from('notifications').insert({
@@ -202,11 +202,12 @@ class ListeEtablissementController extends GetxController {
                     '$gerantName a ajouté un nouvel établissement "$etabName".',
                 'etablissement_id': id,
               }).select();
-              print('Notification créée pour admin ${admin['id']}: $response');
+              debugPrint(
+                  'Notification créée pour admin ${admin['id']}: $response');
             }
           }
         } catch (notifyErr) {
-          print('⚠️ Erreur envoi notification: $notifyErr');
+          debugPrint('⚠️ Erreur envoi notification: $notifyErr');
         }
       } else {
         TLoaders.errorSnackBar(message: 'Erreur lors de la création');
@@ -291,7 +292,8 @@ class ListeEtablissementController extends GetxController {
             'etablissement_id': id,
           });
         } else {
-          print('⚠️ Impossible d\'envoyer notification: id_owner introuvable');
+          debugPrint(
+              '⚠️ Impossible d\'envoyer notification: id_owner introuvable');
         }
       } else {
         TLoaders.errorSnackBar(message: 'Échec de la mise à jour');
@@ -358,7 +360,7 @@ class ListeEtablissementController extends GetxController {
       }
       etablissements.refresh();
     } catch (e) {
-      print('Erreur rafraîchissement: $e');
+      debugPrint('Erreur rafraîchissement: $e');
     }
   }
 
@@ -396,7 +398,7 @@ class ListeEtablissementController extends GetxController {
       etablissements.assignAll(data);
       return data;
     } catch (e) {
-      print('Erreur getTousEtablissements: $e');
+      debugPrint('Erreur getTousEtablissements: $e');
       TLoaders.errorSnackBar(message: 'Erreur chargement établissements: $e');
       rethrow;
     } finally {
@@ -429,7 +431,7 @@ class ListeEtablissementController extends GetxController {
       etablissements.assignAll(dataWithOwner);
       return dataWithOwner;
     } catch (e) {
-      print('Erreur fetchEtablissementsByOwner: $e');
+      debugPrint('Erreur fetchEtablissementsByOwner: $e');
       TLoaders.errorSnackBar(message: 'Erreur chargement établissements: $e');
       return null;
     } finally {
@@ -526,9 +528,9 @@ class ListeEtablissementController extends GetxController {
   }
 
   void _logError(String action, Object error, [StackTrace? stack]) {
-    print('Erreur $action: $error');
+    debugPrint('Erreur $action: $error');
     if (stack != null) {
-      print('Stack: $stack');
+      debugPrint('Stack: $stack');
     }
   }
 

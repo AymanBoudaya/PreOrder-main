@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../features/shop/models/horaire_model.dart';
 import '../../../utils/constants/enums.dart';
@@ -33,7 +34,6 @@ class HoraireRepository {
       }).toList();
 
       await supabase.from('horaires').insert(horairesData);
-
     } catch (e) {
       throw Exception('Erreur lors de la création des horaires: $e');
     }
@@ -41,7 +41,7 @@ class HoraireRepository {
 
   // Récupérer les horaires d'un établissement - CORRIGÉE
   Future<List<Horaire>> getHorairesByEtablissement(
-String etablissementId) async {
+      String etablissementId) async {
     try {
       // Vérifier que l'ID de l'établissement n'est pas vide
       if (etablissementId.isEmpty) {
@@ -110,7 +110,6 @@ String etablissementId) async {
           .toList();
 
       await supabase.from('horaires').insert(horairesData);
-
     } catch (e) {
       throw Exception('Erreur lors de la création des horaires par défaut: $e');
     }
@@ -139,7 +138,7 @@ String etablissementId) async {
         await supabase.from('horaires').insert(horairesManquantsData);
       }
     } catch (e) {
-      print('Erreur complétion horaires: $e');
+      debugPrint('Erreur complétion horaires: $e');
     }
   }
 
@@ -187,9 +186,7 @@ String etablissementId) async {
       String etablissementId, List<Horaire> newHoraires) async {
     try {
       for (final horaire in newHoraires) {
-
         if (horaire.id == null) {
-
           // Map avec typage explicite
           final insertData = <String, dynamic>{
             'etablissement_id': etablissementId,
@@ -211,9 +208,7 @@ String etablissementId) async {
           }
 
           await supabase.from('horaires').insert(insertData);
-
         } else {
-
           // Map avec typage explicite et gestion séparée des cas
           Map<String, dynamic> updateData;
 
@@ -307,7 +302,6 @@ String etablissementId) async {
           await getHorairesByEtablissement(etablissementId);
 
       if (existingHoraires.length < 7) {
-
         // Créer les horaires manquants
         final horairesManquants = JourSemaine.values
             .where((jour) {
@@ -328,7 +322,7 @@ String etablissementId) async {
         }
       }
     } catch (e) {
-      print('Erreur vérification horaires: $e');
+      debugPrint('Erreur vérification horaires: $e');
     }
   }
 }

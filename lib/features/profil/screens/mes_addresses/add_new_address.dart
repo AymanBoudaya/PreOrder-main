@@ -22,8 +22,8 @@ class AddNewAddressScreen extends StatelessWidget {
     final userController = Get.find<UserController>();
     final dark = THelperFunctions.isDarkMode(context);
     // Prefill user info once
-    controller.name.text = userController.user.value.fullName ?? '';
-    controller.phoneNumber.text = userController.user.value.phone ?? '';
+    controller.name.text = userController.user.value.fullName;
+    controller.phoneNumber.text = userController.user.value.phone;
 
     return Scaffold(
       appBar: const TAppBar(title: Text("Ajouter une adresse")),
@@ -134,7 +134,6 @@ class AddNewAddressScreen extends StatelessWidget {
                                   controller.mapController
                                       .move(currentLatLng, 15);
                                 } catch (e) {
-                                  print('Erreur localisation: $e');
                                   Get.snackbar('Erreur',
                                       'Impossible d\'obtenir la localisation',
                                       snackPosition: SnackPosition.BOTTOM);

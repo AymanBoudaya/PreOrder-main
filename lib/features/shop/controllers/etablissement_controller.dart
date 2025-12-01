@@ -29,7 +29,6 @@ class EtablissementController extends GetxController {
 
   @override
   void onClose() {
-    print('EtablissementController fermé');
     _unsubscribeFromRealtime();
     super.onClose();
   }
@@ -88,7 +87,6 @@ class EtablissementController extends GetxController {
       etablissements.assignAll(data);
       return data;
     } catch (e) {
-      print('Erreur fetchApprovedEtablissements: $e');
       TLoaders.errorSnackBar(message: 'Erreur chargement établissements: $e');
       rethrow;
     } finally {

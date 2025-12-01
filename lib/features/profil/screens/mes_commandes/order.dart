@@ -11,7 +11,7 @@ class OrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final orderController = Get.find<OrderController>();
+    Get.find<OrderController>();
 
     return Scaffold(
       appBar: TAppBar(

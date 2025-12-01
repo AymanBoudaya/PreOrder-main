@@ -1,4 +1,5 @@
 import 'package:caferesto/features/profil/controllers/gerant_dashboard_controller.dart';
+import 'package:caferesto/utils/constants/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/constants/colors.dart';
@@ -70,7 +71,7 @@ class OrdersByStatusChart extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(THelperFunctions.getStatusLabel(status)),
+                      Text(THelperFunctions.getStatusLabel(status as OrderStatus)),
                       Text('$count (${percentage.toStringAsFixed(1)}%)'),
                     ],
                   ),

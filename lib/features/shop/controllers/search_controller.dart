@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/repositories/product/produit_repository.dart';
 import '../models/produit_model.dart';
@@ -46,10 +47,10 @@ class ResearchController extends GetxController {
       categories.assignAll(cats);
       etablissements.assignAll(ets);
 
-      print(
+      debugPrint(
           'Filtres chargés: ${cats.length} catégories, ${ets.length} établissements');
     } catch (e) {
-      print('Erreur chargement filtres: $e');
+      debugPrint('Erreur chargement filtres: $e');
     }
   }
 
@@ -82,12 +83,12 @@ class ResearchController extends GetxController {
         // Ajouter les produits de manière optimisée
         allProducts.addAll(products);
         _page++;
-        
+
         // Appliquer les filtres après avoir ajouté les nouveaux produits
         applyFilters();
       }
     } catch (e) {
-      print('Erreur fetch produits: $e');
+      debugPrint('Erreur fetch produits: $e');
       // En cas d'erreur, s'assurer que les états sont corrects
       hasMore.value = false;
     } finally {
@@ -107,17 +108,17 @@ class ResearchController extends GetxController {
       results = results.where((p) {
         // Recherche dans le nom (le plus rapide)
         if (p.name.toLowerCase().contains(queryLower)) return true;
-        
+
         // Recherche dans la description
         if (p.description?.toLowerCase().contains(queryLower) ?? false) {
           return true;
         }
-        
+
         // Recherche dans le nom de l'établissement
         if (p.etablissement?.name.toLowerCase().contains(queryLower) ?? false) {
           return true;
         }
-        
+
         return false;
       }).toList();
     }

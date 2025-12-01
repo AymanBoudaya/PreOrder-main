@@ -73,25 +73,6 @@ class GerantDashboardController extends GetxController {
     return total > 0 ? (count / total * 100) : 0.0;
   }
 
-  String getStatusLabel(String status) {
-    switch (status) {
-      case 'pending':
-        return 'En attente';
-      case 'preparing':
-        return 'En préparation';
-      case 'ready':
-        return 'Prête';
-      case 'delivered':
-        return 'Livrée';
-      case 'cancelled':
-        return 'Annulée';
-      case 'refused':
-        return 'Refusée';
-      default:
-        return status;
-    }
-  }
-
   Color getStatusColor(String status) {
     switch (status) {
       case 'pending':

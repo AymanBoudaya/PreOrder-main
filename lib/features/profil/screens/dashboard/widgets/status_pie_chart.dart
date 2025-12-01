@@ -1,3 +1,5 @@
+import 'package:caferesto/utils/constants/enums.dart';
+import 'package:caferesto/utils/helpers/helper_functions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../../../utils/constants/colors.dart';
@@ -29,25 +31,6 @@ class StatusPieChart extends StatelessWidget {
         return Colors.red.shade700;
       default:
         return Colors.grey;
-    }
-  }
-
-  String getStatusLabel(String status) {
-    switch (status) {
-      case 'pending':
-        return 'En attente';
-      case 'preparing':
-        return 'En préparation';
-      case 'ready':
-        return 'Prête';
-      case 'delivered':
-        return 'Livrée';
-      case 'cancelled':
-        return 'Annulée';
-      case 'refused':
-        return 'Refusée';
-      default:
-        return status;
     }
   }
 
@@ -194,7 +177,8 @@ class StatusPieChart extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    getStatusLabel(entry.key),
+                                    THelperFunctions.getStatusLabel(
+                                        entry.key as OrderStatus),
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                 ),
@@ -260,7 +244,8 @@ class StatusPieChart extends StatelessWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                getStatusLabel(entry.key),
+                                THelperFunctions.getStatusLabel(
+                                    entry.key as OrderStatus),
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ),
@@ -286,5 +271,3 @@ class StatusPieChart extends StatelessWidget {
     );
   }
 }
-
-

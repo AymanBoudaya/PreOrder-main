@@ -108,8 +108,8 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     _productType = produit.productType == 'variable'
         ? ProductType.variable
         : ProductType.single;
-    _prixController.text = (produit.price ?? 0).toString();
-    _prixPromoController.text = (produit.salePrice ?? 0).toString();
+    _prixController.text = (produit.price).toString();
+    _prixPromoController.text = (produit.salePrice).toString();
     _images.addAll(produit.images ?? []);
     // Note: main image handled via produit.imageUrl
   }

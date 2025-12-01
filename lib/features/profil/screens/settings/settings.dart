@@ -165,7 +165,7 @@ class SettingsScreen extends StatelessWidget {
                         final result =
                             await Get.to(() => GerantOrderManagementScreen());
                         if (result == true) {
-                          print("Écran fermé et formulaire réinitialisé");
+                          debugPrint("Écran fermé et formulaire réinitialisé");
                         }
                       },
                     ),
@@ -180,7 +180,7 @@ class SettingsScreen extends StatelessWidget {
                             await Get.to(() => CategoryManagementPage());
                         if (result == true) {
                           // Le formulaire a été réinitialisé
-                          print("Écran fermé et formulaire réinitialisé");
+                          debugPrint("Écran fermé et formulaire réinitialisé");
                         }
                       },
                     ),
@@ -194,7 +194,7 @@ class SettingsScreen extends StatelessWidget {
                         final result =
                             await Get.to(() => const BannerManagementScreen());
                         if (result == true) {
-                          print("Écran fermé et formulaire réinitialisé");
+                          debugPrint("Écran fermé et formulaire réinitialisé");
                         }
                       },
                     ),

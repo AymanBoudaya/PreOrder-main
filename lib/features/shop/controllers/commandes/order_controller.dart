@@ -193,7 +193,6 @@ class OrderController extends GetxController {
 
       // Envoyer une notification au client
       await _envoyerNotificationStatut(order, newStatus, refusalReason);
-      print(updates);
 
       TLoaders.successSnackBar(
         title: "Succès",

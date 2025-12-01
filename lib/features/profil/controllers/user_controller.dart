@@ -127,7 +127,7 @@ class UserController extends GetxController {
 
       // Créer un nouveau canal pour écouter les changements sur l'utilisateur actuel
       _userBanChannel = Supabase.instance.client
-          .channel('user_ban_${currentUserId}')
+          .channel('user_ban_$currentUserId')
           .onPostgresChanges(
             event: PostgresChangeEvent.update,
             schema: 'public',

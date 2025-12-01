@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,7 +12,6 @@ import '../../../utils/exceptions/platform_exceptions.dart';
 import '../order/order_repository.dart';
 
 class ProduitRepository extends GetxController {
-
   /// Variables
   final _db = Supabase.instance.client;
   final _table = 'produits';
@@ -508,7 +506,7 @@ class ProduitRepository extends GetxController {
         }
       }).toList();
     } catch (e) {
-      print('Erreur getAllCategoriesWithIds: $e');
+      debugPrint('Erreur getAllCategoriesWithIds: $e');
       return [];
     }
   }
@@ -528,7 +526,7 @@ class ProduitRepository extends GetxController {
               ))
           .toList();
     } catch (e) {
-      print('Erreur getAllEtablissementsWithIds: $e');
+      debugPrint('Erreur getAllEtablissementsWithIds: $e');
       return [];
     }
   }

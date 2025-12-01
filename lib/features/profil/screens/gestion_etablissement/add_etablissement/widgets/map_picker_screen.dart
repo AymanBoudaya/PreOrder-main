@@ -6,12 +6,12 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 
-
 class MapPickerScreen extends StatefulWidget {
   final double? initialLatitude;
   final double? initialLongitude;
 
-  const MapPickerScreen({super.key, this.initialLatitude, this.initialLongitude});
+  const MapPickerScreen(
+      {super.key, this.initialLatitude, this.initialLongitude});
 
   @override
   State<MapPickerScreen> createState() => _MapPickerScreenState();
@@ -34,9 +34,10 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
 
   Future<void> _initializeLocation() async {
     try {
-      LatLng initialPos = widget.initialLatitude != null && widget.initialLongitude != null
-          ? LatLng(widget.initialLatitude!, widget.initialLongitude!)
-          : await _getCurrentLocation();
+      LatLng initialPos =
+          widget.initialLatitude != null && widget.initialLongitude != null
+              ? LatLng(widget.initialLatitude!, widget.initialLongitude!)
+              : await _getCurrentLocation();
 
       setState(() {
         _selectedLocation = initialPos;
@@ -46,7 +47,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
       await _getAddressFromLatLng(initialPos);
       _mapController.move(initialPos, 15);
     } catch (e) {
-      print('Erreur initialisation localisation: $e');
+      debugPrint('Erreur initialisation localisation: $e');
       setState(() {
         _selectedLocation = _defaultPosition;
         _isLoading = false;
@@ -72,7 +73,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
 
       return LatLng(position.latitude, position.longitude);
     } catch (e) {
-      print('Erreur récupération localisation: $e');
+      debugPrint('Erreur récupération localisation: $e');
       throw 'Impossible d\'obtenir la localisation';
     }
   }
@@ -96,7 +97,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
         setState(() => _selectedAddress = 'Adresse non disponible');
       }
     } catch (e) {
-      print('Erreur récupération adresse: $e');
+      debugPrint('Erreur récupération adresse: $e');
       setState(() => _selectedAddress = 'Adresse non disponible');
     } finally {
       setState(() => _isGettingAddress = false);
@@ -114,7 +115,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
 
       TLoaders.successSnackBar(message: 'Position actuelle récupérée');
     } catch (e) {
-      print('Erreur localisation: $e');
+      debugPrint('Erreur localisation: $e');
       TLoaders.errorSnackBar(message: 'Impossible d\'obtenir la position');
     }
   }
@@ -160,7 +161,8 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate: 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+                      urlTemplate:
+                          'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
                       subdomains: ['a', 'b', 'c'],
                       userAgentPackageName: 'com.caferesto.app',
                       tileProvider: NetworkTileProvider(),
@@ -170,7 +172,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
                         if (_selectedLocation != null)
                           Marker(
                             point: _selectedLocation!,
-                            child : const Icon(
+                            child: const Icon(
                               Icons.location_pin,
                               size: 40,
                               color: Colors.red,
@@ -193,7 +195,8 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
                             SizedBox(
                                 width: 16,
                                 height: 16,
-                                child: CircularProgressIndicator(strokeWidth: 2)),
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2)),
                             SizedBox(width: 8),
                             Text('Recherche de l\'adresse...'),
                           ],

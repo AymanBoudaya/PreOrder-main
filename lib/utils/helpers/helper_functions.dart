@@ -163,22 +163,20 @@ class THelperFunctions {
     }
   }
 
-  static String getStatusLabel(String status) {
+  static String getStatusLabel(OrderStatus status) {
     switch (status) {
-      case 'pending':
-        return 'En attente';
-      case 'preparing':
-        return 'En préparation';
-      case 'ready':
-        return 'Prête';
-      case 'delivered':
+      case OrderStatus.delivered:
         return 'Livrée';
-      case 'cancelled':
+      case OrderStatus.preparing:
+        return 'En préparation';
+      case OrderStatus.ready:
+        return 'Prête';
+      case OrderStatus.pending:
+        return 'En attente';
+      case OrderStatus.cancelled:
         return 'Annulée';
-      case 'refused':
+      case OrderStatus.refused:
         return 'Refusée';
-      default:
-        return status;
     }
   }
 }

@@ -64,7 +64,7 @@ class _GestionHorairesEtablissementState
 
       Get.back(result: success);
     } catch (e) {
-      // print('Erreur lors de la sauvegarde: $e');
+      // debugPrint('Erreur lors de la sauvegarde: $e');
       Get.back(result: false);
     } finally {
       setState(() => _saving = false);
@@ -174,7 +174,7 @@ class _GestionHorairesEtablissementState
         Get.back(result: true);
       }
     } catch (e) {
-      // print('Erreur lors de la fermeture: $e');
+      // debugPrint('Erreur lors de la fermeture: $e');
     } finally {
       setState(() => _saving = false);
     }

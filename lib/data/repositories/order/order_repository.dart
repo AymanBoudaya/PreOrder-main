@@ -28,7 +28,7 @@ class OrderRepository extends GetxController {
           .map((json) => OrderModel.fromJson(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      print('Error fetching orders: $e');
+      debugPrint('Error fetching orders: $e');
       throw 'Something went wrong while fetching order information, try again later';
     }
   }
@@ -66,7 +66,7 @@ class OrderRepository extends GetxController {
         'code_retrait': codeRetrait,
       }).select();
     } on PostgrestException catch (e) {
-      print('Postgres error: ${e.message}');
+      debugPrint('Postgres error: ${e.message}');
       rethrow;
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Erreur', message: e.toString());

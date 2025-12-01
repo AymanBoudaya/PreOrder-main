@@ -9,8 +9,6 @@ extension StatutEtablissementExt on StatutEtablissement {
         return 'approuve';
       case StatutEtablissement.rejete:
         return 'rejete';
-      default:
-        return 'en_attente';
     }
   }
 
@@ -37,8 +35,6 @@ extension StatutEtablissementExt on StatutEtablissement {
         return 'Approuvé';
       case StatutEtablissement.rejete:
         return 'Rejeté';
-      default:
-        return 'En attente';
     }
   }
 }

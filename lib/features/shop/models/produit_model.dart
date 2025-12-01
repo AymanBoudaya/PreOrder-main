@@ -93,7 +93,7 @@ class ProduitModel {
               .toList();
         } catch (e) {
           if (kDebugMode) {
-            print('Erreur parsing tailles_prix (String): $e');
+            debugPrint('Erreur parsing tailles_prix (String): $e');
           }
         }
       } else if (taillesPrix is List) {
@@ -104,7 +104,7 @@ class ProduitModel {
               .toList();
         } catch (e) {
           if (kDebugMode) {
-            print('Erreur parsing tailles_prix (List): $e');
+            debugPrint('Erreur parsing tailles_prix (List): $e');
           }
         }
       } else {
@@ -118,7 +118,7 @@ class ProduitModel {
               .toList();
         } catch (e) {
           if (kDebugMode) {
-            print('Erreur parsing tailles_prix (_JsonMap): $e');
+            debugPrint('Erreur parsing tailles_prix (_JsonMap): $e');
           }
         }
       }

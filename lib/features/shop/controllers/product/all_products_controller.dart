@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../data/repositories/product/produit_repository.dart';
@@ -58,10 +59,8 @@ class AllProductsController extends GetxController {
 
       // Trier après assignation
       sortProducts(selectedSortOption.value);
-      print('Total produits chargés: ${products.length}');
-      print('Produits: ${products.map((p) => p.name).toList()}');
     } catch (e) {
-      print("Erreur chargement produits : $e");
+      debugPrint("Erreur chargement produits : $e");
       // Assigner une liste vide en cas d'erreur
       products.assignAll([]);
     } finally {
@@ -104,8 +103,6 @@ class AllProductsController extends GetxController {
       default:
         products.sort((a, b) => a.name.compareTo(b.name));
     }
-
-    print('Produits triés par: $sortOption');
   }
 
   /// Récupère et assigne les produits d'une marque spécifique
@@ -143,7 +140,7 @@ class AllProductsController extends GetxController {
             etablissement = Etablissement.fromJson(etabResponse);
           }
         } catch (e) {
-          print('Erreur chargement établissement pour marque: $e');
+          debugPrint('Erreur chargement établissement pour marque: $e');
         }
       }
 
@@ -166,7 +163,7 @@ class AllProductsController extends GetxController {
       // Trier après assignation (même logique que pour tous les produits)
       sortBrandProducts(selectedSortOption.value);
     } catch (e) {
-      print("Erreur chargement produits marque : $e");
+      debugPrint("Erreur chargement produits marque : $e");
       brandProducts.assignAll([]);
     } finally {
       isLoading.value = false;
@@ -220,7 +217,6 @@ class AllProductsController extends GetxController {
         brandProducts.sort((a, b) => a.name.compareTo(b.name));
     }
 
-    print('Produits de la marque triés par: $sortOption');
   }
 
   /// Charger tous les établissements manquants en batch (optimisation)
@@ -261,7 +257,7 @@ class AllProductsController extends GetxController {
             etablissementsMap[etab.id!] = etab;
           }
         } catch (e) {
-          print('Erreur parsing établissement: $e');
+          debugPrint('Erreur parsing établissement: $e');
         }
       }
 
@@ -277,7 +273,7 @@ class AllProductsController extends GetxController {
         return produit;
       }).toList();
     } catch (e) {
-      print('Erreur chargement batch établissements: $e');
+      debugPrint('Erreur chargement batch établissements: $e');
       return produits; // Retourner les produits sans établissements en cas d'erreur
     }
   }
@@ -299,7 +295,7 @@ class AllProductsController extends GetxController {
       final etab = Etablissement.fromJson(etabResponse);
       return produit.copyWith(etablissement: etab);
     } catch (e) {
-      print('Erreur chargement établissement pour produit: $e');
+      debugPrint('Erreur chargement établissement pour produit: $e');
     }
     return produit;
   }
@@ -354,7 +350,7 @@ class AllProductsController extends GetxController {
             }
           }
         } catch (e) {
-          print('Erreur traitement changement produit temps réel: $e');
+          debugPrint('Erreur traitement changement produit temps réel: $e');
         }
       },
     );
@@ -379,7 +375,7 @@ class AllProductsController extends GetxController {
       final etab = Etablissement.fromJson(etabResponse);
       return produit.copyWith(etablissement: etab);
     } catch (e) {
-      print('Erreur chargement établissement pour produit marque: $e');
+      debugPrint('Erreur chargement établissement pour produit marque: $e');
     }
     return produit;
   }
@@ -444,7 +440,7 @@ class AllProductsController extends GetxController {
             }
           }
         } catch (e) {
-          print(
+          debugPrint(
               'Erreur traitement changement produit établissement temps réel: $e');
         }
       },
