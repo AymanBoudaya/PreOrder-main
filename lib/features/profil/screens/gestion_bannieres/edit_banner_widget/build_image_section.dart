@@ -67,7 +67,7 @@ class BuildImageSection extends StatelessWidget {
               onPressed: () => controller.pickImage(isMobile: isMobile),
               icon: const Icon(Iconsax.image),
               label: Text(
-                  isMobile ? 'Changer l\'image (Mobile)' : 'Changer l\'image'),
+                  'Changer l\'image'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
               ),

@@ -119,8 +119,18 @@ class BannerController extends GetxController {
   Future<void> fetchAllBanners() async {
     try {
       isLoading.value = true;
-      final banners = await _bannerRepository.getAllBanners();
-      allBanners.assignAll(banners);
+      if (isGerant) {
+        final etab = await etablissementController.getEtablissementUtilisateurConnecte();
+        if (etab != null && (etab.id?.isNotEmpty ?? false)) {
+          final banners = await _bannerRepository.getBannersByEstablishment(etab.id!);
+          allBanners.assignAll(banners);
+        } else {
+          allBanners.clear();
+        }
+      } else {
+        final banners = await _bannerRepository.getAllBanners();
+        allBanners.assignAll(banners);
+      }
     } catch (e) {
       TLoaders.errorSnackBar(
           message: 'Erreur lors du chargement des bannières: $e');
@@ -231,14 +241,22 @@ class BannerController extends GetxController {
         return;
       }
 
+      // Forcer l'association à l'établissement du gérant
+      if (isGerant) {
+        final gerantEtablissement = await etablissementController.getEtablissementUtilisateurConnecte();
+        if (gerantEtablissement != null && (gerantEtablissement.id?.isNotEmpty ?? false)) {
+          selectedLinkType.value = 'establishment';
+          selectedLinkId.value = gerantEtablissement.id!;
+        }
+      }
+
       final banner = BannerModel(
         id: '',
         name: nameController.text.trim(),
         imageUrl: finalImageUrl,
-        status: 'en_attente', // Nouvelle bannière toujours en attente
+        status: 'en_attente',
         link: selectedLinkId.value.isNotEmpty ? selectedLinkId.value : null,
-        linkType:
-            selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
+        linkType: selectedLinkType.value.isNotEmpty ? selectedLinkType.value : null,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );

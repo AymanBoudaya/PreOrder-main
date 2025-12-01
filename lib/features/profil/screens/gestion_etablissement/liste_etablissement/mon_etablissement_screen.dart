@@ -157,7 +157,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
                       },
                     )
                   : _userRole == 'Gérant'
-                      ? _buildEmptyState() // <- Message "Vous n'avez pas d'établissement"
+                      ? _buildEmptyState() // Message "Vous n'avez pas d'établissement"
                       : NoResultsState(
                           currentFilter: _controller.selectedFilter.value),
             ),

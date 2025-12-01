@@ -275,5 +275,39 @@ class BannerRepository extends GetxController {
       // Ne pas faire échouer la suppression de la bannière si l'image ne peut pas être supprimée
     }
   }
+
+    Future<List<BannerModel>> getBannersByEstablishment(String establishmentId) async {
+    try {
+      final response = await _db
+          .from(_table)
+          .select()
+          .eq('link_type', 'establishment')
+          .eq('link', establishmentId)
+          .order('created_at', ascending: false);
+      return response.map((banner) => BannerModel.fromJson(banner)).toList();
+    } on PostgrestException catch (e) {
+      throw 'Erreur Supabase: ${e.message}';
+    } catch (e) {
+      throw 'Échec de récupération des =bannières par établissement : $e';
+    }
+  }
+
+  /// Bannières publiées par établissement (pour affichage ciblé)
+  Future<List<BannerModel>> getPublishedBannersByEstablishment(String establishmentId) async {
+    try {
+      final response = await _db
+          .from(_table)
+          .select()
+          .eq('status', 'publiee')
+          .eq('link_type', 'establishment')
+          .eq('link', establishmentId)
+          .order('created_at', ascending: false);
+      return response.map((banner) => BannerModel.fromJson(banner)).toList();
+    } on PostgrestException catch (e) {
+      throw 'Erreur Supabase: ${e.message}';
+    } catch (e) {
+      throw 'Échec de récupération des bannières publiées par établissement : $e';
+    }
+  }
 }
 

@@ -39,8 +39,8 @@ class ImagePlaceholder extends StatelessWidget {
           const SizedBox(height: AppSizes.spaceBtwItems),
           Text(
             isMobile
-                ? 'Taille recommandée: 1200x800px (Mobile)'
-                : 'Taille recommandée: 1920x1080px (PC)',
+                ? 'Taille recommandée: 1200x800px '
+                : 'Taille recommandée: 1920x1080px',
             style: TextStyle(
               color: dark ? Colors.grey[400] : Colors.grey[600],
             ),
