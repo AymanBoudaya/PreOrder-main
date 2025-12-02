@@ -56,7 +56,7 @@ class LinkSelector extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DropdownButtonFormField<String>(
-              value: isValidValue ? selectedValue : null,
+              initialValue: isValidValue ? selectedValue : null,
               decoration: InputDecoration(
                 labelText: 'Sélectionner un produit',
                 prefixIcon: const Icon(Iconsax.shop),
@@ -212,7 +212,7 @@ class LinkSelector extends StatelessWidget {
             ] else ...[
               // Pour l'admin, afficher le dropdown
               DropdownButtonFormField<String>(
-                value: isValidValue ? selectedValue : null,
+                initialValue: isValidValue ? selectedValue : null,
                 decoration: InputDecoration(
                   labelText: 'Sélectionner un établissement',
                   prefixIcon: const Icon(Iconsax.home),

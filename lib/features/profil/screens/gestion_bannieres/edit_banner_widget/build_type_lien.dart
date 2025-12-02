@@ -34,7 +34,7 @@ class BuildTypeLien extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DropdownButtonFormField<String?>(
-            value: currentValue.isEmpty ? null : currentValue,
+            initialValue: currentValue.isEmpty ? null : currentValue,
             decoration: InputDecoration(
               labelText: 'Type de lien',
               prefixIcon: const Icon(Iconsax.link),

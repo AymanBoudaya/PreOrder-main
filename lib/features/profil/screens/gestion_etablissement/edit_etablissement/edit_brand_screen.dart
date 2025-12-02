@@ -403,7 +403,7 @@ class EditEtablissementScreen extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: constraints.maxWidth),
               child: DropdownButtonFormField<StatutEtablissement>(
                 isExpanded: true,
-                value: controller.selectedStatut.value,
+                initialValue: controller.selectedStatut.value,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Statut',

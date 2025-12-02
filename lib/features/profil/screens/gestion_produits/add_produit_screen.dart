@@ -310,7 +310,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     return CategoryFormCard(children: [
       const Text('Type de produit',
           style: TextStyle(fontWeight: FontWeight.bold)),
-      Row(children: [
+      Wrap(children: [
         Expanded(
           child: RadioListTile<ProductType>(
             title: const Text('Simple'),
@@ -500,8 +500,8 @@ class _AddProduitScreenState extends State<AddProduitScreen>
   Future<String?> _getEtablissementIdUtilisateur() async {
     try {
       final userRole = _userController.userRole;
-      final e =
-          await _listeEtablissementController.getEtablissementUtilisateurConnecte();
+      final e = await _listeEtablissementController
+          .getEtablissementUtilisateurConnecte();
 
       if (userRole == 'Gérant') {
         if (e == null) {
@@ -526,8 +526,8 @@ class _AddProduitScreenState extends State<AddProduitScreen>
   Future<void> _guardAccess() async {
     final role = _userController.userRole;
     if (role != 'Gérant') return;
-    final etab =
-        await _listeEtablissementController.getEtablissementUtilisateurConnecte();
+    final etab = await _listeEtablissementController
+        .getEtablissementUtilisateurConnecte();
     if (etab == null || etab.statut != StatutEtablissement.approuve) {
       TLoaders.errorSnackBar(
           message:

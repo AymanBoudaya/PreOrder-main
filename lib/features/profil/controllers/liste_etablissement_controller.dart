@@ -23,7 +23,6 @@ class ListeEtablissementController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     _subscribeToRealtimeEtablissements();
     _loadEtablissementsAccordingToRole();

@@ -41,10 +41,6 @@ class Etablissement {
           (json['horaires'] as List).map((e) => Horaire.fromJson(e)).toList();
     }
 
-    final ownerData = json['id_owner'] is Map<String, dynamic>
-        ? UserModel.fromJson(json['id_owner'])
-        : null;
-
     return Etablissement(
       id: json['id'],
       name: json['name'] ?? '',
