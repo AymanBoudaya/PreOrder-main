@@ -81,7 +81,11 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
   }
 
   void _navigateToEditProduit(ProduitModel produit) {
-    Get.to(() => AddProduitScreen(produit: produit))?.then((_) {
+    final isAdmin = userController.userRole == 'Admin';
+    Get.to(() => AddProduitScreen(
+          produit: produit,
+          isAdmin: isAdmin,
+        ))?.then((_) {
       _loadProducts();
     });
   }
@@ -114,7 +118,11 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                 Expanded(child: _buildBody()),
               ],
             ),
-      floatingActionButton: _accessDenied ? null : _buildFloatingActionButton(),
+      floatingActionButton: userController.userRole == 'Admin'
+          ? null
+          : _accessDenied
+              ? null
+              : _buildFloatingActionButton(),
     );
   }
 
@@ -593,17 +601,25 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (produit.isStockable)
+        if (produit.isStockable && userController.userRole == 'Gérant')
           IconButton(
             icon: Icon(Icons.inventory_2, size: 20, color: Colors.orange[600]),
             onPressed: () => _showModifierStockDialog(produit),
             tooltip: 'Modifier le stock',
           ),
-        IconButton(
-          icon: const Icon(Icons.edit, size: 20, color: Colors.blue),
-          onPressed: () => _navigateToEditProduit(produit),
-          tooltip: 'Modifier',
-        ),
+        if (userController.userRole == 'Admin')
+          IconButton(
+            icon:
+                const Icon(Icons.remove_red_eye, size: 20, color: Colors.blue),
+            onPressed: () => _navigateToEditProduit(produit),
+            tooltip: 'Consulter',
+          ),
+        if (userController.userRole == 'Gérant')
+          IconButton(
+            icon: const Icon(Icons.edit, size: 20, color: Colors.blue),
+            onPressed: () => _navigateToEditProduit(produit),
+            tooltip: 'Modifier',
+          ),
       ],
     );
   }
@@ -664,7 +680,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Get.back(),
+                onPressed: () => Navigator.pop(context),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.grey[600],
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -727,6 +743,8 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
   }
 
   Widget _buildActionButtons(ProduitModel produit) {
+    final role = userController.userRole;
+    bool isAdmin = role == "Admin";
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -738,7 +756,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                 margin: const EdgeInsets.only(right: 8),
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Get.back();
+                    Navigator.pop(context);
                     _showModifierStockDialog(produit);
                   },
                   icon: const Icon(Icons.inventory_2_outlined, size: 20),
@@ -762,11 +780,12 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                   : const EdgeInsets.only(right: 8),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Get.back();
+                  Navigator.pop(context);
                   _navigateToEditProduit(produit);
                 },
-                icon: const Icon(Icons.edit_outlined, size: 20),
-                label: const Text("Éditer"),
+                icon: Icon(isAdmin ? Icons.remove_red_eye : Icons.edit_outlined,
+                    size: 20),
+                label: Text(isAdmin ? "Consulter" : "Éditer"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade50,
                   foregroundColor: Colors.blue.shade700,
@@ -803,7 +822,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
   }
 
   void _showDeleteConfirmationDialog(ProduitModel produit) {
-    Get.back(); // Fermer le bottom sheet
+    Navigator.pop(context); // Fermer le bottom sheet
 
     showDialog(
       context: context,
@@ -843,7 +862,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
               children: [
                 Expanded(
                   child: TextButton(
-                    onPressed: () => Get.back(),
+                    onPressed: () => Navigator.pop(context),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.grey[600],
                       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -854,7 +873,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.back();
+                      Navigator.pop(context);
                       controller.deleteProduct(produit.id);
                     },
                     style: ElevatedButton.styleFrom(
@@ -922,7 +941,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Get.back(),
+              onPressed: () => Navigator.pop(context),
               child: const Text('Annuler'),
             ),
             ElevatedButton(
@@ -944,7 +963,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                   return;
                 }
 
-                Get.back();
+                Navigator.pop(context);
 
                 // Mettre à jour le stock
                 final success = await controller.updateProductStockQuantity(

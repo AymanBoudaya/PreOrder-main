@@ -21,7 +21,8 @@ import '../../controllers/user_controller.dart';
 
 class AddProduitScreen extends StatefulWidget {
   final ProduitModel? produit;
-  const AddProduitScreen({super.key, this.produit});
+  final bool isAdmin;
+  const AddProduitScreen({super.key, this.produit, this.isAdmin = false});
 
   @override
   State<AddProduitScreen> createState() => _AddProduitScreenState();
@@ -278,14 +279,17 @@ class _AddProduitScreenState extends State<AddProduitScreen>
           title: const Text('Produit en vedette'),
           subtitle: const Text('Afficher ce produit en avant sur la vitrine'),
           value: _isFeatured,
-          onChanged: (val) => setState(() => _isFeatured = val),
+          onChanged: widget.isAdmin
+              ? null
+              : (val) => setState(() => _isFeatured = val),
         ),
       ],
     );
   }
 
-  Widget _buildProductTypeSection() {
+  Widget _buildProductTypeSection(bool isAdmin) {
     final priceField = TextFormField(
+      readOnly: isAdmin ? true : false,
       controller: _prixController,
       decoration: const InputDecoration(
           labelText: 'Prix (DT) *',
@@ -299,6 +303,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     );
 
     final promoField = TextFormField(
+      readOnly: isAdmin ? true : false,
       controller: _prixPromoController,
       decoration: const InputDecoration(
           labelText: 'Prix promo (optionnel)',
@@ -316,7 +321,9 @@ class _AddProduitScreenState extends State<AddProduitScreen>
             title: const Text('Simple'),
             value: ProductType.single,
             groupValue: _productType,
-            onChanged: (v) => setState(() => _productType = v!),
+            onChanged: widget.isAdmin
+                ? null
+                : (v) => setState(() => _productType = v!),
           ),
         ),
         Expanded(
@@ -324,7 +331,9 @@ class _AddProduitScreenState extends State<AddProduitScreen>
             title: const Text('Variable'),
             value: ProductType.variable,
             groupValue: _productType,
-            onChanged: (v) => setState(() => _productType = v!),
+            onChanged: widget.isAdmin
+                ? null
+                : (v) => setState(() => _productType = v!),
           ),
         ),
       ]),
@@ -337,7 +346,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     ]);
   }
 
-  Widget _buildTaillesSection(double width) {
+  Widget _buildTaillesSection(double width, bool isAdmin) {
     if (_productType == ProductType.single) return const SizedBox.shrink();
     final dark = THelperFunctions.isDarkMode(context);
     final fieldWidth = (width >= 900) ? 240.0 : (width >= 600 ? 200.0 : 150.0);
@@ -354,6 +363,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
             SizedBox(
               width: fieldWidth,
               child: TextFormField(
+                readOnly: isAdmin ? true : false,
                 controller: _tailleController,
                 focusNode: _tailleFocusNode,
                 decoration: const InputDecoration(
@@ -363,6 +373,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
             SizedBox(
               width: fieldWidth,
               child: TextFormField(
+                readOnly: isAdmin ? true : false,
                 controller: _prixTailleController,
                 decoration: const InputDecoration(
                     labelText: 'Prix', border: OutlineInputBorder()),
@@ -433,16 +444,18 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     ]);
   }
 
-  Widget _buildStockSection() {
+  Widget _buildStockSection(bool isAdmin) {
     return CategoryFormCard(children: [
       const Text('Stock', style: TextStyle(fontWeight: FontWeight.bold)),
       SwitchListTile(
         title: const Text('Produit stockable'),
         value: _estStockable,
-        onChanged: (v) => setState(() => _estStockable = v),
+        onChanged:
+            widget.isAdmin ? null : (v) => setState(() => _estStockable = v),
       ),
       if (_estStockable)
         TextFormField(
+          readOnly: isAdmin ? true : false,
           controller: _quantiteStockController,
           decoration: const InputDecoration(
               labelText: 'Quantité en stock', border: OutlineInputBorder()),
@@ -451,13 +464,14 @@ class _AddProduitScreenState extends State<AddProduitScreen>
     ]);
   }
 
-  Widget _buildBasicInfoSection(double width) {
+  Widget _buildBasicInfoSection(double width, bool isAdmin) {
     final isWide = width >= 900;
     return CategoryFormCard(children: [
       const Text('Informations de base',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       const SizedBox(height: 16),
       TextFormField(
+        readOnly: isAdmin ? true : false,
         controller: _nomController,
         decoration: const InputDecoration(
             labelText: 'Nom *',
@@ -474,11 +488,14 @@ class _AddProduitScreenState extends State<AddProduitScreen>
             .map((c) => DropdownMenuItem(
                 value: c['id'] as String, child: Text(c['name'])))
             .toList(),
-        onChanged: (v) => setState(() => _selectedCategorieId = v),
+        onChanged: widget.isAdmin
+            ? null
+            : (v) => setState(() => _selectedCategorieId = v),
         validator: (v) => v == null ? 'Sélectionnez une catégorie' : null,
       ),
       const SizedBox(height: 16),
       TextFormField(
+        readOnly: isAdmin ? true : false,
         controller: _descriptionController,
         decoration: const InputDecoration(
             labelText: 'Description', border: OutlineInputBorder()),
@@ -486,6 +503,7 @@ class _AddProduitScreenState extends State<AddProduitScreen>
       ),
       const SizedBox(height: 16),
       TextFormField(
+        readOnly: isAdmin ? true : false,
         controller: _tempsPreparationController,
         decoration: const InputDecoration(
             labelText: 'Temps de préparation (min)',
@@ -617,8 +635,11 @@ class _AddProduitScreenState extends State<AddProduitScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TAppBar(
-          title:
-              Text(_isEditing ? 'Modifier le produit' : 'Ajouter un produit')),
+          title: Text(widget.isAdmin
+              ? 'Consulter le produit'
+              : _isEditing
+                  ? 'Modifier le produit'
+                  : 'Ajouter un produit')),
       body: FadeTransition(
         opacity: _fadeAnimation!,
         child: LayoutBuilder(builder: (context, constraints) {
@@ -653,10 +674,10 @@ class _AddProduitScreenState extends State<AddProduitScreen>
                                 _buildImageSection(width),
                                 const SizedBox(
                                     height: AppSizes.spaceBtwSections),
-                                _buildProductTypeSection(),
+                                _buildProductTypeSection(widget.isAdmin),
                                 const SizedBox(
                                     height: AppSizes.spaceBtwSections),
-                                _buildTaillesSection(width),
+                                _buildTaillesSection(width, widget.isAdmin),
                               ],
                             ),
                           ),
@@ -667,37 +688,38 @@ class _AddProduitScreenState extends State<AddProduitScreen>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                _buildBasicInfoSection(width),
+                                _buildBasicInfoSection(width, widget.isAdmin),
                                 const SizedBox(
                                     height: AppSizes.spaceBtwSections),
-                                _buildStockSection(),
+                                _buildStockSection(widget.isAdmin),
                                 const SizedBox(
                                     height: AppSizes.spaceBtwSections),
                                 _buildFeaturedSection(),
                                 const SizedBox(
                                     height: AppSizes.spaceBtwSections),
                                 // Submit area
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        onPressed:
-                                            _isLoading ? null : _submitForm,
-                                        icon: Icon(_isEditing
-                                            ? Iconsax.save_2
-                                            : Iconsax.add_circle),
-                                        label: Text(_isEditing
-                                            ? 'Enregistrer'
-                                            : 'Ajouter'),
-                                        style: ElevatedButton.styleFrom(
-                                          minimumSize:
-                                              const Size.fromHeight(55),
-                                          backgroundColor: TColors.primary,
+                                if (!widget.isAdmin)
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          onPressed:
+                                              _isLoading ? null : _submitForm,
+                                          icon: Icon(_isEditing
+                                              ? Iconsax.save_2
+                                              : Iconsax.add_circle),
+                                          label: Text(_isEditing
+                                              ? 'Enregistrer'
+                                              : 'Ajouter'),
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize:
+                                                const Size.fromHeight(55),
+                                            backgroundColor: TColors.primary,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
                                 const SizedBox(height: 8),
                                 Text(
                                   'Les champs marqués d\'un * sont requis.',
@@ -715,13 +737,13 @@ class _AddProduitScreenState extends State<AddProduitScreen>
                         children: [
                           _buildImageSection(width),
                           const SizedBox(height: AppSizes.spaceBtwSections),
-                          _buildBasicInfoSection(width),
+                          _buildBasicInfoSection(width, widget.isAdmin),
                           const SizedBox(height: AppSizes.spaceBtwSections),
-                          _buildProductTypeSection(),
+                          _buildProductTypeSection(widget.isAdmin),
                           const SizedBox(height: AppSizes.spaceBtwSections),
-                          _buildTaillesSection(width),
+                          _buildTaillesSection(width, widget.isAdmin),
                           const SizedBox(height: AppSizes.spaceBtwSections),
-                          _buildStockSection(),
+                          _buildStockSection(widget.isAdmin),
                           const SizedBox(height: AppSizes.spaceBtwSections),
                           _buildFeaturedSection(),
                           const SizedBox(height: AppSizes.spaceBtwSections),
