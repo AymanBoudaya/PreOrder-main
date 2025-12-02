@@ -412,7 +412,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Get.back(),
                 style: TextButton.styleFrom(
                     foregroundColor: Colors.grey[600],
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -490,7 +490,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
               margin: const EdgeInsets.only(right: 8),
               child: ElevatedButton.icon(
                 onPressed: () async {
-                  Navigator.pop(context);
+                  Get.back();
                   final result = await Get.to(() =>
                       EditEtablissementScreen(etablissement: etablissement));
                   if (result == true) _chargerEtablissements();
@@ -531,7 +531,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
   }
 
   void _showDeleteConfirmationDialog(Etablissement etablissement) {
-    Navigator.pop(context);
+    Get.back();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -567,7 +567,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
               children: [
                 Expanded(
                   child: TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Get.back(),
                     style: TextButton.styleFrom(
                         foregroundColor: Colors.grey[600],
                         padding: const EdgeInsets.symmetric(vertical: 14)),
@@ -577,7 +577,7 @@ class _MonEtablissementScreenState extends State<MonEtablissementScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                       _deleteEtablissement(etablissement);
                     },
                     style: ElevatedButton.styleFrom(

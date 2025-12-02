@@ -664,7 +664,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Get.back(),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.grey[600],
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -738,7 +738,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                 margin: const EdgeInsets.only(right: 8),
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Get.back();
                     _showModifierStockDialog(produit);
                   },
                   icon: const Icon(Icons.inventory_2_outlined, size: 20),
@@ -762,7 +762,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                   : const EdgeInsets.only(right: 8),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.back();
                   _navigateToEditProduit(produit);
                 },
                 icon: const Icon(Icons.edit_outlined, size: 20),
@@ -803,7 +803,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
   }
 
   void _showDeleteConfirmationDialog(ProduitModel produit) {
-    Navigator.pop(context); // Fermer le bottom sheet
+    Get.back(); // Fermer le bottom sheet
 
     showDialog(
       context: context,
@@ -843,7 +843,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
               children: [
                 Expanded(
                   child: TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Get.back(),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.grey[600],
                       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -854,7 +854,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                       controller.deleteProduct(produit.id);
                     },
                     style: ElevatedButton.styleFrom(
@@ -922,7 +922,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Get.back(),
               child: const Text('Annuler'),
             ),
             ElevatedButton(
@@ -944,7 +944,7 @@ class _ListProduitScreenState extends State<ListProduitScreen> {
                   return;
                 }
 
-                Navigator.pop(context);
+                Get.back();
 
                 // Mettre à jour le stock
                 final success = await controller.updateProductStockQuantity(

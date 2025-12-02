@@ -65,8 +65,6 @@ class CategoryManagementPage extends StatelessWidget {
     });
   }
 
- 
-
   Widget _buildCategoryList(BuildContext context, bool isSubcategory) {
     final categories = controller.getFilteredCategories(isSubcategory);
 
@@ -229,7 +227,7 @@ class CategoryManagementPage extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Get.back(),
                 style: TextButton.styleFrom(
                     foregroundColor: Colors.grey[600],
                     padding: const EdgeInsets.symmetric(vertical: 12)),
@@ -275,7 +273,7 @@ class CategoryManagementPage extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
               Get.to(() => EditCategoryScreen(category: category));
             },
             icon: const Icon(Iconsax.edit, size: 20),
@@ -311,7 +309,7 @@ class CategoryManagementPage extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context, CategoryModel category) {
-    Navigator.pop(context);
+    Get.back();
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
